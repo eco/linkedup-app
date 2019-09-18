@@ -1,0 +1,13 @@
+language: node_js
+node_js:
+  - 10
+cache: yarn
+env:
+  IPFS_DEPLOY_PINATA__API_KEY: 0eec05c095a1cf6df916
+script:
+  - yarn build
+deploy:
+  provider: script
+  script: yarn deploy
+  on:
+    branch: master
