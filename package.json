@@ -1,6 +1,7 @@
 {
   "name": "svelte-app",
   "version": "1.0.0",
+  "license": "UNLICENSED",
   "scripts": {
     "build": "rollup -c",
     "autobuild": "rollup -c -w",
