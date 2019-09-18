@@ -4,12 +4,11 @@ node_js:
 cache: yarn
 env:
   IPFS_DEPLOY_PINATA__API_KEY: 0eec05c095a1cf6df916
-before_install:
-  - npm install -g yarn@latest
 script:
   - yarn build
 deploy:
   provider: script
   script: yarn deploy
+  skip_cleanup: true
   on:
     branch: master
