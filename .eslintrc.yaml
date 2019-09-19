@@ -1,0 +1,10 @@
+env:
+  browser: true
+plugins:
+  - svelte3
+extends:
+  - airbnb-base
+  - prettier
+overrides:
+  - files: ['**/*.svelte']
+    processor: svelte3/svelte3

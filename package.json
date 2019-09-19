@@ -8,9 +8,15 @@
     "dev": "run-p start:dev autobuild",
     "start:dev": "sirv public --single --dev",
     "deploy": "ipfs-deploy public -p pinata",
+    "lint": "eslint 'src/**/*.{js,svelte}'",
     "style": "prettier --write 'src/**/*.{js,svelte}'"
   },
   "dependencies": {
+    "eslint": "^6.4.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.3.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-svelte3": "^2.7.3",
     "husky": "^3.0.5",
     "ipfs-deploy": "^7.10.5",
     "lint-staged": "^9.2.5",
@@ -34,6 +40,7 @@
   },
   "lint-staged": {
     "src/**/*.{js,svelte}": [
+      "eslint",
       "prettier --write",
       "git add"
     ]
