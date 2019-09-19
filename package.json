@@ -7,12 +7,17 @@
     "autobuild": "rollup -c -w",
     "dev": "run-p start:dev autobuild",
     "start:dev": "sirv public --single --dev",
-    "deploy": "ipfs-deploy public -p pinata"
+    "deploy": "ipfs-deploy public -p pinata",
+    "style": "prettier --write 'src/**/*.{js,svelte}'"
   },
   "dependencies": {
+    "husky": "^3.0.5",
     "ipfs-deploy": "^7.10.5",
+    "lint-staged": "^9.2.5",
     "npm-run-all": "^4.1.5",
     "page": "^1.11.4",
+    "prettier": "^1.18.2",
+    "prettier-plugin-svelte": "^0.7.0",
     "rollup": "^1.12.0",
     "rollup-plugin-commonjs": "^10.0.0",
     "rollup-plugin-livereload": "^1.0.0",
@@ -21,5 +26,16 @@
     "rollup-plugin-terser": "^5.1.2",
     "sirv-cli": "^0.4.4",
     "svelte": "^3.0.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,svelte}": [
+      "prettier --write",
+      "git add"
+    ]
   }
 }
