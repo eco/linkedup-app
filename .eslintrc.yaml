@@ -8,3 +8,5 @@ extends:
 overrides:
   - files: ['**/*.svelte']
     processor: svelte3/svelte3
+rules:
+  no-use-before-define: off
