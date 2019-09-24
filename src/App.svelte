@@ -7,10 +7,11 @@
   import AddContact from './pages/AddContact.svelte'
   import Unclaimed from './pages/Unclaimed.svelte'
   import VerifyAccount from './pages/VerifyAccount.svelte'
+  import Scanner from './pages/Scanner.svelte'
 
   let component = Intro
 
-  const initialized = false
+  const initialized = true
   const isBadgeClaimed = () => true
 
   page('/', () => {
@@ -26,6 +27,9 @@
   })
   page('/verify/:token', () => {
     component = VerifyAccount
+  })
+  page('/scan', () => {
+    component = Scanner
   })
 
   page({
