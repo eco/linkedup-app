@@ -5,10 +5,12 @@ cache: yarn
 env:
   IPFS_DEPLOY_PINATA__API_KEY: 0eec05c095a1cf6df916
 script:
+  - yarn style:check
+  - yarn lint
   - yarn build
-deploy:
-  provider: script
-  script: yarn deploy
-  skip_cleanup: true
-  on:
-    branch: master
+# deploy:
+#   provider: script
+#   script: yarn deploy
+#   skip_cleanup: true
+#   on:
+#     branch: master

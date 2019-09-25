@@ -5,8 +5,14 @@ plugins:
 extends:
   - airbnb-base
   - prettier
+settings:
+  import/resolver:
+    node:
+      extensions: ['.mjs', '.js', '.svelte', '.json']
 overrides:
   - files: ['**/*.svelte']
     processor: svelte3/svelte3
 rules:
   no-use-before-define: off
+  import/prefer-default-export: off
+  import/no-mutable-exports: off
