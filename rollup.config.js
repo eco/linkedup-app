@@ -32,13 +32,14 @@ export default {
 		// https://github.com/rollup/rollup-plugin-commonjs
 		resolve({
 			browser: true,
+			extensions: [ '.mjs', '.js', '.svelte', '.json' ],
 			dedupe: importee => importee === 'svelte' || importee.startsWith('svelte/')
 		}),
 		commonjs(),
 
 		// Watch the `public` directory and refresh the
 		// browser on changes when not in production
-		// !production && livereload('public'),
+		!production && livereload('public'),
 
 		// If we're building for production (npm run build
 		// instead of npm run dev), minify

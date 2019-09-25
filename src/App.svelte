@@ -1,18 +1,19 @@
 <script>
   import page from 'page'
-  import Intro from './pages/Intro.svelte'
-  import Home from './pages/Home.svelte'
-  import Welcome from './pages/Welcome.svelte'
-  import AlreadyClaimed from './pages/AlreadyClaimed.svelte'
-  import AddContact from './pages/AddContact.svelte'
-  import Unclaimed from './pages/Unclaimed.svelte'
-  import VerifyAccount from './pages/VerifyAccount.svelte'
-  import Scanner from './pages/Scanner.svelte'
+  import MainLayout from './layout/MainLayout'
+  import Intro from './pages/Intro'
+  import Home from './pages/Home'
+  import Welcome from './pages/Welcome'
+  import AlreadyClaimed from './pages/AlreadyClaimed'
+  import AddContact from './pages/AddContact'
+  import Unclaimed from './pages/Unclaimed'
+  import VerifyAccount from './pages/VerifyAccount'
+  import Scanner from './pages/Scanner'
 
   let component = Intro
 
-  const initialized = true
-  const isBadgeClaimed = () => true
+  const initialized = false
+  const isBadgeClaimed = () => false
 
   page('/', () => {
     component = initialized ? Home : Intro
@@ -37,4 +38,6 @@
   })
 </script>
 
-<svelte:component this={component} />
+<MainLayout>
+  <svelte:component this={component} />
+</MainLayout>
