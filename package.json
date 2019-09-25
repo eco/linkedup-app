@@ -8,8 +8,8 @@
     "dev": "run-p start:dev autobuild",
     "start:dev": "sirv public --single --dev",
     "deploy": "ipfs-deploy public -p pinata",
-    "style": "prettier --write 'src/**/*.{js,svelte}'",
-    "style:check": "prettier --check 'src/**/*.{js,svelte}'",
+    "style": "prettier --write 'src/**/*.{js,svelte}' public/global.css",
+    "style:check": "prettier --check 'src/**/*.{js,svelte}' public/global.css",
     "lint": "eslint 'src/**/*.{js,svelte}'"
   },
   "dependencies": {
@@ -43,6 +43,10 @@
   "lint-staged": {
     "src/**/*.{js,svelte}": [
       "eslint",
+      "prettier --write",
+      "git add"
+    ],
+    "public/global.css": [
       "prettier --write",
       "git add"
     ]
