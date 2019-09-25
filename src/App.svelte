@@ -8,12 +8,12 @@
   import AddContact from './pages/AddContact'
   import Unclaimed from './pages/Unclaimed'
   import VerifyAccount from './pages/VerifyAccount'
-  import Scanner from './pages/Scanner'
+  import ScanContact from './pages/ScanContact'
 
   let component = Intro
 
-  const initialized = false
-  const isBadgeClaimed = () => false
+  const initialized = true
+  const isBadgeClaimed = () => true
 
   page('/', () => {
     component = initialized ? Home : Intro
@@ -30,7 +30,7 @@
     component = VerifyAccount
   })
   page('/scan', () => {
-    component = Scanner
+    component = ScanContact
   })
 
   page({
