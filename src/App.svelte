@@ -1,6 +1,6 @@
 <script>
   import page from 'page'
-  import MainLayout from './pages/layout/MainLayout'
+  import MainLayout from './layout/MainLayout'
   import Intro from './pages/Intro'
   import Home from './pages/Home'
   import Welcome from './pages/Welcome'
