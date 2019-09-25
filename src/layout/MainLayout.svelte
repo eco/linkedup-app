@@ -7,21 +7,21 @@
 
 <style>
   .layout {
-    --header-height: 70px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
   }
   header {
     background-color: var(--blue);
     color: var(--white);
     text-transform: uppercase;
     text-align: center;
-    line-height: var(--header-height);
+    line-height: 70px;
     font-weight: 800;
     font-size: 18px;
   }
   main {
-    padding: 38px 28px;
-    min-height: calc(100vh - var(--header-height));
-    display: flex;
-    flex-direction: column;
+    padding: var(--page-gutter-vert) var(--page-gutter-horiz);
+    flex: 1 0 auto;
   }
 </style>

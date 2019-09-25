@@ -1,8 +1,9 @@
 <script>
   export let fullWidth = false
+  export let onClick = () => {}
 </script>
 
-<button type="button" class:fullWidth>
+<button type="button" class:fullWidth on:click={onClick}>
   <slot />
 </button>
 
@@ -15,7 +16,6 @@
     padding: 0;
     line-height: 54px;
     text-transform: uppercase;
-    cursor: pointer;
   }
 
   button.fullWidth {
