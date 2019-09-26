@@ -1,10 +1,10 @@
 <script>
   import { onMount, onDestroy } from 'svelte'
-  import jsQR from 'jsqr'
 
   let video = document.createElement('video')
   let canvas
   let stream
+  let jsQR
 
   $: context = canvas && canvas.getContext('2d')
 
@@ -21,6 +21,7 @@
     video.setAttribute('playsinline', true)
     video.play()
     requestAnimationFrame(renderFrame)
+    ;({ default: jsQR } = await import('jsqr'))
   }
 
   // renders a video frame to canvas and scans the content
@@ -38,13 +39,15 @@
       const dimensions = [0, 0, width, height]
       context.drawImage(video, ...dimensions)
 
-      const imageData = context.getImageData(...dimensions)
-      const code = jsQR(imageData.data, imageData.width, imageData.height, {
-        inversionAttempts: 'dontInvert',
-      })
+      if (jsQR) {
+        const imageData = context.getImageData(...dimensions)
+        const code = jsQR(imageData.data, imageData.width, imageData.height, {
+          inversionAttempts: 'dontInvert',
+        })
 
-      if (code && code.data) {
-        onCode(code)
+        if (code && code.data) {
+          onCode(code)
+        }
       }
     }
 
