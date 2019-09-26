@@ -22,6 +22,6 @@
   }
   main {
     padding: var(--page-gutter-vert) var(--page-gutter-horiz);
-    flex: 1 0 auto;
+    flex: 1 0 0;
   }
 </style>

@@ -19,7 +19,6 @@
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-svelte3": "^2.7.3",
     "husky": "^3.0.5",
-    "intrinsic-scale": "^3.0.4",
     "ipfs-deploy": "^7.10.5",
     "jsqr": "^1.2.0",
     "lint-staged": "^9.2.5",
