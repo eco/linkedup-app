@@ -1,5 +1,16 @@
-.DS_Store
+# deps - use yarn lockfile only
 node_modules
-public/bundle.*
+package-lock.json
+
+# build output
+public/main.*
+public/*.js
+public/*.js.map
+stats.html
+
+# ipfs-deploy variables
 .env
+
+# std
+.DS_Store
 *.log

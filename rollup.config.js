@@ -3,6 +3,7 @@ import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
 import livereload from 'rollup-plugin-livereload'
 import { terser } from 'rollup-plugin-terser'
+import visualizer from 'rollup-plugin-visualizer'
 
 const production = !process.env.ROLLUP_WATCH
 
@@ -10,9 +11,9 @@ export default {
   input: 'src/main.js',
   output: {
     sourcemap: true,
-    format: 'iife',
+    format: 'esm',
     name: 'app',
-    file: 'public/bundle.js',
+    dir: 'public',
   },
   plugins: [
     svelte({
@@ -21,7 +22,7 @@ export default {
       // we'll extract any component CSS out into
       // a separate file — better for performance
       css: css => {
-        css.write('public/bundle.css')
+        css.write('public/main.css')
       },
     }),
 
@@ -45,6 +46,9 @@ export default {
     // If we're building for production (npm run build
     // instead of npm run dev), minify
     production && terser(),
+
+    // Generate stats for bundle size analysis
+    production && visualizer(),
   ],
   watch: {
     clearScreen: false,
