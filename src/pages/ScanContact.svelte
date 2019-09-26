@@ -22,7 +22,7 @@
     flex-direction: column;
   }
   .qr-scanner {
-    flex-grow: 1;
+    flex: 1 0 0;
     margin: calc(var(--page-gutter-vert) * -1)
       calc(var(--page-gutter-horiz) * -1);
     margin-top: var(--page-gutter-vert);

@@ -9,10 +9,15 @@ settings:
   import/resolver:
     node:
       extensions: ['.mjs', '.js', '.svelte', '.json']
-overrides:
-  - files: ['**/*.svelte']
-    processor: svelte3/svelte3
 rules:
   no-use-before-define: off
   import/prefer-default-export: off
-  import/no-mutable-exports: off
+overrides:
+  - files: ['**/*.svelte']
+    processor: svelte3/svelte3
+    rules:
+      # disable these rules for svelte files
+      # see: https://github.com/sveltejs/eslint-plugin-svelte3/blob/master/OTHER_PLUGINS.md#eslint-plugin-import
+      import/first: off
+      import/no-duplicates: off
+      import/no-mutable-exports: off
