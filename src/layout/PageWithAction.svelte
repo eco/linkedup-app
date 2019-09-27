@@ -1,24 +1,7 @@
-<script>
-  import { Button } from '../components'
-
-  export let actionText
-  export let ActionIcon
-  export let onAction
-</script>
-
 <div class="page">
-  <div>
-    <slot />
-  </div>
+  <slot name="content" />
   <div class="action">
-    <Button fullWidth onClick={onAction}>
-      {#if ActionIcon}
-        <span class="action-icon">
-          <ActionIcon />
-        </span>
-      {/if}
-      {actionText}
-    </Button>
+    <slot name="action" />
   </div>
 </div>
 
@@ -30,10 +13,6 @@
   }
   .action {
     margin-top: auto;
-  }
-  .action-icon {
-    margin-right: 10px;
-    position: relative;
-    top: -1px;
+    padding-top: 1em;
   }
 </style>

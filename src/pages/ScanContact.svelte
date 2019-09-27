@@ -2,8 +2,12 @@
   import page from 'page'
   import { QRScanner } from '../components'
 
-  const handleCode = code => {
-    console.log(code)
+  let found = false
+  const handleCode = () => {
+    if (found) {
+      return
+    }
+    found = true
     page('/badge/123')
   }
 </script>

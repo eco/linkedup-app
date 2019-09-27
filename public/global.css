@@ -1,7 +1,12 @@
 :root {
-  --blue: #3c48ea;
+  /* colors */
   --white: #fff;
+  --gray: #c4c4c4;
   --black: #333;
+  --blue: #3c48ea;
+  --light-blue: #d0e9ff;
+  --pale-blue: #eff2f6;
+  /* spacing */
   --page-gutter-vert: 38px;
   --page-gutter-horiz: 28px;
 }
@@ -44,6 +49,7 @@ select,
 textarea {
   font-family: inherit;
   font-size: inherit;
+  font-weight: inherit;
 }
 
 svg {

@@ -5,7 +5,20 @@ import livereload from 'rollup-plugin-livereload'
 import { terser } from 'rollup-plugin-terser'
 import visualizer from 'rollup-plugin-visualizer'
 
+const thisPkg = require('./package')
+
 const production = !process.env.ROLLUP_WATCH
+const ci = !!process.env.CI
+const branch = process.env.TRAVIS_BRANCH
+
+const includeMocks = !production || (ci && branch === 'master')
+
+const mocksPathFilter = (pkg, path, relativePath) => {
+  if (pkg.name === thisPkg.name && relativePath.startsWith('src/services')) {
+    return relativePath.replace('src/services', 'mock/services')
+  }
+  return relativePath
+}
 
 export default {
   input: 'src/main.js',
@@ -36,6 +49,9 @@ export default {
       extensions: ['.mjs', '.js', '.svelte', '.json'],
       dedupe: importee =>
         importee === 'svelte' || importee.startsWith('svelte/'),
+      customResolveOptions: {
+        pathFilter: includeMocks ? mocksPathFilter : undefined,
+      },
     }),
     commonjs(),
 
@@ -47,8 +63,9 @@ export default {
     // instead of npm run dev), minify
     production && terser(),
 
-    // Generate stats for bundle size analysis
-    production && visualizer(),
+    // Generate stats for bundle size analysis when
+    // building locally
+    production && !ci && visualizer(),
   ],
   watch: {
     clearScreen: false,
