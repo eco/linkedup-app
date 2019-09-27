@@ -11,9 +11,15 @@
   import ScanContact from './pages/ScanContact'
 
   let component = Intro
+  let pageParams = {}
 
   const initialized = true
   const isBadgeClaimed = () => true
+
+  page((ctx, next) => {
+    pageParams = ctx.params
+    next()
+  })
 
   page('/', () => {
     component = initialized ? Home : Intro
@@ -39,5 +45,5 @@
 </script>
 
 <MainLayout>
-  <svelte:component this={component} />
+  <svelte:component this={component} {pageParams} />
 </MainLayout>
