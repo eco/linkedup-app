@@ -1,3 +1,4 @@
+export { default as Attributes } from './Attributes'
 export { default as Avatar } from './Avatar'
 export { default as Button } from './Button'
 export { default as Checkbox } from './Checkbox'

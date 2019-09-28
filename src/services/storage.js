@@ -1,19 +1,11 @@
+const userKey = 'com.eco.longy.user'
+
 export default {
+  storeUser(name, attributes) {
+    localStorage.setItem(userKey, JSON.stringify({ name, attributes }))
+  },
   getLocalUser() {
-    return {
-      name: 'Alexandra Williams',
-      attributes: [
-        {
-          id: 1,
-          label: 'Twitter',
-          value: '@awilliams',
-        },
-        {
-          id: 2,
-          label: 'LinkedIn',
-          value: 'alex.williams',
-        },
-      ],
-    }
+    const user = localStorage.getItem(userKey)
+    return JSON.parse(user)
   },
 }

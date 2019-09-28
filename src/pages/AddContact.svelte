@@ -1,11 +1,10 @@
 <script>
   import { onMount } from 'svelte'
   import page from 'page'
-  import PageWithAction from '../../layout/PageWithAction'
-  import { Button, Textarea, Avatar } from '../../components'
-  import cosmos from '../../services/cosmos'
-  import storage from '../../services/storage'
-  import Attributes from './Attributes'
+  import PageWithAction from '../layout/PageWithAction'
+  import { Button, Textarea, Avatar, Attributes } from '../components'
+  import cosmos from '../services/cosmos'
+  import storage from '../services/storage'
 
   const user = storage.getLocalUser()
   let contactName = ''
