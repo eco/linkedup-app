@@ -1,6 +1,9 @@
 <script>
+  import page from 'page'
   import PageWithAction from '../layout/PageWithAction'
   import { Button } from '../components'
+
+  const verifyProfile = () => page('/verify')
 </script>
 
 <PageWithAction>
@@ -11,7 +14,7 @@
     <p>Please verify your profile information and privacy settings</p>
   </div>
   <div slot="action">
-    <Button fullWidth>Verify your profile</Button>
+    <Button fullWidth onClick={verifyProfile}>Verify your profile</Button>
   </div>
 
 </PageWithAction>

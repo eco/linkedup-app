@@ -7,10 +7,12 @@ env:
 script:
   - yarn style:check
   - yarn lint
+  - if [ "$TRAVIS_BRANCH" = "master" ]; then export SANDBOX_MODE=true; fi
   - yarn build
 deploy:
   provider: script
   script: yarn deploy
   skip_cleanup: true
   on:
-    branch: master
+    all_branches: true
+    condition: $TRAVIS_BRANCH =~ ^(release|master)$

@@ -9,21 +9,12 @@ const thisPkg = require('./package')
 
 const production = !process.env.ROLLUP_WATCH
 const ci = !!process.env.CI
-const branch = process.env.TRAVIS_BRANCH
-
-const includeMocks = !production || (ci && branch === 'master')
-
-const mocksPathFilter = (pkg, path, relativePath) => {
-  if (pkg.name === thisPkg.name && relativePath.startsWith('src/services')) {
-    return relativePath.replace('src/services', 'mock/services')
-  }
-  return relativePath
-}
+const sandbox = !!process.env.SANDBOX_MODE
 
 export default {
-  input: 'src/main.js',
+  input: sandbox ? 'sandbox/main' : 'src/main',
   output: {
-    sourcemap: true,
+    sourcemap: !production,
     format: 'esm',
     name: 'app',
     dir: 'public',
@@ -50,7 +41,16 @@ export default {
       dedupe: importee =>
         importee === 'svelte' || importee.startsWith('svelte/'),
       customResolveOptions: {
-        pathFilter: includeMocks ? mocksPathFilter : undefined,
+        pathFilter: (pkg, path, relativePath) => {
+          if (
+            sandbox &&
+            pkg.name === thisPkg.name &&
+            relativePath.startsWith('src/services')
+          ) {
+            return relativePath.replace('src/services', 'sandbox/services')
+          }
+          return relativePath
+        },
       },
     }),
     commonjs(),
@@ -65,7 +65,7 @@ export default {
 
     // Generate stats for bundle size analysis when
     // building locally
-    production && !ci && visualizer(),
+    !ci && production && visualizer(),
   ],
   watch: {
     clearScreen: false,

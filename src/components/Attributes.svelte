@@ -1,5 +1,5 @@
 <script>
-  import { Checkbox } from '../../components'
+  import Checkbox from './Checkbox'
 
   export let name
   export let attributes
