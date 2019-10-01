@@ -1,12 +1,11 @@
 <script>
   import { onMount } from 'svelte'
   import page from 'page'
+  import { user } from '../store'
   import PageWithAction from '../layout/PageWithAction'
   import { Button, Textarea, Avatar, Attributes } from '../components'
   import cosmos from '../services/cosmos'
-  import storage from '../services/storage'
 
-  const user = storage.getLocalUser()
   let contactName = ''
   $: [contactFirstName] = contactName.split(' ')
   export let pageParams
@@ -32,7 +31,7 @@
     <p class="avatar">
       <Avatar />
     </p>
-    <Attributes name={user.name} attributes={user.attributes} />
+    <Attributes name={$user.name} attributes={$user.attributes} />
     <Textarea placeholder="Include a message for {contactFirstName}" />
   </div>
 

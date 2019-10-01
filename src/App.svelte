@@ -1,6 +1,6 @@
 <script>
   import page from 'page'
-  import storage from './services/storage'
+  import { user } from './store'
   import cosmos from './services/cosmos'
   import MainLayout from './layout/MainLayout'
   import Intro from './pages/Intro'
@@ -22,11 +22,11 @@
     next()
   })
   page('/', () => {
-    component = storage.getLocalUser() ? Home : Intro
+    component = $user ? Home : Intro
   })
   page('/badge/:badgeId', async () => {
     const badgeClaimed = await cosmos.isBadgeClaimed(pageParams.badgeId)
-    if (storage.getLocalUser()) {
+    if ($user) {
       component = badgeClaimed ? AddContact : Unclaimed
     } else {
       component = badgeClaimed ? AlreadyClaimed : Welcome
@@ -45,6 +45,7 @@
   page({
     hashbang: true,
   })
+  page.base(document.location.pathname)
 </script>
 
 <MainLayout>
