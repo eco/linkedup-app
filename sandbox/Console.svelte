@@ -1,22 +1,17 @@
 <script>
   import page from 'page'
-  import user from './user'
+  import sandboxUser from './user'
+  import { user } from '../src/store'
 
   const commands = {
-    'Reset device': () => {
-      page('/')
-      localStorage.clear()
-      document.location.reload()
-    },
-
     'Scan own badge': () => {
       page('/badge/123')
     },
 
     'Open verification email': () => {
       const query = new URLSearchParams()
-      query.set('name', user.name)
-      query.set('attributes', JSON.stringify(user.attributes))
+      query.set('name', sandboxUser.name)
+      query.set('attributes', JSON.stringify(sandboxUser.attributes))
 
       const url = new URL(document.location)
       url.search = query.toString()
@@ -27,6 +22,12 @@
 
     'Scan attendee badge': () => {
       page('/badge/456')
+    },
+
+    'Reset device': () => {
+      page('/')
+      localStorage.clear()
+      document.location.reload()
     },
   }
 </script>
@@ -42,6 +43,7 @@
   </ul>
   <hr />
   <h1>Storage</h1>
+  <pre>{$user ? JSON.stringify($user, null, 4) : '<empty>'}</pre>
 </div>
 
 <style>
@@ -61,5 +63,10 @@
     font-size: 15px;
     text-transform: uppercase;
     cursor: pointer;
+  }
+  pre {
+    text-align: left;
+    font-size: 14px;
+    line-height: normal;
   }
 </style>

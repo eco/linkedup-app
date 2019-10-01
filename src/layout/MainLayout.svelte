@@ -9,8 +9,7 @@
   .layout {
     display: flex;
     flex-direction: column;
-    min-height: 100%;
-    background-color: var(--white);
+    height: 100%;
   }
   header {
     background-color: var(--blue);
@@ -22,6 +21,7 @@
     font-size: 18px;
   }
   main {
+    background-color: var(--white);
     padding: var(--page-gutter-vert) var(--page-gutter-horiz);
     flex: 1 0 0;
   }

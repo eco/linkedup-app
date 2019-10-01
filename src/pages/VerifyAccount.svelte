@@ -1,16 +1,14 @@
 <script>
   import page from 'page'
+  import { user } from '../store'
   import PageWithAction from '../layout/PageWithAction'
   import { Avatar, Button, Attributes } from '../components'
-  import storage from '../services/storage'
 
   const { searchParams } = new URL(document.location.href)
-  const user = {
+  $user = {
     name: searchParams.get('name'),
     attributes: JSON.parse(searchParams.get('attributes')),
   }
-
-  storage.storeUser(user.name, user.attributes)
 
   const finishVerification = () => page('/')
 </script>
@@ -21,7 +19,7 @@
     <p class="avatar">
       <Avatar editable />
     </p>
-    <Attributes name={user.name} attributes={user.attributes} />
+    <Attributes name={$user.name} attributes={$user.attributes} />
   </div>
   <div slot="action">
     <Button fullWidth onClick={finishVerification}>Finish</Button>
