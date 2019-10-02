@@ -8,6 +8,7 @@
     "dev": "run-p start:dev autobuild",
     "sandbox": "SANDBOX_MODE=true yarn dev",
     "start:dev": "sirv public --single --dev",
+    "clean": "rm public/{*.js,*.map,main.css}",
     "deploy": "ipfs-deploy public -p pinata",
     "style": "prettier --write '{src,sandbox}/**/*.{js,svelte}' public/global.css",
     "style:check": "prettier --check '{src,sandbox}/**/*.{js,svelte}' public/global.css",
@@ -15,6 +16,7 @@
   },
   "dependencies": {
     "babel-eslint": "^10.0.3",
+    "date-fns": "^2.4.1",
     "eslint": "^6.4.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-config-prettier": "^6.3.0",

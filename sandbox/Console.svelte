@@ -10,12 +10,11 @@
 
     'Open verification email': () => {
       const query = new URLSearchParams()
-      query.set('name', sandboxUser.name)
-      query.set('attributes', JSON.stringify(sandboxUser.attributes))
+      query.set('longy.user', JSON.stringify(sandboxUser))
 
       const url = new URL(document.location)
+      url.pathname = '/verify/abc'
       url.search = query.toString()
-      url.hash = '#!/verify/abc'
 
       document.location.replace(url)
     },
