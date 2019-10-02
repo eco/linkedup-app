@@ -1,5 +1,6 @@
+// todo - populate this module once backend ready
 export default {
-  async startVerification() {
+  async beginVerification() {
     return true
   },
   async getContactName() {

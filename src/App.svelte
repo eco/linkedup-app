@@ -9,9 +9,10 @@
   import AlreadyClaimed from './pages/AlreadyClaimed'
   import AddContact from './pages/AddContact'
   import Unclaimed from './pages/Unclaimed'
-  import StartVerification from './pages/StartVerification'
+  import BeginVerification from './pages/BeginVerification'
   import VerifyAccount from './pages/VerifyAccount'
   import ScanContact from './pages/ScanContact'
+  import ReputationLog from './pages/ReputationLog'
 
   let component
   let pageParams = {}
@@ -33,7 +34,7 @@
     }
   })
   page('/verify', () => {
-    component = StartVerification
+    component = BeginVerification
   })
   page('/verify/:token', () => {
     component = VerifyAccount
@@ -41,11 +42,11 @@
   page('/scan', () => {
     component = ScanContact
   })
-
-  page({
-    hashbang: true,
+  page('/reputation', () => {
+    component = ReputationLog
   })
-  page.base(document.location.pathname)
+
+  page()
 </script>
 
 <MainLayout>

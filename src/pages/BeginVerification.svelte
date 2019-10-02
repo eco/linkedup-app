@@ -5,7 +5,7 @@
   export let pageParams
 
   onMount(async () => {
-    await cosmos.startVerification(pageParams.badgeId)
+    await cosmos.beginVerification(pageParams.badgeId)
   })
 </script>
 

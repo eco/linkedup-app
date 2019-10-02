@@ -4,11 +4,18 @@
   import PageWithAction from '../layout/PageWithAction'
   import { Avatar, Button, Attributes } from '../components'
 
-  const { searchParams } = new URL(document.location.href)
-  $user = {
-    name: searchParams.get('name'),
-    attributes: JSON.parse(searchParams.get('attributes')),
+  if ($user) {
+    // TODO: display error
+    console.error('Device has already been initialized')
   }
+
+  const currentUrl = new URL(document.location.href)
+  const { searchParams } = currentUrl
+
+  $user = JSON.parse(searchParams.get('longy.user'))
+  searchParams.delete('longy.user')
+  currentUrl.search = searchParams.toString()
+  window.history.replaceState({}, '', currentUrl.toString())
 
   const finishVerification = () => page('/')
 </script>
