@@ -24,4 +24,14 @@ const claimKey = (acc, sec, addr, secret) =>
     },
   })
 
-export { claimKey }
+const scanQr = (acc, sec, sender, scannedQR) =>
+  generateMsg(acc, sec, {
+    type: 'longy/MsgScanQr',
+    value: {
+      sender,
+      scannedQR,
+      data: 'test',
+    },
+  })
+
+export { claimKey, scanQr }

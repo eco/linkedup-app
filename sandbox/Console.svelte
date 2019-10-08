@@ -3,8 +3,18 @@
   import { user } from '../src/store'
 
   const commands = {
-    'Scan own badge': () => {
+    'Scan your own badge': () => {
       page('/badge/1422426129')
+    },
+
+    "Scan someone else's badge": () => {
+      page('/badge/1422410109')
+    },
+
+    'Reset device': () => {
+      page('/')
+      localStorage.clear()
+      document.location.reload()
     },
 
     // 'Open verification email': () => {
@@ -17,16 +27,6 @@
 
     //   document.location.replace(url)
     // },
-
-    'Scan attendee badge': () => {
-      page('/badge/456')
-    },
-
-    'Reset device': () => {
-      page('/')
-      localStorage.clear()
-      document.location.reload()
-    },
   }
 </script>
 

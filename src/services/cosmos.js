@@ -5,7 +5,7 @@ import secp256k1 from 'secp256k1'
 import arrayBufferToBuffer from 'arraybuffer-to-buffer'
 import { get } from 'svelte/store'
 import { user } from '../store'
-import { claimKey } from './txs'
+import { claimKey, scanQr } from './txs'
 
 const path = "m/44'/118'/0'/0/0"
 
@@ -117,8 +117,29 @@ export default {
   async getContactName() {
     return '[not implemented]'
   },
-  async scanContact() {
-    // todo
+  async scanContact(badgeId) {
+    const { address, privateKey } = get(user)
+    const accRes = await fetch(`/auth/accounts/${address}`)
+    const { result } = await accRes.json()
+    const tx = scanQr(
+      result.value.account_number,
+      result.value.sequence,
+      address,
+      badgeId
+    )
+    const signedTx = await sign(tx, Buffer.from(privateKey, 'hex'))
+
+    const res = await fetch('/longy/txs', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(signedTx),
+    })
+
+    if (!res.ok) {
+      throw new Error('scanContact response not ok.')
+    }
   },
   async getPlayerScore() {
     const { address } = get(user)
