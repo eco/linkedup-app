@@ -1,11 +1,24 @@
 <script>
+  import Spinner from './Spinner'
+
   export let onClick = () => {}
   export let fullWidth = false
   export let secondary = false
+  export let loading = false
+
+  const handleClick = (...args) => {
+    if (!loading) {
+      onClick(...args)
+    }
+  }
 </script>
 
-<button type="button" class:fullWidth class:secondary on:click={onClick}>
-  <slot />
+<button type="button" class:fullWidth class:secondary on:click={handleClick}>
+  {#if loading}
+    <Spinner />
+  {:else}
+    <slot />
+  {/if}
 </button>
 
 <style>

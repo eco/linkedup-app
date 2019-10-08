@@ -4,6 +4,9 @@ import commonjs from 'rollup-plugin-commonjs'
 import livereload from 'rollup-plugin-livereload'
 import { terser } from 'rollup-plugin-terser'
 import visualizer from 'rollup-plugin-visualizer'
+import json from 'rollup-plugin-json'
+import builtins from 'rollup-plugin-node-builtins';
+import globals from 'rollup-plugin-node-globals';
 
 const thisPkg = require('./package')
 
@@ -12,7 +15,7 @@ const ci = !!process.env.CI
 const sandbox = !!process.env.SANDBOX_MODE
 
 export default {
-  input: sandbox ? 'sandbox/main' : 'src/main',
+  input: production ? 'src/main' : 'sandbox/main',
   output: {
     sourcemap: !production,
     format: 'esm',
@@ -38,6 +41,7 @@ export default {
     resolve({
       browser: true,
       extensions: ['.mjs', '.js', '.svelte', '.json'],
+      preferBuiltins: true,
       dedupe: importee =>
         importee === 'svelte' || importee.startsWith('svelte/'),
       customResolveOptions: {
@@ -55,6 +59,10 @@ export default {
     }),
     commonjs(),
 
+    builtins(),
+    globals(),
+    json(),
+
     // Watch the `public` directory and refresh the
     // browser on changes when not in production
     !production && livereload('public'),
@@ -66,6 +74,8 @@ export default {
     // Generate stats for bundle size analysis when
     // building locally
     !ci && production && visualizer(),
+
+
   ],
   watch: {
     clearScreen: false,

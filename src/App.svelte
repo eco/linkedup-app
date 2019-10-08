@@ -36,7 +36,7 @@
   page('/verify', () => {
     component = BeginVerification
   })
-  page('/verify/:token', () => {
+  page('/claim', () => {
     component = VerifyAccount
   })
   page('/scan', () => {
