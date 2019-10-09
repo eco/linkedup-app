@@ -4,9 +4,25 @@ import bitcoinjs from 'bitcoinjs-lib'
 import secp256k1 from 'secp256k1'
 import arrayBufferToBuffer from 'arraybuffer-to-buffer'
 
+const { subtle } = window.crypto
+
 const path = "m/44'/118'/0'/0/0"
 
-export const generateKey = async () => {
+export const generateRsaKey = async () => {
+  const opts = {
+    name: 'RSA-OAEP',
+    modulusLength: 1024,
+    publicExponent: new Uint8Array([1, 0, 1]),
+    hash: 'SHA-256',
+  }
+  const keyPair = await subtle.generateKey(opts, true, ['encrypt', 'decrypt'])
+  const pkcs8 = await subtle.exportKey('pkcs8', keyPair.privateKey)
+  const keyStr = String.fromCharCode(...new Uint8Array(pkcs8))
+  const key64 = window.btoa(keyStr)
+  return `-----BEGIN PRIVATE KEY-----\n${key64}\n-----END PRIVATE KEY-----`
+}
+
+export const generateCosmosKey = async () => {
   const mnemonic = bip39.generateMnemonic()
   const seed = await bip39.mnemonicToSeed(mnemonic)
   const node = bip32.fromSeed(seed)
@@ -37,7 +53,7 @@ const getPubKeyBase64 = ecpairPriv => {
 export const sign = async (tx, privateKey) => {
   const encoder = new TextEncoder()
   const data = encoder.encode(JSON.stringify(sortObject(tx)))
-  const hash = await crypto.subtle.digest('SHA-256', data)
+  const hash = await subtle.digest('SHA-256', data)
   const buf = arrayBufferToBuffer(hash)
   const signObj = secp256k1.sign(buf, privateKey)
   const signatureBase64 = Buffer.from(signObj.signature, 'binary').toString(

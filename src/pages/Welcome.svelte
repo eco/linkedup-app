@@ -10,7 +10,8 @@
 
   const verifyProfile = async () => {
     loading = true
-    await cosmos.beginVerification(pageParams.badgeId)
+    const badgeId = parseInt(pageParams.badgeId, 10)
+    await cosmos.beginVerification(badgeId)
     loading = false
     page('/verify')
   }

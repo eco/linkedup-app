@@ -1,16 +1,16 @@
 import { get } from 'svelte/store'
 import { user } from '../store'
-import { generateKey, sign } from '../crypto'
+import { generateCosmosKey, sign, generateRsaKey } from '../crypto'
 import { createTx, claimKey, scanQr } from './cosmos.msgs'
 
 const broadcastMsg = async msg => {
-  const { address, privateKey } = get(user)
+  const { address, cosmosKey } = get(user)
   const accRes = await fetch(`/auth/accounts/${address}`)
   const {
     result: { value },
   } = await accRes.json()
   const tx = createTx(value.account_number, value.sequence, msg)
-  const signedTx = await sign(tx, Buffer.from(privateKey, 'hex'))
+  const signedTx = await sign(tx, Buffer.from(cosmosKey, 'hex'))
 
   const res = await fetch('/longy/txs', {
     method: 'POST',
@@ -25,7 +25,7 @@ const broadcastMsg = async msg => {
   }
 }
 
-const postKey = async (badgeId, privateKey) => {
+const postKey = async (badgeId, cosmosKey, rsaKey) => {
   const res = await fetch('/key', {
     method: 'POST',
     headers: {
@@ -33,7 +33,8 @@ const postKey = async (badgeId, privateKey) => {
     },
     body: JSON.stringify({
       attendee_id: badgeId,
-      private_key: privateKey.toString('hex'),
+      cosmos_private_key: cosmosKey.toString('hex'),
+      rsa_private_key: rsaKey,
     }),
   })
 
@@ -50,15 +51,16 @@ export default {
   },
 
   async beginVerification(badgeId) {
-    const privateKey = await generateKey()
-    await postKey(badgeId, privateKey)
-    user.set({ badgeId, privateKey: privateKey.toString('hex') })
+    const cosmosKey = await generateCosmosKey()
+    const rsaKey = await generateRsaKey()
+    await postKey(badgeId, cosmosKey, rsaKey)
+    user.set({ badgeId, cosmosKey: cosmosKey.toString('hex'), rsaKey })
   },
 
   async claimBadge(address, secret) {
     const msg = claimKey({ attendeeAddress: address, secret })
-    await broadcastMsg(msg)
     user.set({ address, ...get(user) })
+    await broadcastMsg(msg)
   },
 
   async getContactName() {

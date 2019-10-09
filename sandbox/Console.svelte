@@ -4,7 +4,7 @@
 
   const commands = {
     'Scan your own badge': () => {
-      page('/badge/1422426129')
+      page('/badge/1441255721')
     },
 
     "Scan someone else's badge": () => {

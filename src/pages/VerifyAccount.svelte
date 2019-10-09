@@ -4,7 +4,6 @@
   import PageWithAction from '../layout/PageWithAction'
   import { Avatar, Button, Attributes } from '../components'
   import cosmos from '../services/cosmos'
-  import stubUser from '../../sandbox/user'
 
   let loading = false
 
@@ -15,9 +14,19 @@
 
   const currentUrl = new URL(document.location.href)
   const { searchParams } = currentUrl
-
   const address = searchParams.get('attendee')
   const secret = searchParams.get('secret')
+  let profile = searchParams.get('profile')
+  profile = JSON.parse(window.atob(profile))
+
+  const name = `${profile.first_name} ${profile.last_name}`
+  const attributes = [
+    {
+      id: 1,
+      label: 'email',
+      value: profile.email,
+    },
+  ]
 
   currentUrl.search = ''
   window.history.replaceState({}, '', currentUrl.toString())
@@ -26,6 +35,7 @@
     loading = true
     await cosmos.claimBadge(address, secret)
     loading = false
+    $user = { ...$user, profile }
     page('/')
   }
 </script>
@@ -36,7 +46,7 @@
     <p class="avatar">
       <Avatar editable />
     </p>
-    <Attributes name={stubUser.name} attributes={stubUser.attributes} />
+    <Attributes {name} {attributes} />
   </div>
   <div slot="action">
     <Button fullWidth onClick={finishVerification} {loading}>Finish</Button>
