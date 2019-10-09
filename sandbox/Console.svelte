@@ -1,26 +1,14 @@
 <script>
   import page from 'page'
-  import sandboxUser from './user'
   import { user } from '../src/store'
 
   const commands = {
-    'Scan own badge': () => {
-      page('/badge/123')
+    'Scan your own badge': () => {
+      page('/badge/1422426129')
     },
 
-    'Open verification email': () => {
-      const query = new URLSearchParams()
-      query.set('longy.user', JSON.stringify(sandboxUser))
-
-      const url = new URL(document.location)
-      url.pathname = '/verify/abc'
-      url.search = query.toString()
-
-      document.location.replace(url)
-    },
-
-    'Scan attendee badge': () => {
-      page('/badge/456')
+    "Scan someone else's badge": () => {
+      page('/badge/1422410109')
     },
 
     'Reset device': () => {
@@ -28,6 +16,17 @@
       localStorage.clear()
       document.location.reload()
     },
+
+    // 'Open verification email': () => {
+    //   const query = new URLSearchParams()
+    //   query.set('longy.user', JSON.stringify(sandboxUser))
+
+    //   const url = new URL(document.location)
+    //   url.pathname = '/verify/abc'
+    //   url.search = query.toString()
+
+    //   document.location.replace(url)
+    // },
   }
 </script>
 
@@ -67,5 +66,7 @@
     text-align: left;
     font-size: 14px;
     line-height: normal;
+    overflow: scroll;
+    padding-bottom: 1em;
   }
 </style>

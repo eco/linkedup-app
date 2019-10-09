@@ -8,7 +8,7 @@
       return
     }
     found = true
-    page('/badge/123')
+    page('/badge/1422426129')
   }
 </script>
 

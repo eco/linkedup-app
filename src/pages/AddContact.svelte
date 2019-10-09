@@ -1,12 +1,14 @@
 <script>
   import { onMount } from 'svelte'
   import page from 'page'
-  import { user } from '../store'
+  // import { user } from '../store'
   import PageWithAction from '../layout/PageWithAction'
   import { Button, Textarea, Avatar, Attributes } from '../components'
   import cosmos from '../services/cosmos'
+  import stubUser from '../../sandbox/user'
 
   let contactName = ''
+  let loading = false
   $: [contactFirstName] = contactName.split(' ')
   export let pageParams
 
@@ -15,12 +17,17 @@
     cosmos.getContactName(badgeId).then(name => {
       contactName = name
     })
-    cosmos.scanContact(badgeId)
+    // cosmos.scanContact(badgeId)
   })
 
   const returnHome = () => page('/')
   const shareAttributes = async () => {
     // todo: how will this be done?
+    // note: for demo, scanning contact occurs here
+    const { badgeId } = pageParams
+    loading = true
+    await cosmos.scanContact(badgeId)
+    loading = false
     returnHome()
   }
 </script>
@@ -31,13 +38,13 @@
     <p class="avatar">
       <Avatar />
     </p>
-    <Attributes name={$user.name} attributes={$user.attributes} />
+    <Attributes name={stubUser.name} attributes={stubUser.attributes} />
     <Textarea placeholder="Include a message for {contactFirstName}" />
   </div>
 
   <div slot="action" class="action">
     <span class="primary">
-      <Button fullWidth onClick={shareAttributes}>Share</Button>
+      <Button fullWidth onClick={shareAttributes} {loading}>Share</Button>
     </span>
     <span>
       <Button fullWidth secondary onClick={returnHome}>Skip</Button>
