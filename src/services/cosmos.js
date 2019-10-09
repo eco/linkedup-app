@@ -1,67 +1,44 @@
-import bip39 from 'bip39'
-import bip32 from 'bip32'
-import bitcoinjs from 'bitcoinjs-lib'
-import secp256k1 from 'secp256k1'
-import arrayBufferToBuffer from 'arraybuffer-to-buffer'
 import { get } from 'svelte/store'
 import { user } from '../store'
-import { claimKey, scanQr } from './txs'
+import { generateKey, sign } from '../crypto'
+import { createTx, claimKey, scanQr } from './cosmos.msgs'
 
-const path = "m/44'/118'/0'/0/0"
+const broadcastMsg = async msg => {
+  const { address, privateKey } = get(user)
+  const accRes = await fetch(`/auth/accounts/${address}`)
+  const {
+    result: { value },
+  } = await accRes.json()
+  const tx = createTx(value.account_number, value.sequence, msg)
+  const signedTx = await sign(tx, Buffer.from(privateKey, 'hex'))
 
-const getECPairPriv = async mnemonic => {
-  const seed = await bip39.mnemonicToSeed(mnemonic)
-  const node = bip32.fromSeed(seed)
-  const child = node.derivePath(path)
-  const ecpair = bitcoinjs.ECPair.fromPrivateKey(child.privateKey, {
-    compressed: false,
-  })
-  return ecpair.privateKey
-}
-
-const getPubKeyBase64 = ecpairPriv => {
-  const pubKeyByte = secp256k1.publicKeyCreate(ecpairPriv)
-  return Buffer.from(pubKeyByte, 'binary').toString('base64')
-}
-
-const sortObject = obj => {
-  if (obj === null) return null
-  if (typeof obj !== 'object') return obj
-  if (Array.isArray(obj)) return obj.map(sortObject)
-  const sortedKeys = Object.keys(obj).sort()
-  const result = {}
-  sortedKeys.forEach(key => {
-    result[key] = sortObject(obj[key])
-  })
-  return result
-}
-
-const sign = async (tx, privateKey) => {
-  const encoder = new TextEncoder()
-  const data = encoder.encode(JSON.stringify(sortObject(tx)))
-  const hash = await crypto.subtle.digest('SHA-256', data)
-  const buf = arrayBufferToBuffer(hash)
-  const signObj = secp256k1.sign(buf, privateKey)
-  const signatureBase64 = Buffer.from(signObj.signature, 'binary').toString(
-    'base64'
-  )
-
-  return {
-    tx: {
-      msg: tx.msgs,
-      fee: tx.fee,
-      signatures: [
-        {
-          signature: signatureBase64,
-          pub_key: {
-            type: 'tendermint/PubKeySecp256k1',
-            value: getPubKeyBase64(privateKey),
-          },
-        },
-      ],
-      memo: tx.memo,
+  const res = await fetch('/longy/txs', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
     },
-    mode: 'sync',
+    body: JSON.stringify(signedTx),
+  })
+
+  if (!res.ok) {
+    throw new Error(`Failed to broadcast tx: ${msg.typee}`)
+  }
+}
+
+const postKey = async (badgeId, privateKey) => {
+  const res = await fetch('/key', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      attendee_id: badgeId,
+      private_key: privateKey.toString('hex'),
+    }),
+  })
+
+  if (!res.ok) {
+    throw new Error('Failed to post key')
   }
 }
 
@@ -71,82 +48,40 @@ export default {
     const { result } = await res.json()
     return result.value.Claimed
   },
+
   async beginVerification(badgeId) {
-    const mnemonic = bip39.generateMnemonic()
-    const privateKey = await getECPairPriv(mnemonic)
-
-    await fetch('/key', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        attendee_id: badgeId,
-        private_key: privateKey.toString('hex'),
-      }),
-    })
-
+    const privateKey = await generateKey()
+    await postKey(badgeId, privateKey)
     user.set({ badgeId, privateKey: privateKey.toString('hex') })
   },
+
   async claimBadge(address, secret) {
-    const { privateKey } = get(user)
-    const accRes = await fetch(`/auth/accounts/${address}`)
-    const { result } = await accRes.json()
-    const tx = claimKey(
-      result.value.account_number,
-      result.value.sequence,
-      address,
-      secret
-    )
-    const signedTx = await sign(tx, Buffer.from(privateKey, 'hex'))
-
-    const res = await fetch('/longy/txs', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(signedTx),
-    })
-
-    if (!res.ok) {
-      throw new Error('claimBadge response not ok.')
-    }
-
-    user.set({ address, privateKey })
+    const msg = claimKey({ attendeeAddress: address, secret })
+    await broadcastMsg(msg)
+    user.set({ address, ...get(user) })
   },
+
   async getContactName() {
     return '[not implemented]'
   },
+
   async scanContact(badgeId) {
-    const { address, privateKey } = get(user)
-    const accRes = await fetch(`/auth/accounts/${address}`)
-    const { result } = await accRes.json()
-    const tx = scanQr(
-      result.value.account_number,
-      result.value.sequence,
-      address,
-      badgeId
-    )
-    const signedTx = await sign(tx, Buffer.from(privateKey, 'hex'))
-
-    const res = await fetch('/longy/txs', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(signedTx),
+    const { address } = get(user)
+    const msg = scanQr({
+      sender: address,
+      scannedQR: badgeId,
+      data: 'todo',
     })
-
-    if (!res.ok) {
-      throw new Error('scanContact response not ok.')
-    }
+    await broadcastMsg(msg)
   },
+
   async getPlayerScore() {
     const { address } = get(user)
     const res = await fetch(`/longy/attendees/address/${address}`)
     const { result } = await res.json()
     return result.value.Rep
   },
+
   async getReputationLog() {
     return [
       {
