@@ -25,10 +25,6 @@
       label: 'email',
       value: profile.email,
     },
-    {
-      label: 'facebook',
-      value: 'mark.alien.z',
-    },
   ]
   let defaultShare = attributes.map(a => a.label) // turn on all by default
 

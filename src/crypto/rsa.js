@@ -31,21 +31,49 @@ export const generateRsaKeyPair = async () => {
   }
 }
 
-export const encryptData = async (data, publicKey) => {
-  let pk = base64ToArrayBuffer(publicKey)
-  pk = await subtle.importKey(
+export const encryptData = async (data, _publicKey) => {
+  // generate AES key
+  const aesKey = await subtle.generateKey(
+    {
+      name: 'AES-GCM',
+      length: 256,
+    },
+    true,
+    ['encrypt']
+  )
+
+  // encrypt data using the AES key
+  const encoder = new TextEncoder()
+  const encodedData = encoder.encode(JSON.stringify(data))
+  const encryptedData = await crypto.subtle.encrypt(
+    {
+      name: 'AES-GCM',
+      iv: crypto.getRandomValues(new Uint8Array(12)),
+    },
+    aesKey,
+    encodedData
+  )
+
+  // import public RSA key
+  let publicKey = base64ToArrayBuffer(_publicKey)
+  publicKey = await subtle.importKey(
     'spki',
-    pk,
+    publicKey,
     { name: 'RSA-OAEP', hash: 'SHA-256' },
     false,
     ['encrypt']
   )
-  const encoder = new TextEncoder()
-  const encodedData = encoder.encode(JSON.stringify(data))
-  const encryptedData = await crypto.subtle.encrypt(
+
+  // encrypt AES key using the public RSA key
+  const aesKeyExport = await subtle.exportKey('raw', aesKey)
+  const encryptedAesKey = await crypto.subtle.encrypt(
     { name: 'RSA-OAEP' },
-    pk,
-    encodedData
+    publicKey,
+    aesKeyExport
   )
-  return arrayBufferToBase64(encryptedData)
+
+  return [
+    arrayBufferToBase64(encryptedAesKey),
+    arrayBufferToBase64(encryptedData),
+  ].join(':::')
 }
