@@ -1,8 +1,17 @@
 <script>
   import Checkbox from './Checkbox'
 
+  export let share = []
   export let name
   export let attributes
+
+  const shareFlags = {}
+
+  $: {
+    share = Object.entries(shareFlags)
+      .filter(entry => entry[1])
+      .map(entry => entry[0])
+  }
 </script>
 
 <table>
@@ -22,7 +31,7 @@
         {attr.value}
       </td>
       <td class="share-input">
-        <Checkbox checked />
+        <Checkbox bind:checked={shareFlags[attr.label]} />
       </td>
     </tr>
   {/each}

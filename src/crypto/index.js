@@ -7,8 +7,22 @@ import arrayBufferToBuffer from 'arraybuffer-to-buffer'
 const { subtle } = window.crypto
 
 const path = "m/44'/118'/0'/0/0"
+const arrayBufferToBase64 = arrayBuffer => {
+  const arr = new Uint8Array(arrayBuffer)
+  const keyStr = String.fromCharCode(...arr)
+  return btoa(keyStr)
+}
+const base64ToArrayBuffer = base64 => {
+  const str = atob(base64)
+  const buf = new ArrayBuffer(str.length)
+  const bufView = new Uint8Array(buf)
+  for (let i = 0, l = str.length; i < l; i += 1) {
+    bufView[i] = str.charCodeAt(i)
+  }
+  return buf
+}
 
-export const generateRsaKey = async () => {
+export const generateRsaKeyPair = async () => {
   const opts = {
     name: 'RSA-OAEP',
     modulusLength: 1024,
@@ -17,9 +31,11 @@ export const generateRsaKey = async () => {
   }
   const keyPair = await subtle.generateKey(opts, true, ['encrypt', 'decrypt'])
   const pkcs8 = await subtle.exportKey('pkcs8', keyPair.privateKey)
-  const keyStr = String.fromCharCode(...new Uint8Array(pkcs8))
-  const key64 = window.btoa(keyStr)
-  return `-----BEGIN PRIVATE KEY-----\n${key64}\n-----END PRIVATE KEY-----`
+  const spki = await subtle.exportKey('spki', keyPair.publicKey)
+  return {
+    privateKey: arrayBufferToBase64(pkcs8),
+    publicKey: arrayBufferToBase64(spki),
+  }
 }
 
 export const generateCosmosKey = async () => {
@@ -30,7 +46,7 @@ export const generateCosmosKey = async () => {
   const ecpair = bitcoinjs.ECPair.fromPrivateKey(child.privateKey, {
     compressed: false,
   })
-  return ecpair.privateKey
+  return ecpair.privateKey.toString('hex')
 }
 
 const sortObject = obj => {
@@ -50,7 +66,7 @@ const getPubKeyBase64 = ecpairPriv => {
   return Buffer.from(pubKeyByte, 'binary').toString('base64')
 }
 
-export const sign = async (tx, privateKey) => {
+export const signTx = async (tx, privateKey) => {
   const encoder = new TextEncoder()
   const data = encoder.encode(JSON.stringify(sortObject(tx)))
   const hash = await subtle.digest('SHA-256', data)
@@ -77,4 +93,23 @@ export const sign = async (tx, privateKey) => {
     },
     mode: 'sync',
   }
+}
+
+export const encryptData = async (data, publicKey) => {
+  let pk = base64ToArrayBuffer(publicKey)
+  pk = await subtle.importKey(
+    'spki',
+    pk,
+    { name: 'RSA-OAEP', hash: 'SHA-256' },
+    false,
+    ['encrypt']
+  )
+  const encoder = new TextEncoder()
+  const encodedData = encoder.encode(JSON.stringify(data))
+  const encryptedData = await crypto.subtle.encrypt(
+    { name: 'RSA-OAEP' },
+    pk,
+    encodedData
+  )
+  return arrayBufferToBase64(encryptedData)
 }

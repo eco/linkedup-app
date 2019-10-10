@@ -1,6 +1,11 @@
 import { get } from 'svelte/store'
 import { user } from '../store'
-import { generateCosmosKey, sign, generateRsaKey } from '../crypto'
+import {
+  generateCosmosKey,
+  signTx,
+  generateRsaKeyPair,
+  encryptData,
+} from '../crypto'
 import { createTx, claimKey, scanQr } from './cosmos.msgs'
 
 const broadcastMsg = async msg => {
@@ -10,7 +15,7 @@ const broadcastMsg = async msg => {
     result: { value },
   } = await accRes.json()
   const tx = createTx(value.account_number, value.sequence, msg)
-  const signedTx = await sign(tx, Buffer.from(cosmosKey, 'hex'))
+  const signedTx = await signTx(tx, Buffer.from(cosmosKey, 'hex'))
 
   const res = await fetch('/longy/txs', {
     method: 'POST',
@@ -33,7 +38,7 @@ const postKey = async (badgeId, cosmosKey, rsaKey) => {
     },
     body: JSON.stringify({
       attendee_id: badgeId,
-      cosmos_private_key: cosmosKey.toString('hex'),
+      cosmos_private_key: cosmosKey,
       rsa_private_key: rsaKey,
     }),
   })
@@ -52,27 +57,36 @@ export default {
 
   async beginVerification(badgeId) {
     const cosmosKey = await generateCosmosKey()
-    const rsaKey = await generateRsaKey()
-    await postKey(badgeId, cosmosKey, rsaKey)
-    user.set({ badgeId, cosmosKey: cosmosKey.toString('hex'), rsaKey })
+    const rsaKeyPair = await generateRsaKeyPair()
+    await postKey(badgeId, cosmosKey, rsaKeyPair.privateKey)
+    user.set({ badgeId, cosmosKey, rsaKeyPair })
   },
 
   async claimBadge(address, secret) {
-    const msg = claimKey({ attendeeAddress: address, secret })
-    user.set({ address, ...get(user) })
+    const { rsaKeyPair } = get(user)
+    const msg = claimKey({
+      attendeeAddress: address,
+      secret,
+      rsaPublicKey: rsaKeyPair.publicKey,
+      encryptedInfo: 'todo',
+    })
+    user.set({ ...get(user), address })
     await broadcastMsg(msg)
   },
 
   async getContactName() {
-    return '[not implemented]'
+    return 'George Costanza'
   },
 
-  async scanContact(badgeId) {
+  async scanContact(badgeId, sharePayload) {
     const { address } = get(user)
+    const res = await fetch(`/longy/attendees/${badgeId}`)
+    const { result } = await res.json()
+    const data = await encryptData(sharePayload, result.value.RsaPublicKey)
     const msg = scanQr({
       sender: address,
       scannedQR: badgeId,
-      data: 'todo',
+      data,
     })
     await broadcastMsg(msg)
   },

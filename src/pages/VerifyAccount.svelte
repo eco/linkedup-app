@@ -22,7 +22,6 @@
   const name = `${profile.first_name} ${profile.last_name}`
   const attributes = [
     {
-      id: 1,
       label: 'email',
       value: profile.email,
     },
@@ -35,7 +34,7 @@
     loading = true
     await cosmos.claimBadge(address, secret)
     loading = false
-    $user = { ...$user, profile }
+    $user = { ...$user, profile: { name, attributes } }
     page('/')
   }
 </script>
@@ -43,6 +42,7 @@
 <PageWithAction>
   <div slot="content">
     <h1>Verify my profile</h1>
+    <p>What are you usually comfortable sharing?</p>
     <p class="avatar">
       <Avatar editable />
     </p>

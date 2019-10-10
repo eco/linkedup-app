@@ -1,5 +1,5 @@
 <div class="layout">
-  <header>The Chain Game</header>
+  <header>Linked Up</header>
   <main>
     <slot />
   </main>

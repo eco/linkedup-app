@@ -1,34 +1,39 @@
 <script>
   import { onMount } from 'svelte'
   import page from 'page'
-  // import { user } from '../store'
+  import { user } from '../store'
   import PageWithAction from '../layout/PageWithAction'
   import { Button, Textarea, Avatar, Attributes } from '../components'
   import cosmos from '../services/cosmos'
-  import stubUser from '../../sandbox/user'
+
+  export let pageParams
 
   let contactName = ''
   let loading = false
   $: [contactFirstName] = contactName.split(' ')
-  export let pageParams
+  $: badgeId = pageParams.badgeId
+
+  let message = ''
+  let share = []
 
   onMount(() => {
-    const { badgeId } = pageParams
     cosmos.getContactName(badgeId).then(name => {
       contactName = name
     })
-    // cosmos.scanContact(badgeId)
   })
 
-  const returnHome = () => page('/')
-  const shareAttributes = async () => {
-    // todo: how will this be done?
-    // note: for demo, scanning contact occurs here
-    const { badgeId } = pageParams
+  const recordScanAndShare = async () => {
+    const sharedAttrs = $user.profile.attributes.filter(attr =>
+      share.includes(attr.label)
+    )
+    return recordScan({ sharedAttrs, message })
+  }
+
+  const recordScan = async sharePayload => {
     loading = true
-    await cosmos.scanContact(badgeId)
+    await cosmos.scanContact(badgeId, sharePayload)
     loading = false
-    returnHome()
+    page('/')
   }
 </script>
 
@@ -38,16 +43,21 @@
     <p class="avatar">
       <Avatar />
     </p>
-    <Attributes name={stubUser.name} attributes={stubUser.attributes} />
-    <Textarea placeholder="Include a message for {contactFirstName}" />
+    <Attributes
+      bind:share
+      name={$user.profile.name}
+      attributes={$user.profile.attributes} />
+    <Textarea
+      bind:value={message}
+      placeholder="Include a message for {contactFirstName}" />
   </div>
 
   <div slot="action" class="action">
     <span class="primary">
-      <Button fullWidth onClick={shareAttributes} {loading}>Share</Button>
+      <Button fullWidth onClick={recordScanAndShare} {loading}>Share</Button>
     </span>
     <span>
-      <Button fullWidth secondary onClick={returnHome}>Skip</Button>
+      <Button fullWidth secondary onClick={recordScan}>Skip</Button>
     </span>
   </div>
 </PageWithAction>
