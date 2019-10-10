@@ -2,9 +2,25 @@
   import { format } from 'date-fns'
   import cosmos from '../services/cosmos'
 
-  let log = []
-  cosmos.getReputationLog().then(_l => {
-    log = _l
+  let points
+  cosmos.getPlayerScore().then(_p => {
+    points = _p
+  })
+
+  let log = [
+    {
+      timestamp: Date.now(),
+      points: 6,
+      label: 'Verified your profile',
+      imageUrl: 'https://source.unsplash.com/random/100x100',
+    },
+  ]
+  cosmos.getScans().then(scans => {
+    const scansWithLabels = scans.map(s => ({
+      ...s,
+      label: `Connected to ${s.name}`,
+    }))
+    log = [...scansWithLabels, ...log]
   })
 </script>
 
@@ -14,23 +30,25 @@
       <th colspan="2">
         <h1>Reputation</h1>
       </th>
-      <th class="points">110</th>
+      <th class="points">{points}</th>
     </tr>
   </thead>
 
-  {#each log as entry}
-    <tr>
-      <td>
-        <img src={entry.imageUrl} alt={entry.label} />
-      </td>
-      <td>
-        {entry.label}
-        <br />
-        <span class="timestamp">{format(entry.timestamp, 'h:mma')}</span>
-      </td>
-      <td class="points">{entry.points}</td>
-    </tr>
-  {/each}
+  <tbody>
+    {#each log as entry}
+      <tr>
+        <td>
+          <img src={entry.imageUrl} alt={entry.label} />
+        </td>
+        <td>
+          {entry.label}
+          <br />
+          <span class="timestamp">{format(entry.timestamp, 'h:mma')}</span>
+        </td>
+        <td class="points">{entry.points}</td>
+      </tr>
+    {/each}
+  </tbody>
 </table>
 
 <style>
@@ -65,7 +83,7 @@
     text-align: right;
     font-weight: bold;
   }
-  .points::before {
+  tbody .points::before {
     content: '+';
   }
   th.points {

@@ -15,11 +15,18 @@ export const createTx = (acc, seq, msg) => ({
   memo: '',
 })
 
-export const claimKey = ({ attendeeAddress, secret }) => ({
+export const claimKey = ({
+  attendeeAddress,
+  secret,
+  rsaPublicKey,
+  encryptedInfo,
+}) => ({
   type: 'longy/MsgClaimKey',
   value: {
     attendeeAddress,
     secret,
+    rsaPublicKey,
+    encryptedInfo,
   },
 })
 

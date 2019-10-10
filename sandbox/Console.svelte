@@ -4,7 +4,7 @@
 
   const commands = {
     'Scan your own badge': () => {
-      page('/badge/1422426129')
+      page('/badge/1441255721')
     },
 
     "Scan someone else's badge": () => {
@@ -47,12 +47,6 @@
 <style>
   .console {
     text-align: center;
-  }
-  ul,
-  li {
-    margin: 0;
-    padding: 0;
-    list-style: none;
   }
   li {
     margin: 1em 0;

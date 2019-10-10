@@ -1,8 +1,9 @@
 <script>
+  export let value = ''
   export let placeholder = ''
 </script>
 
-<textarea {placeholder} />
+<textarea {placeholder} bind:value />
 
 <style>
   textarea {

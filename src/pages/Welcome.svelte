@@ -1,7 +1,7 @@
 <script>
   import page from 'page'
   import PageWithAction from '../layout/PageWithAction'
-  import cosmos from '../services/cosmos'
+  import keyService from '../services/key'
   import { Button } from '../components'
 
   let loading = false
@@ -10,7 +10,8 @@
 
   const verifyProfile = async () => {
     loading = true
-    await cosmos.beginVerification(pageParams.badgeId)
+    const badgeId = parseInt(pageParams.badgeId, 10)
+    await keyService.beginVerification(badgeId)
     loading = false
     page('/verify')
   }
@@ -18,7 +19,7 @@
 
 <PageWithAction>
   <div slot="content">
-    <h1>Welcome to the Chain Game</h1>
+    <h1>Welcome to Linked Up</h1>
     <p>Grow your network by adding contacts</p>
     <p>To add a contact, scan the QR code on another SFBC attendee's badge.</p>
     <p>Please verify your profile information and privacy settings</p>
