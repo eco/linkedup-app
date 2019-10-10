@@ -48,12 +48,6 @@
   .console {
     text-align: center;
   }
-  ul,
-  li {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
   li {
     margin: 1em 0;
   }

@@ -1,5 +1,4 @@
 <script>
-  import { onMount } from 'svelte'
   import page from 'page'
   import { user } from '../store'
   import PageWithAction from '../layout/PageWithAction'
@@ -11,16 +10,9 @@
   let contactName = ''
   let loading = false
   $: [contactFirstName] = contactName.split(' ')
-  $: badgeId = pageParams.badgeId
 
   let message = ''
   let share = $user.profile.defaultShare
-
-  onMount(() => {
-    cosmos.getContactName(badgeId).then(name => {
-      contactName = name
-    })
-  })
 
   const recordScanAndShare = async () => {
     const sharedAttrs = $user.profile.attributes.filter(attr =>
@@ -31,10 +23,14 @@
 
   const recordScan = async sharePayload => {
     loading = true
-    await cosmos.scanContact(badgeId, sharePayload)
+    await cosmos.scanContact(pageParams.badgeId, sharePayload)
     loading = false
     page('/')
   }
+
+  cosmos.getContactName(pageParams.badgeId).then(name => {
+    contactName = name
+  })
 </script>
 
 <PageWithAction>

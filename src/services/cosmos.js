@@ -1,6 +1,6 @@
 import { get } from 'svelte/store'
 import { user } from '../store'
-import { signTx, encryptData } from '../crypto'
+import { signTx, encryptData, decryptData } from '../crypto'
 import { createTx, claimKey, scanQr } from './cosmos.msgs'
 
 const broadcastMsg = async msg => {
@@ -45,6 +45,7 @@ export default {
   },
 
   async getContactName() {
+    // todo: support incoming parameter - address or badgeId
     return 'George Costanza'
   },
 
@@ -77,24 +78,38 @@ export default {
     const { address } = get(user)
     const res = await fetch(`/longy/attendees/address/${address}`)
     const { result } = await res.json()
+    const scanIds = result.value.ScanIDs || []
+    return Promise.all(scanIds.map(id => this.getScan(id)))
+  },
 
-    return Promise.all(
-      result.value.ScanIDs.map(async (scanId, i) => {
-        const scanRes = await fetch(`/longy/scans/${scanId}`)
-        const {
-          result: { S1, S2 },
-        } = await scanRes.json()
-        const isSlot1Self = S1 === address
-        const contactAddr = isSlot1Self ? S2 : S1
-        const name = await this.getContactName(contactAddr)
+  async getScan(scanId, decrypt = false) {
+    const { address, rsaKeyPair } = get(user)
+    const scanRes = await fetch(`/longy/scans/${scanId}`)
+    const {
+      result: { S1, S2, D1, D2 },
+    } = await scanRes.json()
+    const isSlot1Self = S1 === address
+    const contactAddr = isSlot1Self ? S2 : S1
+    const encryptedData = isSlot1Self ? D2 : D1
+    const name = await this.getContactName(contactAddr)
 
-        return {
-          timestamp: Date.now(),
-          points: 3,
-          name,
-          imageUrl: `https://source.unsplash.com/random/100x100?${i}`,
-        }
-      })
-    )
+    let profile = { sharedAttrs: [], message: '' }
+    if (decrypt && encryptedData) {
+      const { sharedAttrs, message } = await decryptData(
+        encryptedData,
+        rsaKeyPair.privateKey
+      )
+      profile = { sharedAttrs, message }
+    }
+
+    return {
+      scanId,
+      timestamp: Date.now(),
+      points: 3,
+      name,
+      imageUrl: `https://source.unsplash.com/random/100x100?${scanId}`,
+      contactAddr,
+      ...profile,
+    }
   },
 }

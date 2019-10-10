@@ -1,10 +1,12 @@
 const { subtle } = window.crypto
+const DATA_SEP = ':::'
 
 const arrayBufferToBase64 = arrayBuffer => {
   const arr = new Uint8Array(arrayBuffer)
   const keyStr = String.fromCharCode(...arr)
   return btoa(keyStr)
 }
+
 const base64ToArrayBuffer = base64 => {
   const str = atob(base64)
   const buf = new ArrayBuffer(str.length)
@@ -45,10 +47,11 @@ export const encryptData = async (data, _publicKey) => {
   // encrypt data using the AES key
   const encoder = new TextEncoder()
   const encodedData = encoder.encode(JSON.stringify(data))
+  const iv = crypto.getRandomValues(new Uint8Array(12))
   const encryptedData = await crypto.subtle.encrypt(
     {
       name: 'AES-GCM',
-      iv: crypto.getRandomValues(new Uint8Array(12)),
+      iv,
     },
     aesKey,
     encodedData
@@ -72,8 +75,60 @@ export const encryptData = async (data, _publicKey) => {
     aesKeyExport
   )
 
-  return [
+  // final encoding
+  const consString = [
     arrayBufferToBase64(encryptedAesKey),
+    btoa(String.fromCharCode(...iv)),
     arrayBufferToBase64(encryptedData),
-  ].join(':::')
+  ].join(DATA_SEP)
+
+  return btoa(consString)
+}
+
+export const decryptData = async (base64, _privateKey) => {
+  // reverse final encoding
+  const consString = atob(base64)
+  const parts = consString.split(DATA_SEP)
+  const encryptedAesKey = base64ToArrayBuffer(parts[0])
+  const encryptedData = base64ToArrayBuffer(parts[2])
+  let iv = atob(parts[1])
+  iv = iv.split('').map(c => c.charCodeAt(0))
+  iv = Uint8Array.from(iv)
+
+  // import private RSA key
+  let privateKey = base64ToArrayBuffer(_privateKey)
+  privateKey = await subtle.importKey(
+    'pkcs8',
+    privateKey,
+    { name: 'RSA-OAEP', hash: 'SHA-256' },
+    false,
+    ['decrypt']
+  )
+
+  // decode AES key using the private RSA key
+  let aesKey = await subtle.decrypt(
+    {
+      name: 'RSA-OAEP',
+    },
+    privateKey,
+    encryptedAesKey
+  )
+
+  // import AES key
+  aesKey = await subtle.importKey('raw', aesKey, 'AES-GCM', false, ['decrypt'])
+
+  // decrypt data using the AES key
+  const encodedData = await subtle.decrypt(
+    {
+      name: 'AES-GCM',
+      iv,
+    },
+    aesKey,
+    encryptedData
+  )
+  const decoder = new TextDecoder()
+  const data = decoder.decode(encodedData)
+
+  // done!
+  return JSON.parse(data)
 }

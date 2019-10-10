@@ -11,7 +11,6 @@
   })
   let scans = []
   cosmos.getScans().then(_s => {
-    console.log(_s)
     scans = _s
   })
   const scanContact = () => page('/scan')
@@ -32,7 +31,9 @@
     </div>
     <ul>
       {#each scans as scan}
-        <li>{scan.name}</li>
+        <li>
+          <a href={`/contact/${scan.scanId}`}>{scan.name}</a>
+        </li>
       {/each}
     </ul>
   </div>
