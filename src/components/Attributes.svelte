@@ -5,7 +5,7 @@
   export let name
   export let attributes
 
-  const shareFlags = {}
+  const shareFlags = Object.fromEntries(share.map(s => [s, true]))
 
   $: {
     share = Object.entries(shareFlags)

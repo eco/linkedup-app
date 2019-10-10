@@ -9,6 +9,11 @@
   cosmos.getPlayerScore().then(_p => {
     points = _p
   })
+  let scans = []
+  cosmos.getScans().then(_s => {
+    console.log(_s)
+    scans = _s
+  })
   const scanContact = () => page('/scan')
 </script>
 
@@ -25,6 +30,11 @@
         You'll earn 200 reputation points when you share your contact details
       </p>
     </div>
+    <ul>
+      {#each scans as scan}
+        <li>{scan.name}</li>
+      {/each}
+    </ul>
   </div>
   <div slot="action">
     <Button fullWidth onClick={scanContact}>

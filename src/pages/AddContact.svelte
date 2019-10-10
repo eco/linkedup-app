@@ -14,7 +14,7 @@
   $: badgeId = pageParams.badgeId
 
   let message = ''
-  let share = []
+  let share = $user.profile.defaultShare
 
   onMount(() => {
     cosmos.getContactName(badgeId).then(name => {

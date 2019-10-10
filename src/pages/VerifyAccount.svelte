@@ -25,7 +25,12 @@
       label: 'email',
       value: profile.email,
     },
+    {
+      label: 'facebook',
+      value: 'mark.alien.z',
+    },
   ]
+  let defaultShare = attributes.map(a => a.label) // turn on all by default
 
   currentUrl.search = ''
   window.history.replaceState({}, '', currentUrl.toString())
@@ -34,7 +39,7 @@
     loading = true
     await cosmos.claimBadge(address, secret)
     loading = false
-    $user = { ...$user, profile: { name, attributes } }
+    $user = { ...$user, profile: { name, attributes, defaultShare } }
     page('/')
   }
 </script>
@@ -44,9 +49,9 @@
     <h1>Verify my profile</h1>
     <p>What are you usually comfortable sharing?</p>
     <p class="avatar">
-      <Avatar editable />
+      <Avatar />
     </p>
-    <Attributes {name} {attributes} />
+    <Attributes {name} {attributes} bind:share={defaultShare} />
   </div>
   <div slot="action">
     <Button fullWidth onClick={finishVerification} {loading}>Finish</Button>

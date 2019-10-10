@@ -1,11 +1,6 @@
 import { get } from 'svelte/store'
 import { user } from '../store'
-import {
-  generateCosmosKey,
-  signTx,
-  generateRsaKeyPair,
-  encryptData,
-} from '../crypto'
+import { signTx, encryptData } from '../crypto'
 import { createTx, claimKey, scanQr } from './cosmos.msgs'
 
 const broadcastMsg = async msg => {
@@ -30,36 +25,11 @@ const broadcastMsg = async msg => {
   }
 }
 
-const postKey = async (badgeId, cosmosKey, rsaKey) => {
-  const res = await fetch('/key', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      attendee_id: badgeId,
-      cosmos_private_key: cosmosKey,
-      rsa_private_key: rsaKey,
-    }),
-  })
-
-  if (!res.ok) {
-    throw new Error('Failed to post key')
-  }
-}
-
 export default {
   async isBadgeClaimed(badgeId) {
     const res = await fetch(`/longy/attendees/${badgeId}`)
     const { result } = await res.json()
     return result.value.Claimed
-  },
-
-  async beginVerification(badgeId) {
-    const cosmosKey = await generateCosmosKey()
-    const rsaKeyPair = await generateRsaKeyPair()
-    await postKey(badgeId, cosmosKey, rsaKeyPair.privateKey)
-    user.set({ badgeId, cosmosKey, rsaKeyPair })
   },
 
   async claimBadge(address, secret) {
@@ -70,7 +40,7 @@ export default {
       rsaPublicKey: rsaKeyPair.publicKey,
       encryptedInfo: 'todo',
     })
-    user.set({ ...get(user), address })
+    user.set({ address, ...get(user) })
     await broadcastMsg(msg)
   },
 
@@ -82,7 +52,12 @@ export default {
     const { address } = get(user)
     const res = await fetch(`/longy/attendees/${badgeId}`)
     const { result } = await res.json()
-    const data = await encryptData(sharePayload, result.value.RsaPublicKey)
+
+    let data = ''
+    if (sharePayload) {
+      data = await encryptData(sharePayload, result.value.RsaPublicKey)
+    }
+
     const msg = scanQr({
       sender: address,
       scannedQR: badgeId,
@@ -98,20 +73,28 @@ export default {
     return result.value.Rep
   },
 
-  async getReputationLog() {
-    return [
-      {
-        timestamp: Date.now(),
-        points: 10,
-        label: 'Connected to Ayo Ozmani',
-        imageUrl: 'https://source.unsplash.com/random/100x100?1',
-      },
-      {
-        timestamp: Date.now(),
-        points: 100,
-        label: 'Verified your profile',
-        imageUrl: 'https://source.unsplash.com/random/100x100?2',
-      },
-    ]
+  async getScans() {
+    const { address } = get(user)
+    const res = await fetch(`/longy/attendees/address/${address}`)
+    const { result } = await res.json()
+
+    return Promise.all(
+      result.value.ScanIDs.map(async (scanId, i) => {
+        const scanRes = await fetch(`/longy/scans/${scanId}`)
+        const {
+          result: { S1, S2 },
+        } = await scanRes.json()
+        const isSlot1Self = S1 === address
+        const contactAddr = isSlot1Self ? S2 : S1
+        const name = await this.getContactName(contactAddr)
+
+        return {
+          timestamp: Date.now(),
+          points: 3,
+          name,
+          imageUrl: `https://source.unsplash.com/random/100x100?${i}`,
+        }
+      })
+    )
   },
 }

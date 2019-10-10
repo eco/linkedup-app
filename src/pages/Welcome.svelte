@@ -1,7 +1,7 @@
 <script>
   import page from 'page'
   import PageWithAction from '../layout/PageWithAction'
-  import cosmos from '../services/cosmos'
+  import keyService from '../services/key'
   import { Button } from '../components'
 
   let loading = false
@@ -11,7 +11,7 @@
   const verifyProfile = async () => {
     loading = true
     const badgeId = parseInt(pageParams.badgeId, 10)
-    await cosmos.beginVerification(badgeId)
+    await keyService.beginVerification(badgeId)
     loading = false
     page('/verify')
   }
