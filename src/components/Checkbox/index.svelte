@@ -35,6 +35,7 @@
     font-size: 11px;
     position: relative;
     top: -3px;
+    left: 1px;
   }
   input:checked + .box :global(svg) {
     visibility: visible;

@@ -20,6 +20,7 @@ export const claimKey = ({
   secret,
   rsaPublicKey,
   encryptedInfo,
+  name,
 }) => ({
   type: 'longy/MsgClaimKey',
   value: {
@@ -27,6 +28,7 @@ export const claimKey = ({
     secret,
     rsaPublicKey,
     encryptedInfo,
+    name,
   },
 })
 

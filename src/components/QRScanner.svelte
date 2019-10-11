@@ -1,14 +1,13 @@
 <script>
-  import { onMount, onDestroy } from 'svelte'
+  import { onMount, onDestroy, createEventDispatcher } from 'svelte'
 
+  const dispatch = createEventDispatcher()
   let video = document.createElement('video')
   let canvas
   let stream
   let jsQR
 
   $: context = canvas && canvas.getContext('2d')
-
-  export let onCode
 
   // requests permission to access device camera and begins
   // streaming the video the the canvas element
@@ -46,7 +45,7 @@
         })
 
         if (code && code.data) {
-          onCode(code)
+          dispatch('code', code)
         }
       }
     }

@@ -13,6 +13,6 @@
   }
   .action {
     margin-top: auto;
-    padding-top: 1em;
+    padding-top: 1.5em;
   }
 </style>

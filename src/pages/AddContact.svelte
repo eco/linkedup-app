@@ -28,7 +28,7 @@
     page('/')
   }
 
-  cosmos.getContactName(pageParams.badgeId).then(name => {
+  cosmos.getContactNameByBadge(pageParams.badgeId).then(name => {
     contactName = name
   })
 </script>
@@ -50,10 +50,12 @@
 
   <div slot="action" class="action">
     <span class="primary">
-      <Button fullWidth onClick={recordScanAndShare} {loading}>Share</Button>
+      <Button fullWidth on:click={() => recordScanAndShare()} {loading}>
+        Share
+      </Button>
     </span>
     <span>
-      <Button fullWidth secondary onClick={recordScan}>Skip</Button>
+      <Button fullWidth secondary on:click={() => recordScan()}>Skip</Button>
     </span>
   </div>
 </PageWithAction>

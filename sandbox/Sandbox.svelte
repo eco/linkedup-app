@@ -14,7 +14,7 @@
 
 <style>
   .sandbox {
-    height: 100%;
+    min-height: 100%;
     width: 100%;
     display: flex;
     justify-content: space-around;
@@ -28,6 +28,11 @@
     height: 667px;
     overflow: auto;
     box-shadow: 0 0 10px var(--black);
+  }
+
+  /* creates a new stacking context, for things like position:fixed */
+  .emulator > :global(div.layout) {
+    transform: translateZ(0);
   }
 
   .console {

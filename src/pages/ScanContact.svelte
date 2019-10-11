@@ -15,7 +15,7 @@
 <div class="scan-contact">
   <h1>Scan another attendee's QR code to add them to your network</h1>
   <div class="qr-scanner">
-    <QRScanner onCode={handleCode} />
+    <QRScanner on:code={handleCode} />
   </div>
 </div>
 

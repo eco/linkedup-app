@@ -1,32 +1,33 @@
 <script>
   import cosmos from '../services/cosmos'
-  import { Avatar } from '../components'
+  import { Avatar, TextInput } from '../components'
 
   export let pageParams
-
-  let scan
-  cosmos.getScan(pageParams.scanId, true).then(_scan => {
-    scan = _scan
-  })
+  const scanPromise = cosmos.getScan(pageParams.scanId, true)
 </script>
 
-<p class="avatar">
-  <Avatar />
-</p>
-{#if scan}
+{#await scanPromise then scan}
+  <p class="avatar">
+    <Avatar />
+  </p>
   <h1>{scan.name}</h1>
-  <ul>
-    {#each scan.sharedAttrs as attr}
-      <li>
-        <span class="label">{attr.label}</span>
-        {attr.value}
-      </li>
-    {/each}
-  </ul>
+  {#if scan.sharedAttrs}
+    <ul>
+      {#each scan.sharedAttrs as attr}
+        <li>
+          <TextInput
+            fullWidth
+            label={attr.label}
+            bind:value={attr.value}
+            readonly />
+        </li>
+      {/each}
+    </ul>
+  {/if}
   {#if scan.message}
     <p class="message">{scan.message}</p>
   {/if}
-{/if}
+{/await}
 
 <style>
   .avatar {
@@ -37,17 +38,17 @@
     text-align: center;
     margin-bottom: 2em;
   }
-  .label {
-    font-size: 12px;
-    font-weight: 500;
-    text-transform: uppercase;
-    display: block;
-    line-height: 1;
+  li:not(:first-child) {
+    margin-top: 1em;
   }
   .message {
-    background-color: var(--pale-blue);
-    border-radius: 8px;
-    padding: 8px;
-    margin: 1em -8px;
+    margin-top: 2em;
+    font-size: 15px;
+    font-style: italic;
+    font-weight: normal;
+    padding: 1em;
+    box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.2), 0px 3px 4px rgba(0, 0, 0, 0.12),
+      0px 3px 3px rgba(0, 0, 0, 0.14);
+    border-radius: 2px;
   }
 </style>

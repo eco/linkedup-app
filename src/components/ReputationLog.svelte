@@ -1,27 +1,11 @@
 <script>
+  import { createEventDispatcher } from 'svelte'
   import { format } from 'date-fns'
-  import cosmos from '../services/cosmos'
 
-  let points
-  cosmos.getPlayerScore().then(_p => {
-    points = _p
-  })
+  export let points = 0
+  export let log = []
 
-  let log = [
-    {
-      timestamp: Date.now(),
-      points: 6,
-      label: 'Verified your profile',
-      imageUrl: 'https://source.unsplash.com/random/100x100',
-    },
-  ]
-  cosmos.getScans().then(scans => {
-    const scansWithLabels = scans.map(s => ({
-      ...s,
-      label: `Connected to ${s.name}`,
-    }))
-    log = [...scansWithLabels, ...log]
-  })
+  const dispatch = createEventDispatcher()
 </script>
 
 <table>
@@ -36,7 +20,7 @@
 
   <tbody>
     {#each log as entry}
-      <tr>
+      <tr on:click={() => dispatch('open', entry)}>
         <td>
           <img src={entry.imageUrl} alt={entry.label} />
         </td>
