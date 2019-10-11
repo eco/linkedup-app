@@ -16,7 +16,7 @@
   <h1>Login</h1>
   <p>Scan your SF Blockchain Week badge to login.</p>
   <div class="qr-scanner">
-    <QRScanner onCode={handleCode} />
+    <QRScanner on:code={handleCode} />
   </div>
 </div>
 

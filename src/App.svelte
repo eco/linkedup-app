@@ -12,7 +12,6 @@
   import BeginVerification from './pages/BeginVerification'
   import VerifyAccount from './pages/VerifyAccount'
   import ScanContact from './pages/ScanContact'
-  import ReputationLog from './pages/ReputationLog'
   import ViewContact from './pages/ViewContact'
 
   let component
@@ -42,9 +41,6 @@
   })
   page('/scan', () => {
     component = ScanContact
-  })
-  page('/reputation', () => {
-    component = ReputationLog
   })
   page('/contact/:scanId', () => {
     component = ViewContact

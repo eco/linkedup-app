@@ -25,7 +25,7 @@
     <p>Please verify your profile information and privacy settings</p>
   </div>
   <div slot="action">
-    <Button fullWidth onClick={verifyProfile} {loading}>
+    <Button fullWidth on:click={verifyProfile} {loading}>
       Verify your profile
     </Button>
   </div>

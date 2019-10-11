@@ -23,6 +23,11 @@ const broadcastMsg = async msg => {
   if (!res.ok) {
     throw new Error(`Failed to broadcast tx: ${msg.typee}`)
   }
+
+  const json = await res.json()
+  if (json.code) {
+    throw new Error(`Cosmos request failed with code: ${json.code}`)
+  }
 }
 
 export default {
@@ -32,21 +37,29 @@ export default {
     return result.value.Claimed
   },
 
-  async claimBadge(address, secret) {
+  async claimBadge(address, secret, name) {
     const { rsaKeyPair } = get(user)
     const msg = claimKey({
       attendeeAddress: address,
       secret,
       rsaPublicKey: rsaKeyPair.publicKey,
       encryptedInfo: 'todo',
+      name,
     })
     user.set({ address, ...get(user) })
     await broadcastMsg(msg)
   },
 
-  async getContactName() {
-    // todo: support incoming parameter - address or badgeId
-    return 'George Costanza'
+  async getContactNameByBadge(badgeId) {
+    const res = await fetch(`/longy/attendees/${badgeId}`)
+    const { result } = await res.json()
+    return result.value.Name || 'Mr Ed'
+  },
+
+  async getContactNameByAddr(address) {
+    const res = await fetch(`/longy/attendees/address/${address}`)
+    const { result } = await res.json()
+    return result.value.Name || 'Mr Ed'
   },
 
   async scanContact(badgeId, sharePayload) {
@@ -74,27 +87,21 @@ export default {
     return result.value.Rep
   },
 
-  async getScans() {
-    const { address } = get(user)
-    const res = await fetch(`/longy/attendees/address/${address}`)
-    const { result } = await res.json()
-    const scanIds = result.value.ScanIDs || []
-    return Promise.all(scanIds.map(id => this.getScan(id)))
-  },
-
   async getScan(scanId, decrypt = false) {
     const { address, rsaKeyPair } = get(user)
     const scanRes = await fetch(`/longy/scans/${scanId}`)
     const {
-      result: { S1, S2, D1, D2 },
+      result: { S1, S2, D1, D2, P1, P2, UnixTimeSec, Accepted: accepted },
     } = await scanRes.json()
-    const isSlot1Self = S1 === address
-    const contactAddr = isSlot1Self ? S2 : S1
-    const encryptedData = isSlot1Self ? D2 : D1
-    const name = await this.getContactName(contactAddr)
 
-    let profile = { sharedAttrs: [], message: '' }
-    if (decrypt && encryptedData) {
+    const isSlot1Self = S1 === address
+    const [contactAddr, encryptedData, points] = isSlot1Self
+      ? [S2, D2, P2]
+      : [S1, D1, P1]
+    const name = await this.getContactNameByAddr(contactAddr)
+
+    let profile = {}
+    if (accepted && decrypt && encryptedData) {
       const { sharedAttrs, message } = await decryptData(
         encryptedData,
         rsaKeyPair.privateKey
@@ -104,12 +111,39 @@ export default {
 
     return {
       scanId,
-      timestamp: Date.now(),
-      points: 3,
+      address: contactAddr,
+      ...profile,
+      accepted,
+      points,
       name,
       imageUrl: `https://source.unsplash.com/random/100x100?${scanId}`,
-      contactAddr,
-      ...profile,
+      timestamp: UnixTimeSec * 1000,
     }
+  },
+
+  async getReputationLog() {
+    const { address } = get(user)
+    const res = await fetch(`/longy/attendees/address/${address}`)
+    const {
+      result: { value },
+    } = await res.json()
+    const scanIds = value.ScanIDs || []
+
+    const verificationEntry = {
+      timestamp: value.UnixTimeSecClaimed * 1000,
+      points: 5,
+      label: 'Verified your profile',
+      imageUrl: 'https://source.unsplash.com/random/100x100',
+    }
+
+    let scans = await Promise.all(scanIds.map(id => this.getScan(id)))
+    scans = scans
+      .filter(scan => scan.accepted)
+      .map(s => ({
+        ...s,
+        label: `Connected to ${s.name}`,
+      }))
+
+    return [...scans, verificationEntry]
   },
 }

@@ -1,16 +1,13 @@
 <script>
+  import { createEventDispatcher } from 'svelte'
   import Spinner from './Spinner'
 
-  export let onClick = () => {}
   export let fullWidth = false
   export let secondary = false
   export let loading = false
 
-  const handleClick = (...args) => {
-    if (!loading) {
-      onClick(...args)
-    }
-  }
+  const dispatch = createEventDispatcher()
+  const handleClick = () => !loading && dispatch('click')
 </script>
 
 <button type="button" class:fullWidth class:secondary on:click={handleClick}>
