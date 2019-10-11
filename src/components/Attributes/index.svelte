@@ -9,7 +9,7 @@
   export let name = ''
   export let attributes = []
   export let share = []
-  export const editable = false
+  export let editable = false
 
   const shareFlags = Object.fromEntries(share.map(s => [s, true]))
   const possibleFields = ['Facebook', 'LinkedIn', 'Phone']
