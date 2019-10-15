@@ -1,5 +1,4 @@
 <script>
-  import { onMount } from 'svelte'
   import DefaultIcon from './DefaultIcon'
 
   export let avatarUrl
@@ -8,52 +7,52 @@
   export let size = 265
 
   let imageExists = false
+  let initials
+  let fill
 
   const getHue = text => {
     // takes the first letter of text and converts it to a value between 0-255
     const num = (text[0] || 'a').toLowerCase().charCodeAt(0)
-    return ((num - 97) * 255) / 25
+    return ((num - 97) * 360) / 26
   }
 
-  if (avatarUrl) {
-    onMount(() => {
+  // avatarUrl -> imageExists
+  $: {
+    if (avatarUrl) {
       const img = new Image()
       img.onload = () => (imageExists = true)
+      img.onerror = () => (imageExists = false)
       img.src = avatarUrl
-    })
+    }
   }
 
-  // name -> initials
-  $: initials = name
-    .split(' ')
-    .map(c => c[0])
-    .join('')
-    .slice(0, 2)
-
-  // initials -> hue
-  $: fill = initials ? `hsl(${getHue(initials)}, 60%, 71%)` : ''
+  // name -> initials, hue
+  $: {
+    fill = name ? `hsl(${getHue(name)}, 60%, 71%)` : ''
+    initials = name
+      .split(' ')
+      .map(c => c[0])
+      .join('')
+      .slice(0, 2)
+  }
 </script>
 
-{#if imageExists}
-  <span
-    class="avatar"
-    style={`background-image: url("${avatarUrl}"); width: ${size}px; height: ${size}px;`} />
-{:else}
-  <span
-    class="avatar"
-    style={`color: ${fill}; width: ${size}px; height: ${size}px;`}>
+<span
+  class="avatar"
+  style={`background-image: url("${avatarUrl}"); color: ${fill}; width: ${size}px; height: ${size}px;`}>
+  {#if !imageExists}
     <DefaultIcon />
     {#if !hideLabel}
       <span class="initials">{initials}</span>
     {/if}
-  </span>
-{/if}
+  {/if}
+</span>
 
 <style>
   .avatar {
     display: inline-flex;
-    width: 265px;
-    height: 265px;
+    width: 1em;
+    height: 1em;
     text-align: center;
     background: none no-repeat center center var(--avatar-bg);
     background-size: cover;

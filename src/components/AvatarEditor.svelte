@@ -1,4 +1,5 @@
 <script>
+  import loadImage from 'blueimp-load-image'
   import Avatar from './Avatar'
 
   export let selectedFile = undefined
@@ -7,13 +8,23 @@
   let files = []
   let avatarUrl
 
+  const imageOptions = {
+    maxWidth: 500,
+    maxHeight: 500,
+    orientation: true,
+  }
+
   // files -> avatarUrl (as data URL)
   $: {
-    ;[selectedFile] = files
-    if (selectedFile) {
-      const reader = new FileReader()
-      reader.addEventListener('load', e => (avatarUrl = e.target.result))
-      reader.readAsDataURL(selectedFile)
+    if (files[0]) {
+      loadImage(
+        files[0],
+        canvas => {
+          avatarUrl = canvas.toDataURL()
+          canvas.toBlob(blob => (selectedFile = blob))
+        },
+        imageOptions
+      )
     }
   }
 </script>

@@ -15,16 +15,21 @@
   import ViewContact from './pages/ViewContact'
 
   let component
+  let pageNotFound
   let pageParams = {}
 
   page((ctx, next) => {
     component = null
+    pageNotFound = false
     pageParams = ctx.params
     next()
   })
-  page('/', () => {
-    component = $user ? Home : Intro
-  })
+
+  page('/', () => (component = $user ? Home : Intro))
+  page('/verify', () => (component = BeginVerification))
+  page('/claim', () => (component = VerifyAccount))
+  page('/scan', () => (component = ScanContact))
+  page('/contact/:scanId', () => (component = ViewContact))
   page('/badge/:badgeId', async () => {
     const badgeClaimed = await cosmos.isBadgeClaimed(pageParams.badgeId)
     if ($user) {
@@ -33,24 +38,18 @@
       component = badgeClaimed ? AlreadyClaimed : Welcome
     }
   })
-  page('/verify', () => {
-    component = BeginVerification
-  })
-  page('/claim', () => {
-    component = VerifyAccount
-  })
-  page('/scan', () => {
-    component = ScanContact
-  })
-  page('/contact/:scanId', () => {
-    component = ViewContact
+
+  page(() => {
+    pageNotFound = true
   })
 
   page()
 </script>
 
 <MainLayout>
-  {#if component}
+  {#if pageNotFound}
+    Page not found
+  {:else if component}
     <svelte:component this={component} {pageParams} />
   {:else}Page loading&hellip;{/if}
 </MainLayout>
