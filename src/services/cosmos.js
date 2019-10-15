@@ -67,7 +67,7 @@ export default {
     const res = await fetch(`/longy/attendees/${badgeId}`)
     const { result } = await res.json()
 
-    let data = ''
+    let data = null
     if (sharePayload) {
       data = await encryptData(sharePayload, result.value.RsaPublicKey)
     }
@@ -77,6 +77,7 @@ export default {
       scannedQR: badgeId,
       data,
     })
+
     await broadcastMsg(msg)
   },
 
@@ -109,6 +110,11 @@ export default {
       profile = { sharedAttrs, message }
     }
 
+    const res = await fetch(`/longy/attendees/address/${contactAddr}`)
+    const {
+      result: { value },
+    } = await res.json()
+
     return {
       scanId,
       address: contactAddr,
@@ -116,7 +122,7 @@ export default {
       accepted,
       points,
       name,
-      imageUrl: `https://source.unsplash.com/random/100x100?${scanId}`,
+      imageUrl: `/linkedup-user-content/avatars/${value.ID}`,
       timestamp: UnixTimeSec * 1000,
     }
   },
@@ -130,10 +136,11 @@ export default {
     const scanIds = value.ScanIDs || []
 
     const verificationEntry = {
+      name: value.Name,
       timestamp: value.UnixTimeSecClaimed * 1000,
       points: 5,
       label: 'Verified your profile',
-      imageUrl: 'https://source.unsplash.com/random/100x100',
+      imageUrl: `/linkedup-user-content/avatars/${value.ID}`,
     }
 
     let scans = await Promise.all(scanIds.map(id => this.getScan(id)))
@@ -144,6 +151,6 @@ export default {
         label: `Connected to ${s.name}`,
       }))
 
-    return [...scans, verificationEntry]
+    return [verificationEntry, ...scans].reverse()
   },
 }

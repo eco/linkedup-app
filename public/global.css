@@ -6,6 +6,8 @@
   --blue: #3c48ea;
   --light-blue: #d0e9ff;
   --pale-blue: #eff2f6;
+  /* avatar colors */
+  --avatar-bg: #42526e;
   /* spacing */
   --page-gutter-vert: 38px;
   --page-gutter-horiz: 28px;

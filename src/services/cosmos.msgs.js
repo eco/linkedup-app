@@ -34,9 +34,5 @@ export const claimKey = ({
 
 export const scanQr = ({ sender, scannedQR, data }) => ({
   type: 'longy/MsgScanQr',
-  value: {
-    sender,
-    scannedQR,
-    data,
-  },
+  value: { sender, scannedQR, data },
 })

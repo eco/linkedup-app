@@ -139,7 +139,7 @@
   }
 
   .fields {
-    margin: 2em 0;
+    margin-top: 2em;
     font-weight: normal;
   }
   .field {

@@ -19,7 +19,7 @@
   section {
     background-color: var(--white);
     margin: 1em;
-    padding: 1em 2em;
+    padding: 2em;
     overflow: auto;
     width: 100%;
   }

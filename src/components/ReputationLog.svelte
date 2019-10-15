@@ -1,6 +1,7 @@
 <script>
   import { createEventDispatcher } from 'svelte'
   import { format } from 'date-fns'
+  import Avatar from './Avatar'
 
   export let points = 0
   export let log = []
@@ -22,7 +23,11 @@
     {#each log as entry}
       <tr on:click={() => dispatch('open', entry)}>
         <td>
-          <img src={entry.imageUrl} alt={entry.label} />
+          <Avatar
+            avatarUrl={entry.imageUrl}
+            name={entry.name}
+            hideLabel
+            size={50} />
         </td>
         <td>
           {entry.label}
@@ -49,14 +54,6 @@
     vertical-align: top;
     font-weight: 400;
     padding-bottom: 1em;
-  }
-  img {
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    display: block;
-    margin-right: 1em;
-    background-color: var(--pale-blue);
   }
   .timestamp {
     font-size: 14px;
