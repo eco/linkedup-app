@@ -8,23 +8,29 @@
   export let pageParams
 
   let contactName = ''
-  let loading = false
+  let avatarUrl = `/linkedup-user-content/avatars/${pageParams.badgeId}`
+  let loadingShare = false
+  let loadingSkip = false
   $: [contactFirstName] = contactName.split(' ')
 
   let message = ''
   let share = $user.profile.defaultShare
 
-  const recordScanAndShare = async () => {
+  const handleShare = async () => {
     const sharedAttrs = $user.profile.attributes.filter(attr =>
       share.includes(attr.label)
     )
-    return recordScan({ sharedAttrs, message })
+    const sharePayload = { sharedAttrs, message }
+    loadingShare = true
+    await cosmos.scanContact(pageParams.badgeId, sharePayload)
+    loadingShare = false
+    page('/')
   }
 
-  const recordScan = async sharePayload => {
-    loading = true
-    await cosmos.scanContact(pageParams.badgeId, sharePayload)
-    loading = false
+  const handleSkip = async () => {
+    loadingSkip = true
+    await cosmos.scanContact(pageParams.badgeId)
+    loadingSkip = false
     page('/')
   }
 
@@ -37,7 +43,7 @@
   <div slot="content">
     <h1>Share your contact info with {contactName}</h1>
     <p class="avatar">
-      <Avatar />
+      <Avatar name={contactName} {avatarUrl} />
     </p>
     <Attributes
       bind:share
@@ -50,12 +56,14 @@
 
   <div slot="action" class="action">
     <span class="primary">
-      <Button fullWidth on:click={() => recordScanAndShare()} {loading}>
+      <Button fullWidth on:click={handleShare} loading={loadingShare}>
         Share
       </Button>
     </span>
     <span>
-      <Button fullWidth secondary on:click={() => recordScan()}>Skip</Button>
+      <Button fullWidth secondary on:click={handleSkip} loading={loadingSkip}>
+        Skip
+      </Button>
     </span>
   </div>
 </PageWithAction>

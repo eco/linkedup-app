@@ -2,31 +2,24 @@
   import page from 'page'
   import { user } from '../src/store'
 
-  const commands = {
-    'Scan your own badge': () => {
-      page('/badge/1441255721')
-    },
+  const attendees = {
+    Stoyan: 1422410109,
+    Michael: 1422426129,
+    Andrew: 1422437101,
+    Hamdi: 1434344865,
+    Matt: 1441255721,
+  }
 
-    "Scan someone else's badge": () => {
-      page('/badge/1422410109')
-    },
+  const commands = {}
 
-    'Reset device': () => {
-      page('/')
-      localStorage.clear()
-      document.location.reload()
-    },
+  Object.entries(attendees).forEach(([name, id]) => {
+    commands[`Scan ${name}`] = () => page(`/badge/${id}`)
+  })
 
-    // 'Open verification email': () => {
-    //   const query = new URLSearchParams()
-    //   query.set('longy.user', JSON.stringify(sandboxUser))
-
-    //   const url = new URL(document.location)
-    //   url.pathname = '/verify/abc'
-    //   url.search = query.toString()
-
-    //   document.location.replace(url)
-    // },
+  commands['Reset device'] = () => {
+    page('/')
+    localStorage.clear()
+    document.location.reload()
   }
 </script>
 

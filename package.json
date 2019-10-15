@@ -20,6 +20,7 @@
     "bip32": "^2.0.4",
     "bip39": "^3.0.2",
     "bitcoinjs-lib": "^5.1.6",
+    "blueimp-load-image": "^2.24.0",
     "date-fns": "^2.4.1",
     "eslint": "^6.4.0",
     "eslint-config-airbnb-base": "^14.0.0",
