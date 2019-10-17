@@ -153,4 +153,16 @@ export default {
 
     return [verificationEntry, ...scans].reverse()
   },
+
+  async getPrizes() {
+    const res = await fetch('/longy/prizes')
+    const { result } = await res.json()
+
+    const textToImage = text => `${text.toLowerCase().replace(/\s/g, '_')}.png`
+
+    return result.map(prize => ({
+      ...prize,
+      imageUrl: `/linkedup-user-content/prizes/${textToImage(prize.prizeText)}`,
+    }))
+  },
 }

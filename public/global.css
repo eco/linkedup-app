@@ -11,6 +11,9 @@
   /* spacing */
   --page-gutter-vert: 38px;
   --page-gutter-horiz: 28px;
+  /* z-index */
+  --z-index-header: 500;
+  --z-index-menu: 1000;
 }
 
 html,
@@ -63,6 +66,7 @@ svg {
 }
 
 ul,
+ol,
 li {
   margin: 0;
   padding: 0;
