@@ -8,7 +8,7 @@
       return
     }
     found = true
-    page('/badge/1441255721')
+    page.redirect('/badge/1441255721')
   }
 </script>
 

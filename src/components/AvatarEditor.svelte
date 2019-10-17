@@ -29,7 +29,7 @@
   }
 </script>
 
-<Avatar {avatarUrl} {name} />
+<Avatar {avatarUrl} {name} disableHue />
 <label>
   <span>Choose avatar</span>
   <input type="file" accept="image/*" bind:files />

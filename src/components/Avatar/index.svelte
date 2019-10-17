@@ -1,10 +1,11 @@
 <script>
   import DefaultIcon from './DefaultIcon'
 
-  export let avatarUrl
+  export let avatarUrl = undefined
   export let name = ''
   export let hideLabel = false
   export let size = 265
+  export let disableHue = false
 
   let imageExists = false
   let initials
@@ -28,7 +29,7 @@
 
   // name -> initials, hue
   $: {
-    fill = name ? `hsl(${getHue(name)}, 60%, 71%)` : ''
+    fill = name && !disableHue ? `hsl(${getHue(name)}, 60%, 71%)` : 'white'
     initials = name
       .split(' ')
       .map(c => c[0])
