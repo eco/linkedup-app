@@ -1,6 +1,5 @@
 <script>
   import page from 'page'
-  import { user } from '../../store'
   import PageWithAction from '../../layout/PageWithAction'
   import { AvatarEditor, Button, Attributes } from '../../components'
   import cosmos from '../../services/cosmos'
@@ -17,9 +16,8 @@
     if (avatarFile) {
       await s3.uploadFile(avatarUploadUrl, avatarFile)
     }
-    await cosmos.claimBadge(address, secret, profile.name)
+    await cosmos.claimBadge(address, secret, profile)
     loading = false
-    $user = { ...$user, profile }
     page('/')
   }
 </script>

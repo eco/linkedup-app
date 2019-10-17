@@ -7,7 +7,7 @@
     height: 1em;
     border-radius: 100%;
     vertical-align: middle;
-    background-color: var(--white);
+    background-color: currentColor;
     animation: sk-scaleout 1s infinite ease-in-out;
   }
 

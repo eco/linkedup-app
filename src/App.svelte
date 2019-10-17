@@ -6,7 +6,7 @@
   import Intro from './pages/Intro'
   import Home from './pages/Home'
   import Welcome from './pages/Welcome'
-  import AlreadyClaimed from './pages/AlreadyClaimed'
+  import LoggedOut from './pages/LoggedOut'
   import AddContact from './pages/AddContact'
   import Unclaimed from './pages/Unclaimed'
   import BeginVerification from './pages/BeginVerification'
@@ -15,6 +15,7 @@
   import ViewContact from './pages/ViewContact'
   import Rewards from './pages/Rewards'
   import Error404 from './pages/Error404'
+  import Recovery from './pages/Recovery'
 
   let component
   let pageParams = {}
@@ -34,13 +35,17 @@
       next()
     } else {
       const badgeClaimed = await cosmos.isBadgeClaimed(pageParams.badgeId)
-      component = badgeClaimed ? AlreadyClaimed : Welcome
+      component = badgeClaimed ? LoggedOut : Welcome
       navAction = 'back'
     }
   })
   page('/verify', () => (component = BeginVerification))
   page('/claim', () => {
     component = VerifyAccount
+    navAction = false
+  })
+  page('/recover', () => {
+    component = Recovery
     navAction = false
   })
 

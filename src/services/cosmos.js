@@ -32,44 +32,53 @@ const broadcastMsg = async msg => {
 
 export default {
   async isBadgeClaimed(badgeId) {
-    const res = await fetch(`/longy/attendees/${badgeId}`)
-    const { result } = await res.json()
-    return result.value.Claimed
+    const contact = await this.getContactByBadge(badgeId)
+    return contact.Claimed
   },
 
-  async claimBadge(address, secret, name) {
+  async claimBadge(address, secret, profile) {
     const { rsaKeyPair } = get(user)
+    const encryptedInfo = await encryptData(profile, rsaKeyPair.publicKey)
     const msg = claimKey({
       attendeeAddress: address,
       secret,
       rsaPublicKey: rsaKeyPair.publicKey,
-      encryptedInfo: 'todo',
-      name,
+      name: profile.name,
+      encryptedInfo,
     })
-    user.set({ address, ...get(user) })
+    user.set({ address, ...get(user), profile })
     await broadcastMsg(msg)
   },
 
-  async getContactNameByBadge(badgeId) {
+  async getContactByBadge(badgeId) {
     const res = await fetch(`/longy/attendees/${badgeId}`)
     const { result } = await res.json()
-    return result.value.Name || 'Mr Ed'
+    return result.value || {}
+  },
+
+  async getContactByAddr(address) {
+    const res = await fetch(`/longy/attendees/address/${address}`)
+    const { result } = await res.json()
+    return result.value || {}
+  },
+
+  async getContactNameByBadge(badgeId) {
+    const contact = await this.getContactByBadge(badgeId)
+    return contact.name
   },
 
   async getContactNameByAddr(address) {
-    const res = await fetch(`/longy/attendees/address/${address}`)
-    const { result } = await res.json()
-    return result.value.Name || 'Mr Ed'
+    const contact = await this.getContactByAddr(address)
+    return contact.name
   },
 
   async scanContact(badgeId, sharePayload) {
     const { address } = get(user)
-    const res = await fetch(`/longy/attendees/${badgeId}`)
-    const { result } = await res.json()
+    const contact = await this.getContactByBadge(badgeId)
 
     let data = null
     if (sharePayload) {
-      data = await encryptData(sharePayload, result.value.RsaPublicKey)
+      data = await encryptData(sharePayload, contact.RsaPublicKey)
     }
 
     const msg = scanQr({
@@ -83,9 +92,8 @@ export default {
 
   async getPlayerScore() {
     const { address } = get(user)
-    const res = await fetch(`/longy/attendees/address/${address}`)
-    const { result } = await res.json()
-    return result.value.Rep
+    const contact = await this.getContactByAddr(address)
+    return contact.Rep
   },
 
   async getScan(scanId, decrypt = false) {
@@ -110,10 +118,7 @@ export default {
       profile = { sharedAttrs, message }
     }
 
-    const res = await fetch(`/longy/attendees/address/${contactAddr}`)
-    const {
-      result: { value },
-    } = await res.json()
+    const contact = await this.getContactByAddr(contactAddr)
 
     return {
       scanId,
@@ -122,25 +127,22 @@ export default {
       accepted,
       points,
       name,
-      imageUrl: `/linkedup-user-content/avatars/${value.ID}`,
+      imageUrl: `/linkedup-user-content/avatars/${contact.ID}`,
       timestamp: UnixTimeSec * 1000,
     }
   },
 
   async getReputationLog() {
     const { address } = get(user)
-    const res = await fetch(`/longy/attendees/address/${address}`)
-    const {
-      result: { value },
-    } = await res.json()
-    const scanIds = value.ScanIDs || []
+    const contact = await this.getContactByAddr(address)
+    const scanIds = contact.ScanIDs || []
 
     const verificationEntry = {
-      name: value.Name,
-      timestamp: value.UnixTimeSecClaimed * 1000,
+      name: contact.Name,
+      timestamp: contact.UnixTimeSecClaimed * 1000,
       points: 5,
       label: 'Verified your profile',
-      imageUrl: `/linkedup-user-content/avatars/${value.ID}`,
+      imageUrl: `/linkedup-user-content/avatars/${contact.ID}`,
     }
 
     let scans = await Promise.all(scanIds.map(id => this.getScan(id)))
