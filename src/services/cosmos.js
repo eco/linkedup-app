@@ -10,7 +10,7 @@ const broadcastMsg = async msg => {
     result: { value },
   } = await accRes.json()
   const tx = createTx(value.account_number, value.sequence, msg)
-  const signedTx = await signTx(tx, Buffer.from(cosmosKey, 'hex'))
+  const signedTx = await signTx(tx, cosmosKey)
 
   const res = await fetch('/longy/txs', {
     method: 'POST',
@@ -64,12 +64,12 @@ export default {
 
   async getContactNameByBadge(badgeId) {
     const contact = await this.getContactByBadge(badgeId)
-    return contact.name
+    return contact.Name
   },
 
   async getContactNameByAddr(address) {
     const contact = await this.getContactByAddr(address)
-    return contact.name
+    return contact.Name
   },
 
   async scanContact(badgeId, sharePayload) {

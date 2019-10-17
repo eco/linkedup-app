@@ -5,8 +5,6 @@ import livereload from 'rollup-plugin-livereload'
 import { terser } from 'rollup-plugin-terser'
 import visualizer from 'rollup-plugin-visualizer'
 import json from 'rollup-plugin-json'
-import builtins from 'rollup-plugin-node-builtins';
-import globals from 'rollup-plugin-node-globals';
 
 const thisPkg = require('./package')
 
@@ -41,7 +39,7 @@ export default {
     resolve({
       browser: true,
       extensions: ['.mjs', '.js', '.svelte', '.json'],
-      preferBuiltins: true,
+      preferBuiltins: false,
       dedupe: importee =>
         importee === 'svelte' || importee.startsWith('svelte/'),
       customResolveOptions: {
@@ -59,8 +57,6 @@ export default {
     }),
     commonjs(),
 
-    builtins(),
-    globals(),
     json(),
 
     // Watch the `public` directory and refresh the
@@ -74,8 +70,6 @@ export default {
     // Generate stats for bundle size analysis when
     // building locally
     !ci && production && visualizer(),
-
-
   ],
   watch: {
     clearScreen: false,
