@@ -8,7 +8,7 @@
 
 {#await scanPromise then scan}
   <p class="avatar">
-    <Avatar />
+    <Avatar name={scan.name} avatarUrl={scan.imageUrl} />
   </p>
   <h1>{scan.name}</h1>
   {#if scan.sharedAttrs}

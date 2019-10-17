@@ -76,7 +76,7 @@ export default {
     const { address } = get(user)
     const contact = await this.getContactByBadge(badgeId)
 
-    let data = null
+    let data
     if (sharePayload) {
       data = await encryptData(sharePayload, contact.RsaPublicKey)
     }
@@ -138,6 +138,7 @@ export default {
     const scanIds = contact.ScanIDs || []
 
     const verificationEntry = {
+      type: 'verification',
       name: contact.Name,
       timestamp: contact.UnixTimeSecClaimed * 1000,
       points: 5,
@@ -150,6 +151,7 @@ export default {
       .filter(scan => scan.accepted)
       .map(s => ({
         ...s,
+        type: 'connection',
         label: `Connected to ${s.name}`,
       }))
 
