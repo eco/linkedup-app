@@ -6,7 +6,11 @@
   import ScanIcon from './ScanIcon'
 
   const scanContact = () => page('/scan')
-  const openContact = e => page(`/contact/${e.detail.scanId}`)
+  const openContact = e => {
+    if (e.detail.type === 'connection') {
+      page(`/contact/${e.detail.scanId}`)
+    }
+  }
 
   let dataPromise = Promise.all([
     cosmos.getPlayerScore(),

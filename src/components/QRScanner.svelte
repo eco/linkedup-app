@@ -9,6 +9,17 @@
 
   $: context = canvas && canvas.getContext('2d')
 
+  let found = false
+  const codeFound = code => {
+    if (found) {
+      return
+    }
+    found = true
+    setTimeout(() => {
+      dispatch('code', code)
+    }, 1200)
+  }
+
   // requests permission to access device camera and begins
   // streaming the video the the canvas element
   async function loadVideoStream() {
@@ -21,6 +32,32 @@
     video.play()
     requestAnimationFrame(renderFrame)
     ;({ default: jsQR } = await import('jsqr'))
+  }
+
+  function drawBoundingBox(location) {
+    const padding = 10
+    context.moveTo(
+      location.topLeftCorner.x - padding,
+      location.topLeftCorner.y - padding
+    )
+    context.lineTo(
+      location.topRightCorner.x + padding,
+      location.topRightCorner.y - padding
+    )
+    context.lineTo(
+      location.bottomRightCorner.x + padding,
+      location.bottomRightCorner.y + padding
+    )
+    context.lineTo(
+      location.bottomLeftCorner.x - padding,
+      location.bottomLeftCorner.y + padding
+    )
+    context.closePath()
+
+    context.lineJoin = 'round'
+    context.lineWidth = 12
+    context.strokeStyle = '#3c48ea'
+    context.stroke()
   }
 
   // renders a video frame to canvas and scans the content
@@ -45,7 +82,8 @@
         })
 
         if (code && code.data) {
-          dispatch('code', code)
+          codeFound(code)
+          drawBoundingBox(code.location)
         }
       }
     }

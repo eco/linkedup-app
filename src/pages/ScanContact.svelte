@@ -2,13 +2,8 @@
   import page from 'page'
   import { QRScanner } from '../components'
 
-  let found = false
   const handleCode = () => {
-    if (found) {
-      return
-    }
-    found = true
-    page.redirect('/badge/123')
+    page.redirect('/badge/1441255721')
   }
 </script>
 

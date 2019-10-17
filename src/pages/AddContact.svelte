@@ -7,6 +7,7 @@
 
   export let pageParams
 
+  let isSelf = false
   let contactName = ''
   let avatarUrl = `/linkedup-user-content/avatars/${pageParams.badgeId}`
   let loadingShare = false
@@ -34,39 +35,44 @@
     page('/')
   }
 
-  cosmos.getContactNameByBadge(pageParams.badgeId).then(name => {
-    contactName = name
+  cosmos.getContactByBadge(pageParams.badgeId).then(contact => {
+    contactName = contact.Name
+    isSelf = contact.Address === $user.address
   })
 </script>
 
-<PageWithAction>
-  <div slot="content">
-    <h1>Share your contact info with {contactName}</h1>
-    <p class="avatar">
-      <Avatar name={contactName} {avatarUrl} />
-    </p>
-    <Attributes
-      bind:share
-      name={$user.profile.name}
-      attributes={$user.profile.attributes} />
-    <Textarea
-      bind:value={message}
-      placeholder="Include a message for {contactFirstName}" />
-  </div>
+{#if isSelf}
+  <p>Earn reputation points by connecting with other players</p>
+{:else}
+  <PageWithAction>
+    <div slot="content">
+      <h1>Share your contact info with {contactName}</h1>
+      <p class="avatar">
+        <Avatar name={contactName} {avatarUrl} />
+      </p>
+      <Attributes
+        bind:share
+        name={$user.profile.name}
+        attributes={$user.profile.attributes} />
+      <Textarea
+        bind:value={message}
+        placeholder="Include a message for {contactFirstName}" />
+    </div>
 
-  <div slot="action" class="action">
-    <span class="primary">
-      <Button fullWidth on:click={handleShare} loading={loadingShare}>
-        Share
-      </Button>
-    </span>
-    <span>
-      <Button fullWidth secondary on:click={handleSkip} loading={loadingSkip}>
-        Skip
-      </Button>
-    </span>
-  </div>
-</PageWithAction>
+    <div slot="action" class="action">
+      <span class="primary">
+        <Button fullWidth on:click={handleShare} loading={loadingShare}>
+          Share
+        </Button>
+      </span>
+      <span>
+        <Button fullWidth secondary on:click={handleSkip} loading={loadingSkip}>
+          Skip
+        </Button>
+      </span>
+    </div>
+  </PageWithAction>
+{/if}
 
 <style>
   .avatar {

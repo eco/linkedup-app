@@ -152,11 +152,7 @@
   .field .icon {
     float: left;
     width: 2em;
-    margin-right: 0.6em;
+    margin: -3px 0.6em 0 0;
     text-align: center;
-  }
-  .field .icon :global(svg) {
-    position: relative;
-    top: -3px;
   }
 </style>

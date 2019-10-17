@@ -1,5 +1,5 @@
 import elliptic from 'elliptic'
-import Buffer from 'buffer'
+import { Buffer } from 'buffer'
 
 const { subtle } = window.crypto
 const { ec: EC } = elliptic
