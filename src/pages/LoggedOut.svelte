@@ -4,29 +4,30 @@
   import keyService from '../services/key'
   import { Button } from '../components'
 
+  export let pageParams
   let loading = false
 
-  export let pageParams
-
-  const verifyProfile = async () => {
+  const beginRecovery = async () => {
     loading = true
     const badgeId = parseInt(pageParams.badgeId, 10)
-    await keyService.beginVerification(badgeId)
+    await keyService.beginRecovery(badgeId)
     loading = false
     page('/verify')
+    loading = false
   }
 </script>
 
 <PageWithAction>
   <div slot="content">
-    <h1>Welcome to Linked Up</h1>
-    <p>Grow your network by adding contacts</p>
-    <p>To add a contact, scan the QR code on another SFBC attendee's badge.</p>
-    <p>Please verify your profile information and privacy settings</p>
+    <h1>You are not logged in</h1>
+    <p>
+      If you'd like to recover your account, please tap "Recover my account".
+      You won't be able to earn reputation points until you're signed in.
+    </p>
   </div>
   <div slot="action">
-    <Button fullWidth on:click={verifyProfile} {loading}>
-      Verify your profile
+    <Button fullWidth on:click={beginRecovery} {loading}>
+      Recover my account
     </Button>
   </div>
 </PageWithAction>
