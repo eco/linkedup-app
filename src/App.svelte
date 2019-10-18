@@ -3,19 +3,7 @@
   import { user } from './store'
   import cosmos from './services/cosmos'
   import MainLayout from './layout/MainLayout'
-  import Intro from './pages/Intro'
-  import Home from './pages/Home'
-  import Welcome from './pages/Welcome'
-  import LoggedOut from './pages/LoggedOut'
-  import AddContact from './pages/AddContact'
-  import Unclaimed from './pages/Unclaimed'
-  import BeginVerification from './pages/BeginVerification'
-  import VerifyAccount from './pages/VerifyAccount'
-  import ScanContact from './pages/ScanContact'
-  import ViewContact from './pages/ViewContact'
-  import Rewards from './pages/Rewards'
-  import Error404 from './pages/Error404'
-  import Recovery from './pages/Recovery'
+  import * as pages from './pages'
 
   let component
   let pageParams = {}
@@ -29,50 +17,51 @@
   })
 
   // onboarding
-  page('/', () => (component = $user.profile ? Home : Intro))
+  page('/', () => (component = $user.profile ? pages.Home : pages.Intro))
   page('/badge/:badgeId', async (ctx, next) => {
     if ($user.profile) {
       next()
     } else {
       const badgeClaimed = await cosmos.isBadgeClaimed(pageParams.badgeId)
-      component = badgeClaimed ? LoggedOut : Welcome
+      component = badgeClaimed ? pages.LoggedOut : pages.Welcome
       navAction = 'back'
     }
   })
-  page('/verify', () => (component = BeginVerification))
+  page('/verify', () => (component = pages.BeginVerification))
   page('/claim', () => {
-    component = VerifyAccount
+    component = pages.VerifyAccount
     navAction = false
   })
   page('/recover', () => {
-    component = Recovery
+    component = pages.Recovery
     navAction = false
   })
+  page('/about', () => (component = pages.About))
 
   // redirect if not logged in
   page((ctx, next) => ($user.profile ? next() : page.redirect('/')))
 
   // scanning contacts and sponsors
   page('/scan', () => {
-    component = ScanContact
+    component = pages.ScanContact
     navAction = 'back'
   })
   page('/badge/:badgeId', async () => {
     const badgeClaimed = await cosmos.isBadgeClaimed(pageParams.badgeId)
-    component = badgeClaimed ? AddContact : Unclaimed
+    component = badgeClaimed ? pages.AddContact : pages.Unclaimed
     navAction = 'back'
   })
   page('/contact/:scanId', () => {
-    component = ViewContact
+    component = pages.ViewContact
     navAction = 'back'
   })
 
   // rewards
-  page('/rewards', () => (component = Rewards))
+  page('/rewards', () => (component = pages.Rewards))
 
   // finally, if no route matched, display 404
   page(() => {
-    component = Error404
+    component = pages.Error404
   })
 
   // start the router

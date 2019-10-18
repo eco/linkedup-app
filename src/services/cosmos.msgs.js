@@ -6,10 +6,10 @@ export const createTx = (acc, seq, msg) => ({
     amount: [
       {
         amount: '0',
-        denom: 'uatom',
+        denom: 'longy',
       },
     ],
-    gas: '800000',
+    gas: '1000000',
   },
   msgs: [msg],
   memo: '',

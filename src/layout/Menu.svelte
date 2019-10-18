@@ -22,7 +22,6 @@
     },
     '/leaderboard': 'Leaderboard',
     '/about': 'About',
-    '/help': 'Help',
   }
   let navItems
 
@@ -50,6 +49,11 @@
           <a href={item.path} on:click={navigate}>{item.name}</a>
         </li>
       {/each}
+      <li>
+        <a href="mailto:help@eco.com" target="_blank" rel="noopener noreferrer">
+          Help
+        </a>
+      </li>
     </ol>
   </nav>
 
