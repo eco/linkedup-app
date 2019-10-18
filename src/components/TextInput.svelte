@@ -37,6 +37,7 @@
     left: 0;
   }
   input {
+    background-color: transparent;
     padding: 4px 0;
     border: 0;
     border-radius: 0;

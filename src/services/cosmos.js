@@ -164,9 +164,13 @@ export default {
 
     const textToImage = text => `${text.toLowerCase().replace(/\s/g, '_')}.png`
 
-    return result.map(prize => ({
-      ...prize,
-      imageUrl: `/linkedup-user-content/prizes/${textToImage(prize.prizeText)}`,
-    }))
+    return result
+      .sort((a, b) => a.repNeeded - b.repNeeded)
+      .map(prize => ({
+        ...prize,
+        imageUrl: `/linkedup-user-content/prizes/${textToImage(
+          prize.prizeText
+        )}`,
+      }))
   },
 }

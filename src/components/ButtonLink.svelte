@@ -11,6 +11,7 @@
 <style>
   button {
     color: var(--blue);
+    background-color: transparent;
     font-size: 12px;
     line-height: 18px;
     font-weight: normal;
