@@ -1,6 +1,6 @@
 :root {
   /* colors */
-  --white: #fff;
+  --white: #f8f8f8;
   --gray: #c4c4c4;
   --black: #333;
   --blue: #3c48ea;
@@ -46,6 +46,14 @@ h1 {
   margin: 0;
   font-size: 22px;
   line-height: 33px;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 36px;
+  margin: 1em 0 0.5em;
+  color: var(--blue);
 }
 
 input,
