@@ -7,8 +7,7 @@
     const points = await cosmos.getPlayerScore()
 
     const placement = tiers.find(tier => {
-      let attendees = tier.attendees || []
-      attendees = attendees.map(a => a.Address)
+      const attendees = tier.attendees.map(a => a.Address)
       return attendees.includes($user.address)
     })
 

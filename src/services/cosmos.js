@@ -207,6 +207,7 @@ export default {
 
       return {
         ...tier,
+        attendees,
         name,
         prizePerAttendee:
           rep.length && Math.floor(tier.prizeAmount / rep.length),

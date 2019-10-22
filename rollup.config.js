@@ -62,10 +62,11 @@ const generateConfig = (input, outputDir, livereloadPort) => ({
 
     // Watch the outputDir directory and refresh the
     // browser on changes when not in production
-    !production && livereload({
-      watch: outputDir,
-      port: livereloadPort,
-    }),
+    !production &&
+      livereload({
+        watch: outputDir,
+        port: livereloadPort,
+      }),
 
     // If we're building for production (npm run build
     // instead of npm run dev), minify
@@ -73,7 +74,9 @@ const generateConfig = (input, outputDir, livereloadPort) => ({
 
     // Generate stats for bundle size analysis when
     // building locally
-    !ci && production && visualizer({ filename: path.join(outputDir, 'stats.html')}),
+    !ci &&
+      production &&
+      visualizer({ filename: path.join(outputDir, 'stats.html') }),
   ],
   watch: {
     clearScreen: false,
@@ -83,4 +86,9 @@ const generateConfig = (input, outputDir, livereloadPort) => ({
 export default [
   generateConfig(production ? 'src/main' : 'sandbox/main', 'public', 35729),
   generateConfig('src/standalone/redeem/main', 'public/s/redeem', 35730),
+  generateConfig(
+    'src/standalone/leaderboard/main',
+    'public/s/leaderboard',
+    35731
+  ),
 ]
