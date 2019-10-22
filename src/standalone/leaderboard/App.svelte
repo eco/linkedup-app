@@ -2,10 +2,10 @@
   import { onMount } from 'svelte'
   import { blur } from 'svelte/transition'
   import cosmos from '../../services/cosmos'
+  import config from '../../config'
   import Overview from './Overview'
   import Winners from './Winners'
 
-  const rotationInterval = 30000
   const blurDuration = 1200
 
   let frame = 0
@@ -19,7 +19,7 @@
   onMount(async () => {
     leaderboard = await cosmos.getLeaderboard()
 
-    const timerId = setInterval(fetchAndRotate, rotationInterval)
+    const timerId = setInterval(fetchAndRotate, config.leaderboardFrameInterval)
     return () => clearInterval(timerId)
   })
 </script>

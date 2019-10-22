@@ -1,12 +1,13 @@
 import { generateCosmosKey, generateRsaKeyPair, decryptData } from '../crypto'
 import { user } from '../store'
+import config from '../config'
 import cosmos from './cosmos'
 
 export default {
   async beginVerification(badgeId) {
     const cosmosKey = await generateCosmosKey()
     const rsaKeyPair = await generateRsaKeyPair()
-    const res = await fetch('/keys/key', {
+    const res = await fetch(`${config.keyEndpoint}/keys/key`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -25,7 +26,7 @@ export default {
   },
 
   async beginRecovery(badgeId) {
-    const res = await fetch('/keys/recover', {
+    const res = await fetch(`${config.keyEndpoint}/keys/recover`, {
       method: 'POST',
       body: JSON.stringify(badgeId),
     })
@@ -36,16 +37,19 @@ export default {
   },
 
   async getAddressByBadge(badgeId) {
-    const res = await fetch(`/keys/id/${badgeId}`)
+    const res = await fetch(`${config.keyEndpoint}/keys/id/${badgeId}`)
     return res.text()
   },
 
   async recoverAccount(badgeId, token) {
-    const res = await fetch(`/keys/recover/${badgeId}/${token}`, {
-      headers: {
-        Accept: 'application/json',
-      },
-    })
+    const res = await fetch(
+      `${config.keyEndpoint}/keys/recover/${badgeId}/${token}`,
+      {
+        headers: {
+          Accept: 'application/json',
+        },
+      }
+    )
     const json = await res.json()
     const contact = await cosmos.getContactByBadge(badgeId)
     const address = await this.getAddressByBadge(badgeId)

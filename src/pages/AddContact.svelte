@@ -4,12 +4,13 @@
   import PageWithAction from '../layout/PageWithAction'
   import { Button, Textarea, Avatar, Attributes } from '../components'
   import cosmos from '../services/cosmos'
+  import config from '../config'
 
   export let pageParams
 
   let isSelf = false
   let contactName = ''
-  let avatarUrl = `/linkedup-user-content/avatars/${pageParams.badgeId}`
+  let avatarUrl = `${config.contentEndpoint}/avatars/${pageParams.badgeId}`
   let loadingShare = false
   let loadingSkip = false
   $: [contactFirstName] = contactName.split(' ')

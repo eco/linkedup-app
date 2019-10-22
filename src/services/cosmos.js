@@ -1,18 +1,19 @@
 import { get } from 'svelte/store'
 import { user } from '../store'
 import { signTx, encryptData, decryptData } from '../crypto'
+import config from '../config'
 import { createTx, claimKey, scanQr } from './cosmos.msgs'
 
 const broadcastMsg = async msg => {
   const { address, cosmosKey } = get(user)
-  const accRes = await fetch(`/auth/accounts/${address}`)
+  const accRes = await fetch(`${config.chainEndpoint}/auth/accounts/${address}`)
   const {
     result: { value },
   } = await accRes.json()
   const tx = createTx(value.account_number, value.sequence, msg)
   const signedTx = await signTx(tx, cosmosKey)
 
-  const res = await fetch('/longy/txs', {
+  const res = await fetch(`${config.chainEndpoint}/longy/txs`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -51,13 +52,17 @@ export default {
   },
 
   async getContactByBadge(badgeId) {
-    const res = await fetch(`/longy/attendees/${badgeId}`)
+    const res = await fetch(
+      `${config.chainEndpoint}/longy/attendees/${badgeId}`
+    )
     const { result } = await res.json()
     return result.value || {}
   },
 
   async getContactByAddr(address) {
-    const res = await fetch(`/longy/attendees/address/${address}`)
+    const res = await fetch(
+      `${config.chainEndpoint}/longy/attendees/address/${address}`
+    )
     const { result } = await res.json()
     return result.value || {}
   },
@@ -98,7 +103,7 @@ export default {
 
   async getScan(scanId, decrypt = false) {
     const { address, rsaKeyPair } = get(user)
-    const scanRes = await fetch(`/longy/scans/${scanId}`)
+    const scanRes = await fetch(`${config.chainEndpoint}/longy/scans/${scanId}`)
     const {
       result: { S1, S2, D1, D2, P1, P2, UnixTimeSec, Accepted: accepted },
     } = await scanRes.json()
@@ -127,7 +132,7 @@ export default {
       accepted,
       points,
       name,
-      imageUrl: `/linkedup-user-content/avatars/${contact.ID}`,
+      imageUrl: `${config.contentEndpoint}/avatars/${contact.ID}`,
       timestamp: UnixTimeSec * 1000,
     }
   },
@@ -143,7 +148,7 @@ export default {
       timestamp: contact.UnixTimeSecClaimed * 1000,
       points: 5,
       label: 'Verified your profile',
-      imageUrl: `/linkedup-user-content/avatars/${contact.ID}`,
+      imageUrl: `${config.contentEndpoint}/avatars/${contact.ID}`,
     }
 
     let scans = await Promise.all(scanIds.map(id => this.getScan(id)))
@@ -161,7 +166,7 @@ export default {
   async getPrizes() {
     const textToImage = text => `${text.toLowerCase().replace(/\s/g, '_')}.png`
 
-    const res = await fetch('/longy/prizes')
+    const res = await fetch(`${config.chainEndpoint}/longy/prizes`)
     const { result } = await res.json()
     const { address } = get(user)
     const winnings = await this.getWinnings(address)
@@ -173,7 +178,7 @@ export default {
 
         return {
           ...prize,
-          imageUrl: `/linkedup-user-content/prizes/${textToImage(
+          imageUrl: `${config.contentEndpoint}/prizes/${textToImage(
             prize.prizeText
           )}`,
           claimed: !!winning && winning.claimed,
@@ -182,13 +187,15 @@ export default {
   },
 
   async getWinnings(address) {
-    const res = await fetch(`/longy/winnings?address_id=${address}`)
+    const res = await fetch(
+      `${config.chainEndpoint}/longy/winnings?address_id=${address}`
+    )
     const { result } = await res.json()
     return result
   },
 
   async claimWinnings(address, sig) {
-    await fetch(`/longy/claim`, {
+    await fetch(`${config.chainEndpoint}/longy/claim`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -198,7 +205,7 @@ export default {
   },
 
   async getLeaderboard() {
-    const res = await fetch('/longy/leader')
+    const res = await fetch(`${config.chainEndpoint}/longy/leader`)
     const { result } = await res.json()
 
     const processTier = (name, tier) => {
