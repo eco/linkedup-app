@@ -1,14 +1,12 @@
 <script>
   import page from 'page'
   import QRCode from 'qrcode'
+  import { user } from '../store'
   import cosmos from '../services/cosmos'
+  import { signData } from '../crypto'
 
   export let pageParams = {}
   let qrCodeVisible = false
-  let qrCodePromise = QRCode.toDataURL('https://www.google.com/', {
-    margin: 0,
-    width: 200,
-  })
 
   const displayQrCode = () => (qrCodeVisible = true)
 
@@ -26,7 +24,26 @@
     page.redirect('/rewards')
   }
 
+  const getQrCode = async () => {
+    // sign address
+    const { address, rsaKeyPair } = $user
+    const sig = await signData(address, rsaKeyPair.privateKey)
+
+    // generate URL
+    const url = new URL(document.location.href)
+    url.pathname = '/s/redeem'
+    url.search = new URLSearchParams({ address, sig }).toString()
+
+    // generate QR code
+    window.x = url.toString()
+    return QRCode.toDataURL(url.toString(), {
+      margin: 0,
+      width: 200,
+    })
+  }
+
   const prizePromise = getPrizeAtIndex(pageParams.prizeIndex)
+  const qrCodePromise = getQrCode()
 </script>
 
 {#await prizePromise then prize}

@@ -27,15 +27,21 @@
   <ul>
     {#each prizes as prize, index}
       <li>
-        <span class="image-clip">
+        <span class="image-clip" class:claimed={prize.claimed}>
           <img src={prize.imageUrl} alt={prize.prizeText} />
         </span>
-        <progress
-          max={prize.repNeeded}
-          value={prize.repNeeded - prize.pointsRemaining} />
+
+        {#if !prize.claimed}
+          <progress
+            max={prize.repNeeded}
+            value={prize.repNeeded - prize.pointsRemaining} />
+        {/if}
+
         <span class="message">
           {#if prize.pointsRemaining}
             You are {prize.pointsRemaining} points away from a {prize.prizeText}
+          {:else if prize.claimed}
+            You claimed a {prize.prizeText}
           {:else}
             <span class="claim">
               <ButtonLink on:click={() => openPrizeAtIndex(index)}>
@@ -63,6 +69,9 @@
     max-height: 170px;
     overflow: hidden;
     display: block;
+  }
+  .image-clip.claimed {
+    opacity: 0.333;
   }
   img {
     width: 100%;

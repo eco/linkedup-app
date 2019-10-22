@@ -1,3 +1,4 @@
+import path from 'path'
 import svelte from 'rollup-plugin-svelte'
 import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
@@ -12,13 +13,13 @@ const production = !process.env.ROLLUP_WATCH
 const ci = !!process.env.CI
 const sandbox = !!process.env.SANDBOX_MODE
 
-export default {
-  input: production ? 'src/main' : 'sandbox/main',
+const generateConfig = (input, outputDir, livereloadPort) => ({
+  input,
   output: {
     sourcemap: !production,
     format: 'esm',
     name: 'app',
-    dir: 'public',
+    dir: outputDir,
   },
   plugins: [
     svelte({
@@ -27,7 +28,7 @@ export default {
       // we'll extract any component CSS out into
       // a separate file — better for performance
       css: css => {
-        css.write('public/main.css')
+        css.write(path.join(outputDir, 'main.css'))
       },
     }),
 
@@ -43,7 +44,7 @@ export default {
       dedupe: importee =>
         importee === 'svelte' || importee.startsWith('svelte/'),
       customResolveOptions: {
-        pathFilter: (pkg, path, relativePath) => {
+        pathFilter: (pkg, _path, relativePath) => {
           if (
             sandbox &&
             pkg.name === thisPkg.name &&
@@ -59,9 +60,12 @@ export default {
 
     json(),
 
-    // Watch the `public` directory and refresh the
+    // Watch the outputDir directory and refresh the
     // browser on changes when not in production
-    !production && livereload('public'),
+    !production && livereload({
+      watch: outputDir,
+      port: livereloadPort,
+    }),
 
     // If we're building for production (npm run build
     // instead of npm run dev), minify
@@ -69,9 +73,14 @@ export default {
 
     // Generate stats for bundle size analysis when
     // building locally
-    !ci && production && visualizer(),
+    !ci && production && visualizer({ filename: path.join(outputDir, 'stats.html')}),
   ],
   watch: {
     clearScreen: false,
   },
-}
+})
+
+export default [
+  generateConfig(production ? 'src/main' : 'sandbox/main', 'public', 35729),
+  generateConfig('src/standalone/redeem/main', 'public/s/redeem', 35730),
+]

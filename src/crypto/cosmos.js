@@ -60,3 +60,23 @@ export const signTx = async (tx, _privateKey) => {
     mode: 'block',
   }
 }
+
+export const signData = async (data, _privateKey) => {
+  // encode data into buffer
+  const encoder = new TextEncoder()
+  const encodedData = encoder.encode(data)
+  const hash = await subtle.digest('SHA-512', encodedData)
+  const buf = Buffer.from(hash)
+
+  // import private cosmos key
+  const privateKey = Buffer.from(_privateKey, 'hex')
+
+  // sign data
+  let signature = ec.sign(buf, privateKey, { canonical: true })
+  signature = Buffer.concat([
+    signature.r.toArrayLike(Buffer, 'be', 32),
+    signature.s.toArrayLike(Buffer, 'be', 32),
+  ]).toString('hex')
+
+  return signature
+}

@@ -159,18 +159,41 @@ export default {
   },
 
   async getPrizes() {
+    const textToImage = text => `${text.toLowerCase().replace(/\s/g, '_')}.png`
+
     const res = await fetch('/longy/prizes')
     const { result } = await res.json()
-
-    const textToImage = text => `${text.toLowerCase().replace(/\s/g, '_')}.png`
+    const { address } = get(user)
+    const winnings = await this.getWinnings(address)
 
     return result
       .sort((a, b) => a.repNeeded - b.repNeeded)
-      .map(prize => ({
-        ...prize,
-        imageUrl: `/linkedup-user-content/prizes/${textToImage(
-          prize.prizeText
-        )}`,
-      }))
+      .map(prize => {
+        const winning = winnings.find(w => w.tier === prize.tier)
+
+        return {
+          ...prize,
+          imageUrl: `/linkedup-user-content/prizes/${textToImage(
+            prize.prizeText
+          )}`,
+          claimed: !!winning && winning.claimed,
+        }
+      })
+  },
+
+  async getWinnings(address) {
+    const res = await fetch(`/longy/winnings?address_id=${address}`)
+    const { result } = await res.json()
+    return result
+  },
+
+  async claimWinnings(address, sig) {
+    await fetch(`/longy/claim`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ address, sig }),
+    })
   },
 }
