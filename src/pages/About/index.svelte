@@ -91,6 +91,13 @@
     left: 0;
     top: 65px;
   }
+  h2 {
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 36px;
+    margin: 1em 0 0.5em;
+    color: var(--blue);
+  }
   p {
     font-size: 14px;
     line-height: 21px;

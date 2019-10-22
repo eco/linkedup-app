@@ -1,0 +1,5 @@
+body {
+  background-color: var(--blue);
+  color: var(--white);
+  padding: 30px;
+}
