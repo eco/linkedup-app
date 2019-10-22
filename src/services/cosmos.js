@@ -196,4 +196,31 @@ export default {
       body: JSON.stringify({ address, sig }),
     })
   },
+
+  async getLeaderboard() {
+    const res = await fetch('/longy/leader')
+    const { result } = await res.json()
+
+    const processTier = (name, tier) => {
+      const attendees = tier.attendees || []
+      const rep = attendees.map(a => parseInt(a.Rep, 10))
+
+      return {
+        ...tier,
+        name,
+        prizePerAttendee:
+          rep.length && Math.floor(tier.prizeAmount / rep.length),
+        numAttendees: attendees.length,
+        minRep: rep.length && Math.min(...rep),
+        maxRep: rep.length && Math.max(...rep),
+      }
+    }
+
+    const tiers = [
+      processTier('Platinum', result.value.tier1),
+      processTier('Gold', result.value.tier2),
+    ]
+
+    return tiers
+  },
 }

@@ -37,6 +37,7 @@
     navAction = false
   })
   page('/about', () => (component = pages.About))
+  page('/leaderboard', () => (component = pages.Leaderboard))
 
   // redirect if not logged in
   page((ctx, next) => ($user.profile ? next() : page.redirect('/')))
