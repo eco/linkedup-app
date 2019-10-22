@@ -2,17 +2,18 @@ language: node_js
 node_js:
   - 10
 cache: yarn
-env:
-  IPFS_DEPLOY_PINATA__API_KEY: 0eec05c095a1cf6df916
 script:
   - yarn style:check
   - yarn lint
-  - if [ "$TRAVIS_BRANCH" = "master" ]; then export SANDBOX_MODE=true; fi
   - yarn build
 deploy:
-  provider: script
-  script: yarn deploy
+  provider: s3
+  local_dir: public
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+  bucket: linkedup.sfbw.io
+  region: us-west-2
   skip_cleanup: true
   on:
     all_branches: true
-    condition: $TRAVIS_BRANCH =~ ^(release|master)$
+    condition: $TRAVIS_BRANCH =~ ^(master)$
