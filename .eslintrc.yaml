@@ -16,6 +16,7 @@ settings:
 rules:
   no-use-before-define: off
   no-return-assign: off
+  consistent-return: off
   import/prefer-default-export: off
 overrides:
   - files: ['**/*.svelte']

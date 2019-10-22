@@ -51,6 +51,8 @@
     component = badgeClaimed ? pages.AddContact : pages.Unclaimed
     navAction = 'back'
   })
+
+  // view contacts
   page('/contact/:scanId', () => {
     component = pages.ViewContact
     navAction = 'back'
@@ -58,6 +60,10 @@
 
   // rewards
   page('/rewards', () => (component = pages.Rewards))
+  page('/rewards/:prizeIndex', () => {
+    component = pages.Redemption
+    navAction = 'back'
+  })
 
   // finally, if no route matched, display 404
   page(() => {

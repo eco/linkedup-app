@@ -3,6 +3,7 @@ module.exports = {
   hostname: 'localhost',
   port: '5000',
   spa: 'index.html',
+  spaAssetTest: '(\\.|^\\/s\\/)',
   rewrite: [{
     from: '/keys/(.*)',
     to: 'http://localhost:1337/$1',

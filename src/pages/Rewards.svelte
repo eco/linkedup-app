@@ -1,4 +1,5 @@
 <script>
+  import page from 'page'
   import cosmos from '../services/cosmos'
   import { ButtonLink } from '../components'
 
@@ -8,13 +9,13 @@
       cosmos.getPrizes(),
     ])
 
-    return prizes
-      .sort((a, b) => a.repNeeded - b.repNeeded)
-      .map(prize => ({
-        ...prize,
-        pointsRemaining: Math.max(0, prize.repNeeded - score),
-      }))
+    return prizes.map(prize => ({
+      ...prize,
+      pointsRemaining: Math.max(0, prize.repNeeded - score),
+    }))
   }
+
+  const openPrizeAtIndex = index => page(`/rewards/${index}`)
 
   const prizesPromise = getPrizes()
 </script>
@@ -24,20 +25,28 @@
   <p>Fetching rewards&hellip;</p>
 {:then prizes}
   <ul>
-    {#each prizes as prize}
+    {#each prizes as prize, index}
       <li>
-        <span class="image-clip">
+        <span class="image-clip" class:claimed={prize.claimed}>
           <img src={prize.imageUrl} alt={prize.prizeText} />
         </span>
-        <progress
-          max={prize.repNeeded}
-          value={prize.repNeeded - prize.pointsRemaining} />
+
+        {#if !prize.claimed}
+          <progress
+            max={prize.repNeeded}
+            value={prize.repNeeded - prize.pointsRemaining} />
+        {/if}
+
         <span class="message">
           {#if prize.pointsRemaining}
             You are {prize.pointsRemaining} points away from a {prize.prizeText}
+          {:else if prize.claimed}
+            You claimed a {prize.prizeText}
           {:else}
             <span class="claim">
-              <ButtonLink>Claim</ButtonLink>
+              <ButtonLink on:click={() => openPrizeAtIndex(index)}>
+                Claim
+              </ButtonLink>
             </span>
             You earned a {prize.prizeText}
           {/if}
@@ -60,6 +69,9 @@
     max-height: 170px;
     overflow: hidden;
     display: block;
+  }
+  .image-clip.claimed {
+    opacity: 0.333;
   }
   img {
     width: 100%;

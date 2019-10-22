@@ -3,9 +3,9 @@ node_modules
 package-lock.json
 
 # build output
-public/main.*
-public/*.js
-public/*.js.map
+public/**/main.*
+public/**/*.js
+public/**/*.js.map
 stats.html
 
 # ipfs-deploy variables
