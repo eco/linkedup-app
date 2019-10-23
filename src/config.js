@@ -9,8 +9,8 @@ const domains = {
     contentEndpoint: 'https://linkedup-user-content.s3.us-west-2.amazonaws.com',
   },
   localhost: {
-    chainEndpoint: '',
-    keyEndpoint: 'http://localhost:1337',
+    chainEndpoint: '/chainsvc',
+    keyEndpoint: '/keysvc',
     contentEndpoint: '/linkedup-user-content',
   },
 }

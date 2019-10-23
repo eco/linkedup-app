@@ -3,7 +3,7 @@
   import QRCode from 'qrcode'
   import { user } from '../store'
   import cosmos from '../services/cosmos'
-  import { signData } from '../crypto'
+  import { signAddress } from '../crypto'
 
   export let pageParams = {}
   let qrCodeVisible = false
@@ -27,7 +27,7 @@
   const getQrCode = async () => {
     // sign address
     const { address, rsaKeyPair } = $user
-    const sig = await signData(address, rsaKeyPair.privateKey)
+    const sig = await signAddress(address, rsaKeyPair.privateKey)
 
     // generate URL
     const url = new URL(document.location.href)

@@ -1,4 +1,5 @@
 import elliptic from 'elliptic'
+import bech32 from 'bech32'
 import { Buffer } from 'buffer'
 
 const { subtle } = window.crypto
@@ -61,11 +62,10 @@ export const signTx = async (tx, _privateKey) => {
   }
 }
 
-export const signData = async (data, _privateKey) => {
-  // encode data into buffer
-  const encoder = new TextEncoder()
-  const encodedData = encoder.encode(data)
-  const hash = await subtle.digest('SHA-512', encodedData)
+export const signAddress = async (address, _privateKey) => {
+  // decode address and hash bytes into buffer
+  const { words } = bech32.decode(address)
+  const hash = await subtle.digest('SHA-512', new Uint8Array(words))
   const buf = Buffer.from(hash)
 
   // import private cosmos key

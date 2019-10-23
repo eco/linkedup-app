@@ -5,14 +5,11 @@ module.exports = {
   spa: 'index.html',
   spaAssetTest: '(\\.|^\\/s\\/)',
   rewrite: [{
-    from: '/keys/(.*)',
+    from: '/keysvc/(.*)',
     to: 'http://localhost:1337/$1',
   }, {
-    from: '/longy/(.*)',
-    to: 'http://localhost:1317/longy/$1'
-  }, {
-    from: '/auth/(.*)',
-    to: 'http://localhost:1317/auth/$1'
+    from: '/chainsvc/(.*)',
+    to: 'http://localhost:1317/$1'
   }, {
     from: '/linkedup-user-content/(.*)',
     to: 'http://localhost:4572/linkedup-user-content/$1'

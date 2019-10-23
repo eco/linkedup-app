@@ -1,2 +1,2 @@
-export { generateCosmosKey, signTx, signData } from './cosmos'
+export { generateCosmosKey, signTx, signAddress } from './cosmos'
 export { generateRsaKeyPair, encryptData, decryptData } from './rsa'
