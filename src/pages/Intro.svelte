@@ -2,8 +2,9 @@
   import page from 'page'
   import { QRScanner } from '../components'
 
-  const handleCode = () => {
-    page.redirect('/badge/1441255721')
+  const handleCode = e => {
+    const url = new URL(e.detail.data)
+    page.redirect(url.pathname)
   }
 </script>
 
