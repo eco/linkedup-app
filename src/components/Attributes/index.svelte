@@ -4,6 +4,7 @@
   import ButtonLink from '../ButtonLink'
   import DeleteIcon from './DeleteIcon.svelte'
   import Modal from '../Modal'
+  import platforms from './platforms'
   import * as socialIcons from './socials'
 
   export let name = ''
@@ -12,7 +13,6 @@
   export let editable = false
 
   const shareFlags = Object.fromEntries(share.map(s => [s, true]))
-  const possibleFields = ['Facebook', 'LinkedIn', 'Phone']
   let fieldsVisible = false
 
   $: {
@@ -21,14 +21,13 @@
       .map(entry => entry[0])
   }
   $: selectedFields = attributes.slice(1).map(a => a.label)
-  $: allSelected = selectedFields.length === possibleFields.length
+  $: allSelected = selectedFields.length === platforms.length
 
-  const showFields = () => {
-    fieldsVisible = true
-  }
+  const showFields = () => (fieldsVisible = true)
+  const hideFields = () => (fieldsVisible = false)
 
   const addField = field => {
-    fieldsVisible = false
+    hideFields()
     shareFlags[field] = true
     attributes = [
       ...attributes,
@@ -83,10 +82,9 @@
 {/if}
 
 {#if editable && fieldsVisible}
-  <Modal>
-    <h1>Add Field</h1>
+  <Modal title="Add Field" on:close={hideFields}>
     <ul class="fields">
-      {#each possibleFields as field}
+      {#each platforms as field}
         <li
           class="field"
           class:selected={selectedFields.includes(field)}

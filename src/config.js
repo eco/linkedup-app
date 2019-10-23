@@ -1,5 +1,5 @@
 const defaultOptions = {
-  leaderboardFrameInterval: 30000,
+  leaderboardFrameInterval: 10000,
 }
 
 const domains = {
