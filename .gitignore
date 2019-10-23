@@ -3,10 +3,11 @@ node_modules
 package-lock.json
 
 # build output
-public/**/main.*
+public/**/main*.*
 public/**/*.js
 public/**/*.js.map
-stats.html
+public/**/stats.html
+public/**/index.html
 
 # ipfs-deploy variables
 .env

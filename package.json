@@ -25,6 +25,7 @@
     "eslint-config-prettier": "^6.3.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-svelte3": "^2.7.3",
+    "hash.js": "^1.1.7",
     "husky": "^3.0.9",
     "ipfs-deploy": "^7.10.5",
     "jsqr": "^1.2.0",
