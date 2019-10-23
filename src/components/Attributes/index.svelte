@@ -12,7 +12,7 @@
   export let editable = false
 
   const shareFlags = Object.fromEntries(share.map(s => [s, true]))
-  const possibleFields = ['Facebook', 'LinkedIn', 'Phone']
+  const possibleFields = ['LinkedIn', 'Phone', 'Telegram', 'Twitter', 'Discord', 'Signal', 'Whatsapp', 'Angel List', 'Facebook', 'Instagram']
   let fieldsVisible = false
 
   $: {
