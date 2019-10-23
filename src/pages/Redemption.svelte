@@ -31,7 +31,7 @@
 
     // generate URL
     const url = new URL(document.location.href)
-    url.pathname = '/s/redeem'
+    url.pathname = '/s/redeem/index.html'
     url.search = new URLSearchParams({ address, sig }).toString()
 
     // generate QR code

@@ -7,7 +7,7 @@ export default {
   async beginVerification(badgeId) {
     const cosmosKey = await generateCosmosKey()
     const rsaKeyPair = await generateRsaKeyPair()
-    const res = await fetch(`${config.keyEndpoint}/keys/key`, {
+    const res = await fetch(`${config.keyEndpoint}/key`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -26,7 +26,7 @@ export default {
   },
 
   async beginRecovery(badgeId) {
-    const res = await fetch(`${config.keyEndpoint}/keys/recover`, {
+    const res = await fetch(`${config.keyEndpoint}/recover`, {
       method: 'POST',
       body: JSON.stringify(badgeId),
     })
@@ -37,13 +37,13 @@ export default {
   },
 
   async getAddressByBadge(badgeId) {
-    const res = await fetch(`${config.keyEndpoint}/keys/id/${badgeId}`)
+    const res = await fetch(`${config.keyEndpoint}/id/${badgeId}`)
     return res.text()
   },
 
   async recoverAccount(badgeId, token) {
     const res = await fetch(
-      `${config.keyEndpoint}/keys/recover/${badgeId}/${token}`,
+      `${config.keyEndpoint}/recover/${badgeId}/${token}`,
       {
         headers: {
           Accept: 'application/json',

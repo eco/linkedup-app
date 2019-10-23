@@ -10,7 +10,7 @@ const domains = {
   },
   localhost: {
     chainEndpoint: '',
-    keyEndpoint: '',
+    keyEndpoint: '/keys',
     contentEndpoint: '/linkedup-user-content',
   },
 }
