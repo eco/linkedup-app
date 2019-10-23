@@ -65,7 +65,8 @@ export const signTx = async (tx, _privateKey) => {
 export const signAddress = async (address, _privateKey) => {
   // decode address and hash bytes into buffer
   const { words } = bech32.decode(address)
-  const hash = await subtle.digest('SHA-512', new Uint8Array(words))
+  const bytes = bech32.fromWords(words)
+  const hash = await subtle.digest('SHA-512', new Uint8Array(bytes))
   const buf = Buffer.from(hash)
 
   // import private cosmos key
