@@ -1,6 +1,8 @@
+import config from '../config'
+
 export default {
   async uploadFile(url, file) {
-    const res = await fetch(url, {
+    const res = await fetch(`${config.contentEndpoint}${url}`, {
       method: 'PUT',
       body: file,
     })
