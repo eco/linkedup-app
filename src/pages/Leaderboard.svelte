@@ -1,6 +1,6 @@
 <script>
   import cosmos from '../services/cosmos'
-  import { user } from '../store'
+  import userStore from '../store/user'
 
   const getPlacement = async () => {
     const tiers = await leaderboardPromise
@@ -8,7 +8,7 @@
 
     const placement = tiers.find(tier => {
       const attendees = tier.attendees.map(a => a.Address)
-      return attendees.includes($user.address)
+      return attendees.includes($userStore.address)
     })
 
     const { name, prizePerAttendee } = placement || {}

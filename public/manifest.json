@@ -1,0 +1,7 @@
+{
+  "name": "Linked Up",
+  "short_name": "Linked Up",
+  "start_url": "/",
+  "display": "browser",
+  "orientation": "portrait"
+}

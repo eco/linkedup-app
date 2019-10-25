@@ -1,29 +1,34 @@
 <script>
   import page from 'page'
-  import cosmos from '../services/cosmos'
   import { ButtonLink } from '../components'
+  import prizeStore from '../store/prizes'
+  import playerStore from '../store/player'
 
-  const getPrizes = async () => {
-    const [score, prizes] = await Promise.all([
-      cosmos.getPlayerScore(),
-      cosmos.getPrizes(),
-    ])
-
-    return prizes.map(prize => ({
-      ...prize,
-      pointsRemaining: Math.max(0, prize.repNeeded - score),
-    }))
-  }
+  let prizes
 
   const openPrizeAtIndex = index => page(`/rewards/${index}`)
 
-  const prizesPromise = getPrizes()
+  $: {
+    if ($prizeStore.data && $playerStore.data) {
+      prizes = $prizeStore.data.map(prize => ({
+        ...prize,
+        pointsRemaining: Math.max(0, prize.repNeeded - $playerStore.data.score),
+      }))
+    } else {
+      prizes = []
+    }
+  }
 </script>
 
 <h1>Rewards</h1>
-{#await prizesPromise}
+
+{#if $prizeStore.loading}
   <p>Fetching rewards&hellip;</p>
-{:then prizes}
+{:else if $prizeStore.error}
+  <p>There was an error fetching the rewards. {$prizeStore.error.message}</p>
+{:else if $playerStore.error}
+  <p>There was an error fetching the rewards. {$playerStore.error.message}</p>
+{:else}
   <ul>
     {#each prizes as prize, index}
       <li>
@@ -54,9 +59,7 @@
       </li>
     {/each}
   </ul>
-{:catch error}
-  <p>There was an error fetching the rewards. {error.message}</p>
-{/await}
+{/if}
 
 <style>
   li {

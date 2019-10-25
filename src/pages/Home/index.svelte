@@ -1,8 +1,9 @@
 <script>
   import page from 'page'
+  import config from '../../config'
   import PageWithAction from '../../layout/PageWithAction'
   import { ReputationLog, Button } from '../../components'
-  import cosmos from '../../services/cosmos'
+  import playerStore from '../../store/player'
   import ScanIcon from './ScanIcon'
 
   const scanContact = () => page('/scan')
@@ -12,17 +13,41 @@
     }
   }
 
-  let dataPromise = Promise.all([
-    cosmos.getPlayerScore(),
-    cosmos.getReputationLog(),
-  ])
+  let score
+  let log
+
+  $: {
+    const player = $playerStore.data
+
+    if (player) {
+      const verificationEntry = {
+        type: 'verification',
+        name: player.name,
+        timestamp: player.claimedAt,
+        points: 5,
+        label: 'Verified your profile',
+        imageUrl: `${config.contentEndpoint}/avatars/${player.id}`,
+      }
+
+      const scans = player.scans
+        .filter(scan => scan.accepted)
+        .map(s => ({
+          ...s,
+          type: 'connection',
+          label: `Connected to ${s.name}`,
+        }))
+
+      score = player.score
+      log = [verificationEntry, ...scans].reverse()
+    }
+  }
 </script>
 
 <PageWithAction>
   <div slot="content">
-    {#await dataPromise then data}
-      <ReputationLog points={data[0]} log={data[1]} on:open={openContact} />
-    {/await}
+    {#if $playerStore.data}
+      <ReputationLog points={score} {log} on:open={openContact} />
+    {/if}
   </div>
   <div slot="action">
     <Button fullWidth on:click={scanContact}>

@@ -1,6 +1,6 @@
 <script>
   import page from 'page'
-  import { user } from './store'
+  import userStore from './store/user'
   import cosmos from './services/cosmos'
   import MainLayout from './layout/MainLayout'
   import * as pages from './pages'
@@ -17,9 +17,9 @@
   })
 
   // onboarding
-  page('/', () => (component = $user.profile ? pages.Home : pages.Intro))
+  page('/', () => (component = $userStore.profile ? pages.Home : pages.Intro))
   page('/badge/:badgeId', async (ctx, next) => {
-    if ($user.profile) {
+    if ($userStore.profile) {
       next()
     } else {
       const badgeClaimed = await cosmos.isBadgeClaimed(pageParams.badgeId)
@@ -40,7 +40,7 @@
   page('/leaderboard', () => (component = pages.Leaderboard))
 
   // redirect if not logged in
-  page((ctx, next) => ($user.profile ? next() : page.redirect('/')))
+  page((ctx, next) => ($userStore.profile ? next() : page.redirect('/')))
 
   // scanning contacts and sponsors
   page('/scan', () => {
@@ -65,6 +65,9 @@
     component = pages.Redemption
     navAction = 'back'
   })
+
+  // notifications
+  page('/notifications', () => (component = pages.Notifications))
 
   // finally, if no route matched, display 404
   page(() => {

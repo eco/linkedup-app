@@ -1,5 +1,5 @@
 import { generateCosmosKey, generateRsaKeyPair, decryptData } from '../crypto'
-import { user } from '../store'
+import userStore from '../store/user'
 import config from '../config'
 import cosmos from './cosmos'
 
@@ -22,7 +22,7 @@ export default {
     if (!res.ok) {
       throw new Error('Failed to post key')
     }
-    user.set({ cosmosKey, rsaKeyPair })
+    userStore.set({ cosmosKey, rsaKeyPair })
   },
 
   async beginRecovery(badgeId) {
@@ -55,7 +55,7 @@ export default {
     const address = await this.getAddressByBadge(badgeId)
     const profile = await decryptData(contact.EncryptedInfo, json.RSA_key)
 
-    user.set({
+    userStore.set({
       address,
       cosmosKey: json.cosmos_private_key,
       rsaKeyPair: {

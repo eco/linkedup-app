@@ -18,4 +18,4 @@ const lsWritable = (name, initialValueWhenEmpty) => {
   }
 }
 
-export const user = lsWritable('user', {})
+export default lsWritable
