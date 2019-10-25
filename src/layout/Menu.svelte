@@ -2,7 +2,8 @@
   import { createEventDispatcher } from 'svelte'
   import { fly } from 'svelte/transition'
   import page from 'page'
-  import { user } from '../store'
+  import userStore from '../store/user'
+  import notificationsStore from '../store/notifications'
   import MenuGraphic from './MenuGraphic'
 
   const dispatch = createEventDispatcher()
@@ -20,20 +21,29 @@
       name: 'Rewards',
       requiresLogin: true,
     },
+    '/notifications': {
+      name: 'Notifications',
+      requiresLogin: true,
+      badge: () => $notificationsStore.filter(n => !n.accepted).length,
+    },
     '/leaderboard': 'Leaderboard',
     '/about': 'About',
   }
   let navItems
 
-  // user -> navItems
+  // userStore -> navItems
   $: {
     navItems = Object.entries(navConfig)
       .map(([path, entry]) => {
-        if (entry.requiresLogin && (!$user || !$user.profile)) {
+        if (entry.requiresLogin && !$userStore.profile) {
           return false
         }
         const name = entry.name || entry
-        return { path, name }
+        let badge
+        if (entry.badge) {
+          badge = entry.badge()
+        }
+        return { path, name, badge }
       })
       .filter(Boolean)
   }
@@ -46,6 +56,9 @@
     <ol class="nav">
       {#each navItems as item}
         <li>
+          {#if item.badge}
+            <span class="badge">{item.badge}</span>
+          {/if}
           <a href={item.path} on:click={navigate}>{item.name}</a>
         </li>
       {/each}
@@ -113,5 +126,20 @@
   footer :global(svg) {
     width: 180px;
     height: 180px;
+  }
+  .badge {
+    float: right;
+    width: 2em;
+    line-height: 2em;
+    background-color: var(--red);
+    color: var(--white);
+    border-radius: 10em;
+    box-shadow: 1px 4px 8px rgba(0, 0, 0, 0.05), 0px 4px 4px rgba(0, 0, 0, 0.25);
+    font-size: 18px;
+    position: relative;
+    top: 4px;
+    right: 10px;
+    text-align: center;
+    font-weight: bold;
   }
 </style>

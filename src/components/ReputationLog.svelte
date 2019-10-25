@@ -43,6 +43,7 @@
 <style>
   table {
     width: 100%;
+    border-spacing: 0;
   }
   th {
     text-align: left;

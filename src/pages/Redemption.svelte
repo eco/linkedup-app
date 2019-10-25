@@ -1,7 +1,7 @@
 <script>
   import page from 'page'
   import QRCode from 'qrcode'
-  import { user } from '../store'
+  import userStore from '../store/user'
   import cosmos from '../services/cosmos'
   import { signAddress } from '../crypto'
 
@@ -26,8 +26,8 @@
 
   const getQrCode = async () => {
     // sign address
-    const { address, rsaKeyPair } = $user
-    const sig = await signAddress(address, rsaKeyPair.privateKey)
+    const { address, cosmosKey } = $userStore
+    const sig = await signAddress(address, cosmosKey)
 
     // generate URL
     const url = new URL(document.location.href)
@@ -35,7 +35,6 @@
     url.search = new URLSearchParams({ address, sig }).toString()
 
     // generate QR code
-    window.x = url.toString()
     return QRCode.toDataURL(url.toString(), {
       margin: 0,
       width: 200,

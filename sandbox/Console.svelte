@@ -1,6 +1,6 @@
 <script>
   import page from 'page'
-  import { user } from '../src/store'
+  import userStore from '../src/store/user'
 
   const attendees = {
     Stoyan: 1422410109,
@@ -34,7 +34,7 @@
   </ul>
   <hr />
   <h1>Storage</h1>
-  <pre>{$user ? JSON.stringify($user, null, 4) : '<empty>'}</pre>
+  <pre>{$userStore ? JSON.stringify($userStore, null, 4) : '<empty>'}</pre>
 </div>
 
 <style>

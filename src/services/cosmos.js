@@ -1,11 +1,11 @@
 import { get } from 'svelte/store'
-import { user } from '../store'
+import userStore from '../store/user'
 import { signTx, encryptData, decryptData } from '../crypto'
 import config from '../config'
 import { createTx, claimKey, scanQr } from './cosmos.msgs'
 
 const broadcastMsg = async msg => {
-  const { address, cosmosKey } = get(user)
+  const { address, cosmosKey } = get(userStore)
   const accRes = await fetch(`${config.chainEndpoint}/auth/accounts/${address}`)
   const {
     result: { value },
@@ -38,7 +38,7 @@ export default {
   },
 
   async claimBadge(address, secret, profile) {
-    const { rsaKeyPair } = get(user)
+    const { rsaKeyPair } = get(userStore)
     const encryptedInfo = await encryptData(profile, rsaKeyPair.publicKey)
     const msg = claimKey({
       attendeeAddress: address,
@@ -47,7 +47,7 @@ export default {
       name: profile.name,
       encryptedInfo,
     })
-    user.set({ address, ...get(user), profile })
+    userStore.set({ address, ...get(userStore), profile })
     await broadcastMsg(msg)
   },
 
@@ -78,7 +78,7 @@ export default {
   },
 
   async scanContact(badgeId, sharePayload) {
-    const { address } = get(user)
+    const { address } = get(userStore)
     const contact = await this.getContactByBadge(badgeId)
 
     let data
@@ -96,13 +96,13 @@ export default {
   },
 
   async getPlayerScore() {
-    const { address } = get(user)
+    const { address } = get(userStore)
     const contact = await this.getContactByAddr(address)
     return contact.Rep
   },
 
   async getScan(scanId, decrypt = false) {
-    const { address, rsaKeyPair } = get(user)
+    const { address, rsaKeyPair } = get(userStore)
     const scanRes = await fetch(`${config.chainEndpoint}/longy/scans/${scanId}`)
     const {
       result: { S1, S2, D1, D2, P1, P2, UnixTimeSec, Accepted: accepted },
@@ -127,6 +127,7 @@ export default {
 
     return {
       scanId,
+      id: contact.ID,
       address: contactAddr,
       ...profile,
       accepted,
@@ -137,30 +138,20 @@ export default {
     }
   },
 
-  async getReputationLog() {
-    const { address } = get(user)
+  async getPlayer() {
+    const { address } = get(userStore)
     const contact = await this.getContactByAddr(address)
     const scanIds = contact.ScanIDs || []
+    const scans = await Promise.all(scanIds.map(id => this.getScan(id)))
 
-    const verificationEntry = {
-      type: 'verification',
+    return {
+      id: contact.ID,
+      address,
       name: contact.Name,
-      timestamp: contact.UnixTimeSecClaimed * 1000,
-      points: 5,
-      label: 'Verified your profile',
-      imageUrl: `${config.contentEndpoint}/avatars/${contact.ID}`,
+      score: contact.Rep,
+      claimedAt: contact.UnixTimeSecClaimed * 1000,
+      scans,
     }
-
-    let scans = await Promise.all(scanIds.map(id => this.getScan(id)))
-    scans = scans
-      .filter(scan => scan.accepted)
-      .map(s => ({
-        ...s,
-        type: 'connection',
-        label: `Connected to ${s.name}`,
-      }))
-
-    return [verificationEntry, ...scans].reverse()
   },
 
   async getPrizes() {
@@ -168,7 +159,7 @@ export default {
 
     const res = await fetch(`${config.chainEndpoint}/longy/prizes`)
     const { result } = await res.json()
-    const { address } = get(user)
+    const { address } = get(userStore)
     const winnings = await this.getWinnings(address)
 
     return result

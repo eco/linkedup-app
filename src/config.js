@@ -1,5 +1,6 @@
 const defaultOptions = {
   leaderboardFrameInterval: 10000,
+  dataPollingInterval: 5000,
 }
 
 const domains = {

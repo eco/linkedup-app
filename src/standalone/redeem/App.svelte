@@ -57,6 +57,7 @@
   table {
     margin-top: 1.5em;
     width: 100%;
+    border-spacing: 0;
   }
   table td {
     padding-top: 0.5em;
