@@ -11,7 +11,7 @@ export default derived(
     if (player) {
       // connection requests
       requests = player.scans
-        .filter(scan => scan.S1 !== player.address)
+        .filter(scan => !scan.isSelfInitiated)
         .map(scan => ({
           ...scan,
           type: 'request',

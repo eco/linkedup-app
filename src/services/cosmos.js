@@ -108,8 +108,8 @@ export default {
       result: { S1, S2, D1, D2, P1, P2, UnixTimeSec, Accepted: accepted },
     } = await scanRes.json()
 
-    const isSlot1Self = S1 === address
-    const [contactAddr, encryptedData, points] = isSlot1Self
+    const isSelfInitiated = S1 === address
+    const [contactAddr, encryptedData, points] = isSelfInitiated
       ? [S2, D2, P2]
       : [S1, D1, P1]
     const name = await this.getContactNameByAddr(contactAddr)
@@ -135,6 +135,7 @@ export default {
       name,
       imageUrl: `${config.contentEndpoint}/avatars/${contact.ID}`,
       timestamp: UnixTimeSec * 1000,
+      isSelfInitiated,
     }
   },
 

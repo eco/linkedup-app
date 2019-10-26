@@ -3,8 +3,8 @@
   import { fly } from 'svelte/transition'
   import page from 'page'
   import userStore from '../store/user'
-  import notificationsStore from '../store/notifications'
   import MenuGraphic from './MenuGraphic'
+  import NotifBadge from './NotifBadge'
 
   const dispatch = createEventDispatcher()
   const close = () => dispatch('close')
@@ -24,7 +24,7 @@
     '/notifications': {
       name: 'Notifications',
       requiresLogin: true,
-      badge: () => $notificationsStore.filter(n => !n.accepted).length,
+      badge: true,
     },
     '/leaderboard': 'Leaderboard',
     '/about': 'About',
@@ -39,11 +39,7 @@
           return false
         }
         const name = entry.name || entry
-        let badge
-        if (entry.badge) {
-          badge = entry.badge()
-        }
-        return { path, name, badge }
+        return { path, name, badge: entry.badge }
       })
       .filter(Boolean)
   }
@@ -57,7 +53,9 @@
       {#each navItems as item}
         <li>
           {#if item.badge}
-            <span class="badge">{item.badge}</span>
+            <span class="badge">
+              <NotifBadge />
+            </span>
           {/if}
           <a href={item.path} on:click={navigate}>{item.name}</a>
         </li>
@@ -129,17 +127,9 @@
   }
   .badge {
     float: right;
-    width: 2em;
-    line-height: 2em;
-    background-color: var(--red);
-    color: var(--white);
-    border-radius: 10em;
-    box-shadow: 1px 4px 8px rgba(0, 0, 0, 0.05), 0px 4px 4px rgba(0, 0, 0, 0.25);
-    font-size: 18px;
     position: relative;
     top: 4px;
     right: 10px;
-    text-align: center;
-    font-weight: bold;
+    font-size: 18px;
   }
 </style>

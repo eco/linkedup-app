@@ -1,40 +1,44 @@
 <script>
   import page from 'page'
-  import notificationsStore from '../store/notifications'
+  import userStore from '../store/user'
   import Menu from './Menu'
   import MenuIcon from './MenuIcon'
   import BackIcon from './BackIcon'
   import NotifIcon from './NotifIcon'
+  import NotifBadge from './NotifBadge'
 
   export let navAction = 'menu'
+  export let standalone = false
   let menuVisible = false
 
   const showMenu = () => (menuVisible = true)
   const hideMenu = () => (menuVisible = false)
   const goBack = () => window.history.back()
   const openNotifs = () => page('/notifications')
-
-  $: badge = $notificationsStore.filter(n => !n.accepted).length
 </script>
 
 <div class="layout">
   <header>
     Linked Up
-    {#if navAction === 'menu'}
-      <span class="menu-icon" on:click={showMenu}>
-        <MenuIcon />
-      </span>
-    {:else if navAction === 'back'}
-      <span class="menu-icon" on:click={goBack}>
-        <BackIcon />
-      </span>
-    {/if}
-    <span class="notif-icon" on:click={openNotifs}>
-      <NotifIcon />
-      {#if badge}
-        <span class="badge">{badge}</span>
+    {#if !standalone}
+      {#if navAction === 'menu'}
+        <span class="menu-icon" on:click={showMenu}>
+          <MenuIcon />
+        </span>
+      {:else if navAction === 'back'}
+        <span class="menu-icon" on:click={goBack}>
+          <BackIcon />
+        </span>
       {/if}
-    </span>
+      {#if $userStore.profile}
+        <span class="notif-icon" on:click={openNotifs}>
+          <NotifIcon />
+          <span class="badge">
+            <NotifBadge />
+          </span>
+        </span>
+      {/if}
+    {/if}
   </header>
 
   <main>
@@ -75,23 +79,15 @@
     top: 0;
     right: 25px;
   }
+  .badge {
+    position: absolute;
+    top: 13px;
+    right: -10px;
+    font-size: 11px;
+  }
   main {
     background-color: var(--white);
     padding: var(--page-gutter-vert) var(--page-gutter-horiz);
     flex: 1 0 0;
-  }
-  .badge {
-    position: absolute;
-    width: 2em;
-    line-height: 2em;
-    background-color: var(--red);
-    color: var(--white);
-    border-radius: 10em;
-    box-shadow: 1px 4px 8px rgba(0, 0, 0, 0.05), 0px 4px 4px rgba(0, 0, 0, 0.25);
-    font-size: 11px;
-    top: 13px;
-    right: -10px;
-    text-align: center;
-    font-weight: bold;
   }
 </style>

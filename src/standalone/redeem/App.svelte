@@ -25,23 +25,27 @@
   let winningsPromise = cosmos.getWinnings(address)
 </script>
 
-<MainLayout navAction={false}>
+<MainLayout standalone>
   <PageWithAction>
     <div slot="content">
       <h1>Attendee Reward Status</h1>
       {#await winningsPromise then winnings}
-        <table>
-          {#each winnings as prize}
-            <tr>
-              <td>{prize.name}</td>
-              <td class="status">
-                {#if prize.claimed}
-                  <span class="tag">Claimed</span>
-                {/if}
-              </td>
-            </tr>
-          {/each}
-        </table>
+        {#if winnings.length}
+          <table>
+            {#each winnings as prize}
+              <tr>
+                <td>{prize.name}</td>
+                <td class="status">
+                  {#if prize.claimed}
+                    <span class="tag">Claimed</span>
+                  {/if}
+                </td>
+              </tr>
+            {/each}
+          </table>
+        {:else}
+          <p>Player has no rewards.</p>
+        {/if}
       {/await}
     </div>
     <div slot="action">
