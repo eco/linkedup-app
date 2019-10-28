@@ -20,8 +20,9 @@
 <PageWithAction>
   <div slot="content">
     <h1>Welcome to Linked Up</h1>
-    <p>Grow your network by adding contacts</p>
-    <p>To add a contact, scan the QR code on another SFBC attendee's badge.</p>
+    <p>Grow your professioanl network, make friends, and win prizes!</p>
+    <p>Meet with others and share your contact details</p>
+    <p>To play, scan the QR code on another SFBW attendee's badge using this app.</p>
     <p>Please verify your profile information and privacy settings</p>
   </div>
   <div slot="action">
