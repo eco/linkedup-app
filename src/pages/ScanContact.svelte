@@ -3,7 +3,7 @@
   import { QRScanner } from '../components'
 
   const handleCode = e => {
-    const url = new URL(e.detail.data)
+    const url = new URL(e.detail.url)
     page.redirect(url.pathname)
   }
 </script>

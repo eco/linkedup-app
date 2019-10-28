@@ -51,6 +51,12 @@
 </div>
 
 <style>
+  :global(body) {
+    background-color: var(--blue);
+    color: var(--white);
+    padding: 30px;
+  }
+
   .container {
     display: flex;
     flex-direction: column;

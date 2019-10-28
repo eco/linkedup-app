@@ -12,12 +12,28 @@
   let found = false
   const codeFound = code => {
     if (found) {
-      return
+      return found
     }
-    found = true
+
+    try {
+      const url = new URL(code.data)
+      const reValid = /^\/badge\/(\d+)$/
+      if (!reValid.test(url.pathname)) {
+        return false
+      }
+    } catch (e) {
+      return false
+    }
+
+    // delay callback until user has been shown successful scan
     setTimeout(() => {
-      dispatch('code', code)
+      const detail = { url: code.data }
+      dispatch('code', detail)
     }, 1200)
+
+    found = true
+
+    return found
   }
 
   // requests permission to access device camera and begins
@@ -34,7 +50,7 @@
     ;({ default: jsQR } = await import('jsqr'))
   }
 
-  function drawBoundingBox(location) {
+  function drawBoundingBox(location, valid) {
     const padding = 10
     context.moveTo(
       location.topLeftCorner.x - padding,
@@ -56,7 +72,7 @@
 
     context.lineJoin = 'round'
     context.lineWidth = 12
-    context.strokeStyle = '#3c48ea'
+    context.strokeStyle = valid ? '#3c48ea' : '#bb0000'
     context.stroke()
   }
 
@@ -82,8 +98,8 @@
         })
 
         if (code && code.data) {
-          codeFound(code)
-          drawBoundingBox(code.location)
+          const valid = codeFound(code)
+          drawBoundingBox(code.location, valid)
         }
       }
     }
