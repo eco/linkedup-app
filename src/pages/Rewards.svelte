@@ -1,5 +1,6 @@
 <script>
   import page from 'page'
+  import events from '../services/events'
   import { ButtonLink } from '../components'
   import prizeStore from '../store/prizes'
   import playerStore from '../store/player'
@@ -8,6 +9,11 @@
   let loading = true
 
   const openPrizeAtIndex = index => page(`/rewards/${index}`)
+
+  const tracker = events.configured()
+  tracker.track('view', {
+    category: 'rewards',
+  })
 
   $: {
     if ($prizeStore.data && $playerStore.data) {

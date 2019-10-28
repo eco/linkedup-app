@@ -2,12 +2,22 @@
   import page from 'page'
   import userStore from './store/user'
   import cosmos from './services/cosmos'
+  import events from './services/events'
   import MainLayout from './layout/MainLayout'
   import * as pages from './pages'
 
   let component
   let pageParams = {}
   let navAction
+
+  // configure analytics / segment
+  const tracker = events.configure()
+
+  userStore.subscribe(account => {
+    tracker.identify(account.address, {
+      name: account.profile.name,
+    })
+  })
 
   page((ctx, next) => {
     component = null

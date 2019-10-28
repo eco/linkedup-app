@@ -1,6 +1,12 @@
 <script>
   import cosmos from '../services/cosmos'
+  import events from '../services/events'
   import { Avatar, TextInput } from '../components'
+
+  const tracker = events.configured()
+  tracker.track('view', {
+    category: 'connection',
+  })
 
   export let pageParams
   const scanPromise = cosmos.getScan(pageParams.scanId, true)
