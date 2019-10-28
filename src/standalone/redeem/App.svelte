@@ -16,7 +16,7 @@
 
   const markClaimed = async () => {
     loading = true
-    cosmos.claimWinnings(address, sig)
+    await cosmos.claimWinnings(address, sig)
     winningsPromise = cosmos.getWinnings(address)
     loading = false
   }
@@ -49,9 +49,13 @@
       {/await}
     </div>
     <div slot="action">
-      <Button fullWidth on:click={markClaimed} {loading}>
-        Mark all as claimed
-      </Button>
+      {#await winningsPromise then winnings}
+        {#if winnings.filter(w => !w.claimed).length}
+          <Button fullWidth on:click={markClaimed} {loading}>
+            Mark all as claimed
+          </Button>
+        {/if}
+      {/await}
     </div>
   </PageWithAction>
 

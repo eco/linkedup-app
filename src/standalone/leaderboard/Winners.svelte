@@ -18,8 +18,8 @@
     {#each tier.attendees as attendee, idx}
       <tr>
         <td>{idx + 1}</td>
-        <td>{attendee.Name}</td>
-        <td>{attendee.Rep}</td>
+        <td>{attendee.name}</td>
+        <td>{attendee.rep}</td>
       </tr>
     {/each}
   </table>

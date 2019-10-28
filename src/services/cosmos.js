@@ -4,8 +4,7 @@ import { signTx, encryptData, decryptData } from '../crypto'
 import config from '../config'
 import { createTx, claimKey, scanQr } from './cosmos.msgs'
 
-const broadcastMsg = async msg => {
-  const { address, cosmosKey } = get(userStore)
+const broadcastMsg = async (msg, address, cosmosKey) => {
   const accRes = await fetch(`${config.chainEndpoint}/auth/accounts/${address}`)
   const {
     result: { value },
@@ -34,11 +33,12 @@ const broadcastMsg = async msg => {
 export default {
   async isBadgeClaimed(badgeId) {
     const contact = await this.getContactByBadge(badgeId)
-    return contact.Claimed
+    return contact.claimed
   },
 
   async claimBadge(address, secret, profile) {
-    const { rsaKeyPair } = get(userStore)
+    const user = get(userStore)
+    const { cosmosKey, rsaKeyPair } = user
     const encryptedInfo = await encryptData(profile, rsaKeyPair.publicKey)
     const msg = claimKey({
       attendeeAddress: address,
@@ -47,8 +47,8 @@ export default {
       name: profile.name,
       encryptedInfo,
     })
-    userStore.set({ address, ...get(userStore), profile })
-    await broadcastMsg(msg)
+    await broadcastMsg(msg, address, cosmosKey)
+    userStore.set({ address, ...user, profile })
   },
 
   async getContactByBadge(badgeId) {
@@ -69,21 +69,21 @@ export default {
 
   async getContactNameByBadge(badgeId) {
     const contact = await this.getContactByBadge(badgeId)
-    return contact.Name
+    return contact.name
   },
 
   async getContactNameByAddr(address) {
     const contact = await this.getContactByAddr(address)
-    return contact.Name
+    return contact.name
   },
 
   async scanContact(badgeId, sharePayload) {
-    const { address } = get(userStore)
+    const { address, cosmosKey } = get(userStore)
     const contact = await this.getContactByBadge(badgeId)
 
     let data
     if (sharePayload) {
-      data = await encryptData(sharePayload, contact.RsaPublicKey)
+      data = await encryptData(sharePayload, contact.rsaPublicKey)
     }
 
     const msg = scanQr({
@@ -92,26 +92,28 @@ export default {
       data,
     })
 
-    await broadcastMsg(msg)
+    await broadcastMsg(msg, address, cosmosKey)
   },
 
   async getPlayerScore() {
     const { address } = get(userStore)
     const contact = await this.getContactByAddr(address)
-    return contact.Rep
+    return contact.rep
   },
 
   async getScan(scanId, decrypt = false) {
     const { address, rsaKeyPair } = get(userStore)
     const scanRes = await fetch(`${config.chainEndpoint}/longy/scans/${scanId}`)
     const {
-      result: { S1, S2, D1, D2, P1, P2, UnixTimeSec, Accepted: accepted },
+      result: {
+        value: { s1, s2, d1, d2, p1, p2, unixTimeSec, accepted },
+      },
     } = await scanRes.json()
 
-    const isSelfInitiated = S1 === address
+    const isSelfInitiated = s1 === address
     const [contactAddr, encryptedData, points] = isSelfInitiated
-      ? [S2, D2, P2]
-      : [S1, D1, P1]
+      ? [s2, d2, p2]
+      : [s1, d1, p1]
     const name = await this.getContactNameByAddr(contactAddr)
 
     let profile = {}
@@ -127,14 +129,14 @@ export default {
 
     return {
       scanId,
-      id: contact.ID,
+      id: contact.id,
       address: contactAddr,
       ...profile,
       accepted,
       points,
       name,
-      imageUrl: `${config.contentEndpoint}/avatars/${contact.ID}`,
-      timestamp: UnixTimeSec * 1000,
+      imageUrl: `${config.contentEndpoint}/avatars/${contact.id}`,
+      timestamp: unixTimeSec * 1000,
       isSelfInitiated,
     }
   },
@@ -142,40 +144,23 @@ export default {
   async getPlayer() {
     const { address } = get(userStore)
     const contact = await this.getContactByAddr(address)
-    const scanIds = contact.ScanIDs || []
+    const scanIds = contact.scanIds || []
     const scans = await Promise.all(scanIds.map(id => this.getScan(id)))
 
     return {
-      id: contact.ID,
+      id: contact.id,
       address,
-      name: contact.Name,
-      score: contact.Rep,
-      claimedAt: contact.UnixTimeSecClaimed * 1000,
+      name: contact.name,
+      score: contact.rep,
+      claimedAt: contact.unixTimeSecClaimed * 1000,
       scans,
     }
   },
 
   async getPrizes() {
-    const textToImage = text => `${text.toLowerCase().replace(/\s/g, '_')}.png`
-
     const res = await fetch(`${config.chainEndpoint}/longy/prizes`)
     const { result } = await res.json()
-    const { address } = get(userStore)
-    const winnings = await this.getWinnings(address)
-
     return result
-      .sort((a, b) => a.repNeeded - b.repNeeded)
-      .map(prize => {
-        const winning = winnings.find(w => w.tier === prize.tier)
-
-        return {
-          ...prize,
-          imageUrl: `${config.contentEndpoint}/prizes/${textToImage(
-            prize.prizeText
-          )}`,
-          claimed: !!winning && winning.claimed,
-        }
-      })
   },
 
   async getWinnings(address) {
@@ -202,7 +187,7 @@ export default {
 
     const processTier = (name, tier) => {
       const attendees = tier.attendees || []
-      const rep = attendees.map(a => parseInt(a.Rep, 10))
+      const rep = attendees.map(a => parseInt(a.rep, 10))
 
       return {
         ...tier,

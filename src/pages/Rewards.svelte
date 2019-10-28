@@ -5,6 +5,7 @@
   import playerStore from '../store/player'
 
   let prizes
+  let loading = true
 
   const openPrizeAtIndex = index => page(`/rewards/${index}`)
 
@@ -14,15 +15,17 @@
         ...prize,
         pointsRemaining: Math.max(0, prize.repNeeded - $playerStore.data.score),
       }))
+      loading = false
     } else {
       prizes = []
+      loading = true
     }
   }
 </script>
 
 <h1>Rewards</h1>
 
-{#if $prizeStore.loading}
+{#if loading}
   <p>Fetching rewards&hellip;</p>
 {:else if $prizeStore.error}
   <p>There was an error fetching the rewards. {$prizeStore.error.message}</p>
@@ -74,7 +77,7 @@
     display: block;
   }
   .image-clip.claimed {
-    opacity: 0.333;
+    opacity: 0.65;
   }
   img {
     width: 100%;

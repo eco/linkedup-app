@@ -53,14 +53,14 @@ export default {
     const json = await res.json()
     const contact = await cosmos.getContactByBadge(badgeId)
     const address = await this.getAddressByBadge(badgeId)
-    const profile = await decryptData(contact.EncryptedInfo, json.RSA_key)
+    const profile = await decryptData(contact.encryptedInfo, json.RSA_key)
 
     userStore.set({
       address,
       cosmosKey: json.cosmos_private_key,
       rsaKeyPair: {
         privateKey: json.RSA_key,
-        publicKey: contact.RsaPublicKey,
+        publicKey: contact.rsaPublicKey,
       },
       profile,
     })

@@ -2,27 +2,16 @@
   import page from 'page'
   import QRCode from 'qrcode'
   import userStore from '../store/user'
-  import cosmos from '../services/cosmos'
+  import playerStore from '../store/player'
+  import prizeStore from '../store/prizes'
   import { signAddress } from '../crypto'
 
   export let pageParams = {}
   let qrCodeVisible = false
+  let prize
+  let prizeLoading = true
 
   const displayQrCode = () => (qrCodeVisible = true)
-
-  const getPrizeAtIndex = async index => {
-    if (index) {
-      const [score, prizes] = await Promise.all([
-        cosmos.getPlayerScore(),
-        cosmos.getPrizes(),
-      ])
-      const prize = prizes[index]
-      if (prize && score >= prize.repNeeded) {
-        return prize
-      }
-    }
-    page.redirect('/rewards')
-  }
 
   const getQrCode = async () => {
     // sign address
@@ -42,11 +31,23 @@
     })
   }
 
-  const prizePromise = getPrizeAtIndex(pageParams.prizeIndex)
   const qrCodePromise = getQrCode()
+
+  $: {
+    if (!$playerStore.data || !$prizeStore.data) {
+      prizeLoading = true
+    } else {
+      const { score } = $playerStore.data
+      prize = $prizeStore.data[pageParams.prizeIndex]
+      if (!prize || score < prize.repNeeded || prize.claimed) {
+        page.redirect('/rewards')
+      }
+      prizeLoading = false
+    }
+  }
 </script>
 
-{#await prizePromise then prize}
+{#if !prizeLoading}
   <h1>{prize.prizeText}</h1>
   <p>
     Present this screen at the SF Blockchain Week merchandise booth to claim
@@ -60,7 +61,7 @@
       {/await}
     {:else}Show One-Time use QR Code{/if}
   </span>
-{/await}
+{/if}
 
 <style>
   img {

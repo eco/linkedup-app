@@ -46,7 +46,7 @@ export default derived(
               label: 'Reward Earned',
               name: prize.prizeText,
               timestamp: score.timestamp,
-              accepted: prizes.claimed,
+              accepted: prize.claimed,
               index,
             }
           })

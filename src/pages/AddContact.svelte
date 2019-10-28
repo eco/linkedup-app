@@ -37,8 +37,8 @@
   }
 
   cosmos.getContactByBadge(pageParams.badgeId).then(contact => {
-    contactName = contact.Name
-    isSelf = contact.Address === $userStore.address
+    contactName = contact.name
+    isSelf = contact.address === $userStore.address
   })
 </script>
 
