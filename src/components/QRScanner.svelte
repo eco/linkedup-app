@@ -80,8 +80,11 @@
   // for QR codes
   function renderFrame() {
     if (!video) {
+      // video stream has been unloaded
       return
     }
+
+    requestAnimationFrame(renderFrame)
 
     if (video.readyState === video.HAVE_ENOUGH_DATA) {
       const { videoWidth: width, videoHeight: height } = video
@@ -103,8 +106,6 @@
         }
       }
     }
-
-    requestAnimationFrame(renderFrame)
   }
 
   // switches off the video stream and cleans memory

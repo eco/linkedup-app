@@ -8,7 +8,7 @@
     "dev": "run-p start:dev autobuild",
     "sandbox": "SANDBOX_MODE=true yarn dev",
     "start:dev": "ws",
-    "clean": "git clean -fx public",
+    "clean": "git clean -Xf public",
     "deploy": "ipfs-deploy public -p pinata",
     "style": "prettier --write '{src,sandbox}/**/*.{js,svelte}' public/global.css",
     "style:check": "prettier --check '{src,sandbox}/**/*.{js,svelte}' public/global.css",

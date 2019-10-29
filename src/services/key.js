@@ -16,19 +16,28 @@ export default {
         attendee_id: badgeId,
         cosmos_private_key: cosmosKey,
         rsa_private_key: rsaKeyPair.privateKey,
+        rsa_public_key: rsaKeyPair.publicKey,
       }),
     })
+
+    if (res.status === 409) {
+      await this.beginRecovery(badgeId)
+      return
+    }
 
     if (!res.ok) {
       throw new Error('Failed to post key')
     }
+
     userStore.set({ cosmosKey, rsaKeyPair })
   },
 
   async beginRecovery(badgeId) {
     const res = await fetch(`${config.keyEndpoint}/recover`, {
       method: 'POST',
-      body: JSON.stringify(badgeId),
+      body: JSON.stringify({
+        attendee_id: badgeId,
+      }),
     })
 
     if (!res.ok) {
@@ -53,16 +62,32 @@ export default {
     const json = await res.json()
     const contact = await cosmos.getContactByBadge(badgeId)
     const address = await this.getAddressByBadge(badgeId)
-    const profile = await decryptData(contact.encryptedInfo, json.RSA_key)
 
-    userStore.set({
-      address,
+    const user = {
       cosmosKey: json.cosmos_private_key,
       rsaKeyPair: {
-        privateKey: json.RSA_key,
-        publicKey: contact.rsaPublicKey,
+        privateKey: json.rsa_private_key,
+        publicKey: json.rsa_public_key,
       },
-      profile,
-    })
+    }
+
+    if (contact.claimed) {
+      const profile = await decryptData(
+        contact.encryptedInfo,
+        json.rsa_private_key
+      )
+      userStore.set({ address, ...user, profile })
+    } else {
+      // can only restore keys
+      userStore.set(user)
+    }
+
+    return {
+      profileRecovered: contact.claimed,
+      address,
+      secret: json.commitment_secret,
+      avatar: json.image_upload_url,
+      profile: btoa(JSON.stringify(json.attendee)),
+    }
   },
 }

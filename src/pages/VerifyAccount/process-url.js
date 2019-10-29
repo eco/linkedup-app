@@ -20,9 +20,6 @@ const processUrl = () => {
   ]
   const defaultShare = attributes.map(a => a.label) // turn on all by default
 
-  currentUrl.search = ''
-  window.history.replaceState({}, '', currentUrl.toString())
-
   return {
     address,
     secret,
