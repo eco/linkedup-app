@@ -84,28 +84,32 @@
       return
     }
 
-    requestAnimationFrame(renderFrame)
-
     if (video.readyState === video.HAVE_ENOUGH_DATA) {
-      const { videoWidth: width, videoHeight: height } = video
-      canvas.width = width
-      canvas.height = height
+      try {
+        const { videoWidth: width, videoHeight: height } = video
+        canvas.width = width
+        canvas.height = height
 
-      const dimensions = [0, 0, width, height]
-      context.drawImage(video, ...dimensions)
+        const dimensions = [0, 0, width, height]
+        context.drawImage(video, ...dimensions)
 
-      if (jsQR) {
-        const imageData = context.getImageData(...dimensions)
-        const code = jsQR(imageData.data, imageData.width, imageData.height, {
-          inversionAttempts: 'dontInvert',
-        })
+        if (jsQR) {
+          const imageData = context.getImageData(...dimensions)
+          const code = jsQR(imageData.data, imageData.width, imageData.height, {
+            inversionAttempts: 'dontInvert',
+          })
 
-        if (code && code.data) {
-          const valid = codeFound(code)
-          drawBoundingBox(code.location, valid)
+          if (code && code.data) {
+            const valid = codeFound(code)
+            drawBoundingBox(code.location, valid)
+          }
         }
+      } catch (e) {
+        // fail silently
       }
     }
+
+    requestAnimationFrame(renderFrame)
   }
 
   // switches off the video stream and cleans memory
