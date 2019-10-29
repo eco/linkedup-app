@@ -68,7 +68,8 @@
           fullWidth
           label={attr.label}
           bind:value={attr.value}
-          readonly={!editable} />
+          readonly={!editable}
+          autofocus={editable && i !== 0} />
       </td>
       <td class="share-input">
         <Checkbox bind:checked={shareFlags[attr.label]} />
