@@ -19,7 +19,7 @@
     <tbody>
       {#each $notificationStore as notif}
         <tr>
-          <td>
+          <td class="avatar-col">
             <Avatar
               avatarUrl={notif.imageUrl}
               name={notif.name}
@@ -59,6 +59,9 @@
     vertical-align: top;
     font-weight: 400;
     padding-bottom: 1em;
+  }
+  td.avatar-col {
+    width: 65px;
   }
   td.info span {
     display: block;

@@ -22,7 +22,7 @@
   <tbody>
     {#each log as entry}
       <tr on:click={() => dispatch('open', entry)}>
-        <td>
+        <td class="avatar-col">
           <Avatar
             avatarUrl={entry.imageUrl}
             name={entry.name}
@@ -55,6 +55,9 @@
     vertical-align: top;
     font-weight: 400;
     padding-bottom: 1em;
+  }
+  td.avatar-col {
+    width: 65px;
   }
   .timestamp {
     font-size: 14px;

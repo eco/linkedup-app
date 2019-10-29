@@ -13,8 +13,21 @@
 
   const recoverAccount = async () => {
     const { id, token } = processUrl()
-    await keyService.recoverAccount(id, token)
-    page.redirect('/')
+    const result = await keyService.recoverAccount(id, token)
+    if (result.profileRecovered) {
+      // account recovery fully completed
+      page.redirect('/')
+    } else {
+      // keys recovered but profile is yet to be claimed
+      const params = {
+        attendee: result.address,
+        secret: result.secret,
+        avatar: result.avatar,
+        profile: result.profile,
+      }
+      const query = new URLSearchParams(params).toString()
+      page.redirect(`/claim?${query}`)
+    }
   }
 
   recoverAccount()
