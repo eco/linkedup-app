@@ -12,7 +12,7 @@
     const badgeId = parseInt(pageParams.badgeId, 10)
     await keyService.beginRecovery(badgeId)
     loading = false
-    page('/verify')
+    page(`/verify?badgeId=${badgeId}`)
     loading = false
   }
 </script>

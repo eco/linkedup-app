@@ -1,7 +1,10 @@
+const isIOS = /iphone|ipad|ipod/i.test(window.navigator.userAgent)
+
 const defaultOptions = {
   leaderboardFrameInterval: 10000,
   dataPollingInterval: 5000,
   segmentWriteApiKey: '6tAoLDmWqPfUxy30obm1ZqxcTbZ3zom8',
+  isIOS,
 }
 
 const domains = {
