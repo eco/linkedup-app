@@ -1,5 +1,5 @@
 <script>
-  import notificationStore from '../store/notifications'
+  import notificationStore from '../../store/notifications'
 
   $: badge = $notificationStore.filter(n => !n.accepted).length
 </script>

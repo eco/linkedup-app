@@ -1,3 +1,5 @@
+import config from '../../config'
+
 const processUrl = () => {
   const currentUrl = new URL(document.location.href)
   const { searchParams } = currentUrl
@@ -5,8 +7,13 @@ const processUrl = () => {
   const address = searchParams.get('attendee')
   const secret = searchParams.get('secret')
 
-  const { pathname, search } = new URL(searchParams.get('avatar'))
-  const avatarUploadUrl = [pathname, search].join('')
+  let avatarUploadUrl = searchParams.get('avatar')
+  if (config.rewriteAvatarUploadUrl) {
+    avatarUploadUrl = avatarUploadUrl.replace(
+      'http://localstack:4572',
+      'http://localhost:5000'
+    )
+  }
 
   let profile = searchParams.get('profile')
   profile = JSON.parse(atob(profile))

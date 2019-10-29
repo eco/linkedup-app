@@ -24,6 +24,7 @@
               avatarUrl={notif.imageUrl}
               name={notif.name}
               hideLabel
+              useFallback={notif.type !== 'reward'}
               size={50} />
           </td>
           <td class="info">

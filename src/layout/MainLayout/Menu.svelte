@@ -2,7 +2,7 @@
   import { createEventDispatcher } from 'svelte'
   import { fly } from 'svelte/transition'
   import page from 'page'
-  import userStore from '../store/user'
+  import userStore from '../../store/user'
   import NotifBadge from './NotifBadge'
 
   const dispatch = createEventDispatcher()

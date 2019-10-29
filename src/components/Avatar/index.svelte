@@ -6,6 +6,7 @@
   export let hideLabel = false
   export let size = 265
   export let disableHue = false
+  export let useFallback = true
 
   let imageExists = false
   let initials
@@ -41,7 +42,7 @@
 <span
   class="avatar"
   style={`background-image: url("${avatarUrl}"); color: ${fill}; width: ${size}px; height: ${size}px;`}>
-  {#if !imageExists}
+  {#if !imageExists && useFallback}
     <DefaultIcon />
     {#if !hideLabel}
       <span class="initials">{initials}</span>

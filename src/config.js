@@ -17,6 +17,7 @@ const domains = {
     chainEndpoint: '/chainsvc',
     keyEndpoint: '/keysvc',
     contentEndpoint: '/linkedup-user-content',
+    rewriteAvatarUploadUrl: true,
   },
 }
 

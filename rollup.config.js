@@ -107,7 +107,7 @@ const generateConfig = (input, outputDir, livereloadPort) => {
 }
 
 export default [
-  generateConfig(!sandbox ? 'src/main' : 'sandbox/main', 'public', 35729),
+  generateConfig(production ? 'src/main' : 'sandbox/main', 'public', 35729),
   generateConfig('src/standalone/redeem/main', 'public/s/redeem', 35730),
   generateConfig(
     'src/standalone/leaderboard/main',
