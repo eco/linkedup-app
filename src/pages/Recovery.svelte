@@ -12,9 +12,13 @@
   }
 
   const recoverAccount = async () => {
-    const { id, token } = processUrl()
-    const result = await keyService.recoverAccount(id, token)
-    page.redirect(result.claimUrl || '/')
+    try {
+      const { id, token } = processUrl()
+      const result = await keyService.recoverAccount(id, token)
+      page.redirect(result.claimUrl || '/')
+    } catch (e) {
+      window.alert(`ERROR: ${e.message}`)
+    }
   }
 
   // begin recover as soon as page is loaded

@@ -19,17 +19,22 @@
   const { address, secret, avatarUploadUrl, profile } = processUrl()
 
   const finishVerification = async () => {
-    loading = true
-    if (avatarFile) {
-      await s3.uploadFile(avatarUploadUrl, avatarFile)
+    try {
+      loading = true
+      if (avatarFile) {
+        await s3.uploadFile(avatarUploadUrl, avatarFile)
+      }
+      await cosmos.claimBadge(address, secret, profile)
+      tracker.track('click', {
+        category: 'onboarding',
+        label: 'verify',
+      })
+      page('/')
+    } catch (e) {
+      window.alert(`ERROR: ${e.message}`)
+    } finally {
+      loading = false
     }
-    await cosmos.claimBadge(address, secret, profile)
-    loading = false
-    page('/')
-    tracker.track('click', {
-      category: 'onboarding',
-      label: 'verify',
-    })
   }
 </script>
 

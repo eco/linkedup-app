@@ -7,6 +7,7 @@
   import { TextInput, Button } from '../components'
 
   let code = ''
+  let loading = false
 
   const tracker = events.configured()
   tracker.track('view', {
@@ -15,10 +16,17 @@
   })
 
   const recoverAccount = async () => {
-    const url = new URL(document.location.href)
-    const badgeId = url.searchParams.get('badgeId')
-    const result = await keyService.recoverAccount(badgeId, code)
-    page.redirect(result.claimUrl || '/')
+    try {
+      loading = true
+      const url = new URL(document.location.href)
+      const badgeId = url.searchParams.get('badgeId')
+      const result = await keyService.recoverAccount(badgeId, code)
+      page.redirect(result.claimUrl || '/')
+    } catch (e) {
+      window.alert(`ERROR: ${e.message}`)
+    } finally {
+      loading = false
+    }
   }
 </script>
 
@@ -40,13 +48,11 @@
       </p>
     </div>
     <div slot="action">
-      <Button fullWidth on:click={recoverAccount}>Continue</Button>
+      <Button fullWidth on:click={recoverAccount} {loading}>Continue</Button>
     </div>
   </PageWithAction>
-
 {:else}
   <h1>Check your email</h1>
-
   <p>We've sent you an email with a link to log you in!</p>
 {/if}
 

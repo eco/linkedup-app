@@ -9,11 +9,16 @@
   export let pageParams
 
   const verifyProfile = async () => {
-    loading = true
-    const badgeId = parseInt(pageParams.badgeId, 10)
-    await keyService.beginVerification(badgeId)
-    loading = false
-    page(`/verify?badgeId=${badgeId}`)
+    try {
+      loading = true
+      const badgeId = parseInt(pageParams.badgeId, 10)
+      await keyService.beginVerification(badgeId)
+      page(`/verify?badgeId=${badgeId}`)
+    } catch (e) {
+      window.alert(`ERROR: ${e.message}`)
+    } finally {
+      loading = false
+    }
   }
 </script>
 

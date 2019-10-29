@@ -8,12 +8,16 @@
   let loading = false
 
   const beginRecovery = async () => {
-    loading = true
-    const badgeId = parseInt(pageParams.badgeId, 10)
-    await keyService.beginRecovery(badgeId)
-    loading = false
-    page(`/verify?badgeId=${badgeId}`)
-    loading = false
+    try {
+      loading = true
+      const badgeId = parseInt(pageParams.badgeId, 10)
+      await keyService.beginRecovery(badgeId)
+      page(`/verify?badgeId=${badgeId}`)
+    } catch (e) {
+      window.alert(`ERROR: ${e.message}`)
+    } finally {
+      loading = false
+    }
   }
 </script>
 
