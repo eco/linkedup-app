@@ -17,6 +17,7 @@ export default {
         cosmos_private_key: cosmosKey,
         rsa_private_key: rsaKeyPair.privateKey,
         rsa_public_key: rsaKeyPair.publicKey,
+        use_verification: config.isIOS,
       }),
     })
 
@@ -37,6 +38,7 @@ export default {
       method: 'POST',
       body: JSON.stringify({
         attendee_id: badgeId,
+        use_verification: config.isIOS,
       }),
     })
 
@@ -71,6 +73,7 @@ export default {
       },
     }
 
+    let claimUrl
     if (contact.claimed) {
       const profile = await decryptData(
         contact.encryptedInfo,
@@ -80,14 +83,19 @@ export default {
     } else {
       // can only restore keys
       userStore.set(user)
+      const params = {
+        attendee: address,
+        secret: json.commitment_secret,
+        avatar: json.image_upload_url,
+        profile: btoa(JSON.stringify(json.attendee)),
+      }
+      const query = new URLSearchParams(params)
+      claimUrl = `/claim?${query}`
     }
 
     return {
       profileRecovered: contact.claimed,
-      address,
-      secret: json.commitment_secret,
-      avatar: json.image_upload_url,
-      profile: btoa(JSON.stringify(json.attendee)),
+      claimUrl,
     }
   },
 }

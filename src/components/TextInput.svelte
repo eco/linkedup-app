@@ -5,6 +5,8 @@
   export let label = ''
   export let fullWidth = false
   export let readonly = false
+  export let numpad = false
+  export let maxlength = undefined
 </script>
 
 <label>
@@ -13,9 +15,11 @@
   {/if}
   <input
     type="text"
+    pattern={numpad ? '\\d*' : null}
     bind:value
     placeholder={label}
     class:fullWidth
+    {maxlength}
     {readonly} />
 </label>
 

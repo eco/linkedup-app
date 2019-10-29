@@ -13,7 +13,7 @@
     const badgeId = parseInt(pageParams.badgeId, 10)
     await keyService.beginVerification(badgeId)
     loading = false
-    page('/verify')
+    page(`/verify?badgeId=${badgeId}`)
   }
 </script>
 
