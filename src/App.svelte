@@ -13,10 +13,14 @@
   // configure analytics / segment
   const tracker = events.configure()
 
-  userStore.subscribe(account => {
-    tracker.identify(account.address, {
-      name: account.profile.name,
-    })
+  userStore.subscribe(({ address, profile }) => {
+    if (address) {
+      const traits = {}
+      if (profile) {
+        traits.name = profile.name
+      }
+      tracker.identify(address, traits)
+    }
   })
 
   page((ctx, next) => {

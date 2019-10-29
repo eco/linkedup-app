@@ -67,16 +67,6 @@ export default {
     return result.value || {}
   },
 
-  async getContactNameByBadge(badgeId) {
-    const contact = await this.getContactByBadge(badgeId)
-    return contact.name
-  },
-
-  async getContactNameByAddr(address) {
-    const contact = await this.getContactByAddr(address)
-    return contact.name
-  },
-
   async scanContact(badgeId, sharePayload) {
     const { address, cosmosKey } = get(userStore)
     const contact = await this.getContactByBadge(badgeId)
@@ -114,7 +104,7 @@ export default {
     const [contactAddr, encryptedData, points] = isSelfInitiated
       ? [s2, d2, p2]
       : [s1, d1, p1]
-    const name = await this.getContactNameByAddr(contactAddr)
+    const { name } = await this.getContactByAddr(contactAddr)
 
     let profile = {}
     if (accepted && decrypt && encryptedData) {
