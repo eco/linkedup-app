@@ -7,6 +7,9 @@
   export let readonly = false
   export let numpad = false
   export let maxlength = undefined
+  export let autofocus = false
+
+  const maybeAutofocus = el => autofocus && el.focus()
 </script>
 
 <label>
@@ -20,7 +23,8 @@
     placeholder={label}
     class:fullWidth
     {maxlength}
-    {readonly} />
+    {readonly}
+    use:maybeAutofocus />
 </label>
 
 <style>

@@ -2,8 +2,7 @@
   import { createEventDispatcher } from 'svelte'
   import { fly } from 'svelte/transition'
   import page from 'page'
-  import userStore from '../store/user'
-  import MenuGraphic from './MenuGraphic'
+  import userStore from '../../store/user'
   import NotifBadge from './NotifBadge'
 
   const dispatch = createEventDispatcher()
@@ -69,7 +68,7 @@
   </nav>
 
   <footer>
-    <MenuGraphic />
+    <img src="/assets/images/menu-feature.svg" alt="Linked Up" />
   </footer>
 </div>
 

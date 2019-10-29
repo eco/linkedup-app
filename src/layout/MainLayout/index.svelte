@@ -1,6 +1,6 @@
 <script>
   import page from 'page'
-  import userStore from '../store/user'
+  import userStore from '../../store/user'
   import Menu from './Menu'
   import MenuIcon from './MenuIcon'
   import BackIcon from './BackIcon'

@@ -1,10 +1,10 @@
 <script>
   import cosmos from '../services/cosmos'
   import userStore from '../store/user'
+  import playerStore from '../store/player'
 
-  const getPlacement = async () => {
+  const getPlacement = async points => {
     const tiers = await leaderboardPromise
-    const points = await cosmos.getPlayerScore()
 
     const placement = tiers.find(tier => {
       const attendees = tier.attendees.map(a => a.address)
@@ -21,26 +21,34 @@
   }
 
   const leaderboardPromise = cosmos.getLeaderboard()
-  const placementPromise = getPlacement()
+  let placementPromise
+
+  $: {
+    if ($playerStore.data) {
+      placementPromise = getPlacement($playerStore.data.score)
+    }
+  }
 </script>
 
 <h1>Leaderboard</h1>
-{#await placementPromise then placement}
-  <table>
-    <tr>
-      <td>Reputation Points</td>
-      <td>{placement.points}</td>
-    </tr>
-    <tr>
-      <td>Your Tier</td>
-      <td>{placement.name}</td>
-    </tr>
-    <tr>
-      <td>Current Payout</td>
-      <td>${placement.prizePerAttendee}</td>
-    </tr>
-  </table>
-{/await}
+{#if placementPromise}
+  {#await placementPromise then placement}
+    <table>
+      <tr>
+        <td>Reputation Points</td>
+        <td>{placement.points}</td>
+      </tr>
+      <tr>
+        <td>Your Tier</td>
+        <td>{placement.name}</td>
+      </tr>
+      <tr>
+        <td>Current Payout</td>
+        <td>${placement.prizePerAttendee}</td>
+      </tr>
+    </table>
+  {/await}
+{/if}
 
 <h2>Tier Breakdown</h2>
 {#await leaderboardPromise then leaderboard}

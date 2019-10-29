@@ -1,18 +1,42 @@
 <script>
-  import cosmos from '../services/cosmos'
+  import page from 'page'
+  import { decryptData } from '../crypto'
   import events from '../services/events'
+  import userStore from '../store/user'
+  import playerStore from '../store/player'
   import { Avatar, TextInput } from '../components'
+
+  export let pageParams
 
   const tracker = events.configured()
   tracker.track('view', {
     category: 'connection',
   })
 
-  export let pageParams
-  const scanPromise = cosmos.getScan(pageParams.scanId, true)
+  const { scanId } = pageParams
+  let scan
+
+  $: {
+    if ($playerStore.data) {
+      const { rsaKeyPair } = $userStore
+      const foundScan = $playerStore.data.scans.find(s => s.scanId === scanId)
+
+      if (!foundScan || !foundScan.accepted) {
+        page.redirect('/')
+      }
+
+      if (foundScan.encryptedData) {
+        decryptData(foundScan.encryptedData, rsaKeyPair.privateKey).then(
+          data => ({ ...foundScan, ...data })
+        )
+      } else {
+        scan = foundScan
+      }
+    }
+  }
 </script>
 
-{#await scanPromise then scan}
+{#if scan}
   <p class="avatar">
     <Avatar name={scan.name} avatarUrl={scan.imageUrl} />
   </p>
@@ -33,7 +57,7 @@
   {#if scan.message}
     <p class="message">{scan.message}</p>
   {/if}
-{/await}
+{/if}
 
 <style>
   .avatar {

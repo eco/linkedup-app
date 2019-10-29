@@ -1,10 +1,9 @@
 <script>
-  import HeaderGraphic from './HeaderGraphic'
   import PointBox from './PointBox'
 </script>
 
 <div class="header">
-  <HeaderGraphic />
+  <img class="graphic" src="/assets/images/about-header.svg" alt="Linked Up" />
   <h1>Linked Up</h1>
 </div>
 
@@ -77,7 +76,7 @@
   .header {
     position: relative;
   }
-  .header :global(svg) {
+  .graphic {
     margin: 0 calc(var(--page-gutter-horiz) * -1);
     width: calc(100% + var(--page-gutter-horiz) * 2);
     height: auto;

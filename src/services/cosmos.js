@@ -1,6 +1,6 @@
 import { get } from 'svelte/store'
 import userStore from '../store/user'
-import { signTx, encryptData, decryptData } from '../crypto'
+import { signTx, encryptData } from '../crypto'
 import config from '../config'
 import { createTx, claimKey, scanQr } from './cosmos.msgs'
 
@@ -91,8 +91,8 @@ export default {
     return contact.rep
   },
 
-  async getScan(scanId, decrypt = false) {
-    const { address, rsaKeyPair } = get(userStore)
+  async getScan(scanId) {
+    const { address } = get(userStore)
     const scanRes = await fetch(`${config.chainEndpoint}/longy/scans/${scanId}`)
     const {
       result: {
@@ -105,29 +105,19 @@ export default {
       ? [s2, d2, p2]
       : [s1, d1, p1]
     const { name } = await this.getContactByAddr(contactAddr)
-
-    let profile = {}
-    if (accepted && decrypt && encryptedData) {
-      const { sharedAttrs, message } = await decryptData(
-        encryptedData,
-        rsaKeyPair.privateKey
-      )
-      profile = { sharedAttrs, message }
-    }
-
     const contact = await this.getContactByAddr(contactAddr)
 
     return {
       scanId,
       id: contact.id,
       address: contactAddr,
-      ...profile,
       accepted,
       points,
       name,
       imageUrl: `${config.contentEndpoint}/avatars/${contact.id}`,
       timestamp: unixTimeSec * 1000,
       isSelfInitiated,
+      encryptedData,
     }
   },
 
@@ -177,7 +167,7 @@ export default {
 
     const processTier = (name, tier) => {
       const attendees = tier.attendees || []
-      const rep = attendees.map(a => parseInt(a.rep, 10))
+      const rep = attendees.filter(a => a.rep).map(a => parseInt(a.rep, 10))
 
       return {
         ...tier,
