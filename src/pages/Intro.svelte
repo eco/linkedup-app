@@ -1,6 +1,13 @@
 <script>
   import page from 'page'
+  import events from '../services/events'
   import { QRScanner } from '../components'
+
+  const tracker = events.configured()
+  tracker.track('view', {
+    category: 'login',
+    action: 'scan',
+  })
 
   const handleCode = e => {
     const url = new URL(e.detail.url)
