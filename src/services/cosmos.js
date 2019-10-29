@@ -102,9 +102,8 @@ export default {
 
     const isSelfInitiated = s1 === address
     const [contactAddr, encryptedData, points] = isSelfInitiated
-      ? [s2, d2, p2]
-      : [s1, d1, p1]
-    const { name } = await this.getContactByAddr(contactAddr)
+      ? [s2, d2, p1]
+      : [s1, d1, p2]
     const contact = await this.getContactByAddr(contactAddr)
 
     return {
@@ -113,7 +112,7 @@ export default {
       address: contactAddr,
       accepted,
       points,
-      name,
+      name: contact.name,
       imageUrl: `${config.contentEndpoint}/avatars/${contact.id}`,
       timestamp: unixTimeSec * 1000,
       isSelfInitiated,
