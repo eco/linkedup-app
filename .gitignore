@@ -9,9 +9,6 @@ public/**/*.js.map
 public/**/stats.html
 public/**/index.html
 
-# ipfs-deploy variables
-.env
-
 # std
 .DS_Store
 *.log

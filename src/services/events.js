@@ -4,7 +4,7 @@ import config from '../config'
 
 export default {
   configured() {
-    if (window.analytics && window.analytics.invoked) {
+    if (window.analytics) {
       return window.analytics
     } else {
       return this.configure()

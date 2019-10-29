@@ -7,7 +7,7 @@ const ec = new EC('secp256k1')
 
 export const generateCosmosKey = async () => {
   const keys = ec.genKeyPair()
-  return keys.getPrivate().toString(16)
+  return keys.getPrivate().toString(16, 64)
 }
 
 const sortObject = obj => {

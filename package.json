@@ -9,7 +9,6 @@
     "sandbox": "SANDBOX_MODE=true yarn dev",
     "start:dev": "ws",
     "clean": "git clean -Xf public",
-    "deploy": "ipfs-deploy public -p pinata",
     "style": "prettier --write '{src,sandbox}/**/*.{js,svelte}' public/global.css",
     "style:check": "prettier --check '{src,sandbox}/**/*.{js,svelte}' public/global.css",
     "lint": "eslint '{src,sandbox}/**/*.{js,svelte}'"
@@ -27,7 +26,6 @@
     "eslint-plugin-svelte3": "^2.7.3",
     "hash.js": "^1.1.7",
     "husky": "^3.0.9",
-    "ipfs-deploy": "^7.10.5",
     "jsqr": "^1.2.0",
     "lint-staged": "^9.2.5",
     "local-web-server": "^3.0.7",
