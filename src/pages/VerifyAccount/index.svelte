@@ -3,11 +3,18 @@
   import PageWithAction from '../../layout/PageWithAction'
   import { AvatarEditor, Button, Attributes } from '../../components'
   import cosmos from '../../services/cosmos'
+  import events from '../../services/events'
   import s3 from '../../services/s3'
   import processUrl from './process-url'
 
   let loading = false
   let avatarFile
+
+  const tracker = events.configured()
+  tracker.track('view', {
+    category: 'onboarding',
+    label: 'verify',
+  })
 
   const { address, secret, avatarUploadUrl, profile } = processUrl()
 
@@ -19,6 +26,10 @@
     await cosmos.claimBadge(address, secret, profile)
     loading = false
     page('/')
+    tracker.track('click', {
+      category: 'onboarding',
+      label: 'verify',
+    })
   }
 </script>
 

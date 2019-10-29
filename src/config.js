@@ -1,6 +1,7 @@
 const defaultOptions = {
   leaderboardFrameInterval: 10000,
   dataPollingInterval: 5000,
+  segmentWriteApiKey: '6tAoLDmWqPfUxy30obm1ZqxcTbZ3zom8',
 }
 
 const domains = {

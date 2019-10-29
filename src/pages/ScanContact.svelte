@@ -1,8 +1,12 @@
 <script>
   import page from 'page'
+  import events from '../services/events'
   import { QRScanner } from '../components'
 
+  const tracker = events.configured()
+
   const handleCode = e => {
+    tracker.track('scan')
     const url = new URL(e.detail.url)
     page.redirect(url.pathname)
   }

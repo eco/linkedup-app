@@ -1,10 +1,16 @@
 <script>
   import page from 'page'
   import config from '../../config'
+  import events from '../../services/events'
   import PageWithAction from '../../layout/PageWithAction'
   import { ReputationLog, Button } from '../../components'
   import playerStore from '../../store/player'
   import ScanIcon from './ScanIcon'
+
+  const tracker = events.configured()
+  tracker.track('view', {
+    category: 'home',
+  })
 
   const scanContact = () => page('/scan')
   const openContact = e => {

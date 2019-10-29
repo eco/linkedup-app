@@ -1,12 +1,18 @@
 <script>
   import page from 'page'
   import userStore from '../store/user'
+  import events from '../services/events'
   import PageWithAction from '../layout/PageWithAction'
   import { Button, Textarea, Avatar, Attributes } from '../components'
   import cosmos from '../services/cosmos'
   import config from '../config'
 
   export let pageParams
+
+  const tracker = events.configured()
+  tracker.track('view', {
+    category: 'share_contact',
+  })
 
   let isSelf = false
   let contactName = ''
@@ -27,6 +33,10 @@
     await cosmos.scanContact(pageParams.badgeId, sharePayload)
     loadingShare = false
     page('/')
+    tracker.track('click', {
+      category: 'share_contact',
+      label: 'confirm',
+    })
   }
 
   const handleSkip = async () => {
@@ -34,6 +44,10 @@
     await cosmos.scanContact(pageParams.badgeId)
     loadingSkip = false
     page('/')
+    tracker.track('click', {
+      category: 'share_contact',
+      label: 'skip',
+    })
   }
 
   cosmos.getContactByBadge(pageParams.badgeId).then(contact => {
