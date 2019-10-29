@@ -1,4 +1,5 @@
 <script>
+  import page from 'page'
   import { decryptData } from '../crypto'
   import events from '../services/events'
   import userStore from '../store/user'
@@ -6,15 +7,6 @@
   import { Avatar, TextInput } from '../components'
 
   export let pageParams
-
-  /*
-if (accepted && decrypt && encryptedData) {
-      const { sharedAttrs, message } = await decryptData(
-        encryptedData,
-        rsaKeyPair.privateKey
-      )
-    }
-  */
 
   const tracker = events.configured()
   tracker.track('view', {
@@ -29,12 +21,16 @@ if (accepted && decrypt && encryptedData) {
       const { rsaKeyPair } = $userStore
       const foundScan = $playerStore.data.scans.find(s => s.scanId === scanId)
 
-      if (foundScan.accepted && foundScan.encryptedData) {
+      if (!foundScan || !foundScan.accepted) {
+        page.redirect('/')
+      }
+
+      if (foundScan.encryptedData) {
         decryptData(foundScan.encryptedData, rsaKeyPair.privateKey).then(
-          data => {
-            scan = { ...foundScan, ...data }
-          }
+          data => ({ ...foundScan, ...data })
         )
+      } else {
+        scan = foundScan
       }
     }
   }
