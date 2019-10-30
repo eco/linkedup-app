@@ -12,6 +12,12 @@
   let leaderboard
   let bonus
 
+  // configure error reporting
+  window.Sentry.init({
+    dsn: config.sentryDsn,
+    environment: config.env,
+  })
+
   const refreshData = async () => {
     leaderboard = await cosmos.getLeaderboard()
     bonus = await cosmos.getBonus()

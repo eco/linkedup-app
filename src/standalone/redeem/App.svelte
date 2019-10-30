@@ -2,10 +2,17 @@
   import MainLayout from '../../layout/MainLayout'
   import PageWithAction from '../../layout/PageWithAction'
   import cosmos from '../../services/cosmos'
+  import config from '../../config'
   import { Button } from '../../components'
 
   let loading = false
   let badgeId
+
+  // configure error reporting
+  window.Sentry.init({
+    dsn: config.sentryDsn,
+    environment: config.env,
+  })
 
   const parseUrl = () => {
     const url = new URL(document.location.href)
