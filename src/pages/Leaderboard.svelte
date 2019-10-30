@@ -5,13 +5,18 @@
 
   const getPlacement = async points => {
     const tiers = await leaderboardPromise
+    let name = '-'
+    let prizePerAttendee = '-'
 
     const placement = tiers.find(tier => {
       const attendees = tier.attendees.map(a => a.address)
       return attendees.includes($userStore.address)
     })
 
-    const { name, prizePerAttendee } = placement || {}
+    if (placement) {
+      name = placement.name
+      prizePerAttendee = placement.prizePerAttendee
+    }
 
     return {
       points,

@@ -1,7 +1,16 @@
 <script>
   import notificationStore from '../../store/notifications'
+  import userStore from '../../store/user'
 
-  $: badge = $notificationStore.filter(n => !n.accepted).length
+  let badge = 0
+  $: {
+    const seen = n => {
+      const { noticesViewedAt: viewed } = $userStore
+      return viewed && n.timestamp <= viewed
+    }
+
+    badge = $notificationStore.filter(n => !n.accepted && !seen(n)).length
+  }
 </script>
 
 <span class="badge" class:empty={!badge}>{badge}</span>

@@ -3,6 +3,7 @@
   import { format } from 'date-fns'
   import { Avatar } from '../components'
   import notificationStore from '../store/notifications'
+  import userStore from '../store/user'
 
   const openNotification = notif => {
     if (notif.type === 'reward') {
@@ -11,6 +12,8 @@
       page(`/badge/${notif.id}`)
     }
   }
+
+  $userStore = { ...$userStore, noticesViewedAt: Date.now() }
 </script>
 
 <h1>Notifications</h1>
