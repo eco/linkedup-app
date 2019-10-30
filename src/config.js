@@ -1,3 +1,5 @@
+import platforms from './config.platforms'
+
 const isIOS = /iphone|ipad|ipod/i.test(window.navigator.userAgent)
 
 const defaultOptions = {
@@ -7,6 +9,7 @@ const defaultOptions = {
   sentryDsn: 'https://7379beb03edb44148dbb098e4f85c83f@sentry.io/1802604',
   env: 'development',
   isIOS,
+  platforms,
 }
 
 const domains = {

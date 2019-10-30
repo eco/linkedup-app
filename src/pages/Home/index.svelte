@@ -69,8 +69,8 @@
       <div class="boost">
         <header>Boost Active</header>
         <p>
-          Scanning select sponsers will earn you {bonusPercent}% bonus
-          reputation points
+          Scanning sponsors will earn you {bonusPercent}% bonus reputation
+          points
         </p>
       </div>
     {/if}

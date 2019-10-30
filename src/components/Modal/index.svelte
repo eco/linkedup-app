@@ -42,6 +42,9 @@
 
   .close {
     float: right;
+    position: relative;
+    top: -8px;
+    right: -8px;
   }
   .close :global(button) {
     margin: 0;
