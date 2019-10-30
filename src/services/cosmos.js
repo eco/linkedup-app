@@ -187,4 +187,19 @@ export default {
 
     return tiers
   },
+
+  async getBonus() {
+    const res = await fetch(`${config.chainEndpoint}/longy/bonus`)
+    if (res.status === 404) {
+      return { active: false }
+    }
+    if (!res.ok) {
+      throw new Error('Failed to fetch bonus')
+    }
+    const json = await res.json()
+    return {
+      active: true,
+      multiplier: parseInt(json.value.multiplier, 10),
+    }
+  },
 }
