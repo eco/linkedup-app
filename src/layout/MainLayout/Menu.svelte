@@ -60,7 +60,10 @@
         </li>
       {/each}
       <li>
-        <a href="mailto:linkedup@sfbw.io" target="_blank" rel="noopener noreferrer">
+        <a
+          href="mailto:linkedup@sfbw.io"
+          target="_blank"
+          rel="noopener noreferrer">
           Help
         </a>
       </li>
