@@ -45,6 +45,15 @@
     width: 100%;
     border-spacing: 0;
   }
+  tbody {
+    max-height: 98vh;
+    display: block;
+    overflow: auto;
+    width: 100%;
+  }
+  tbody tr {
+    display: table;
+  }
   th {
     text-align: left;
     padding-bottom: 1em;
