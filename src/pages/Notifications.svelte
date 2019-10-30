@@ -13,7 +13,14 @@
     }
   }
 
-  $userStore = { ...$userStore, noticesViewedAt: Date.now() }
+  $: {
+    const notices = $notificationStore
+    if (notices.length) {
+      const latestNotice = notices[0]
+      const id = `${latestNotice.type}|${latestNotice.imageUrl}`
+      $userStore.latestNotice = id
+    }
+  }
 </script>
 
 <h1>Notifications</h1>
