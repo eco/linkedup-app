@@ -2,38 +2,48 @@
   export let tier
 </script>
 
-<div class="top tier-top">
-  <p>{tier.name}</p>
-  <p>Prize Pool: ${tier.prizeAmount}</p>
-</div>
-<div class="box tier-details">
-  <table class="winners">
-    <thead>
-      <tr>
-        <th>Rank</th>
-        <th>Name</th>
-        <th>Reputation</th>
-      </tr>
-    </thead>
-    {#each tier.attendees as attendee, idx}
-      <tr>
-        <td>{idx + 1}</td>
-        <td>{attendee.name}</td>
-        <td>{attendee.rep}</td>
-      </tr>
-    {/each}
-  </table>
-  <div class="winners-fade" />
+<div class="container">
+  <div class="top tier-top">
+    <p>{tier.name}</p>
+    <p>Prize Pool: ${tier.prizeAmount}</p>
+  </div>
+  <div class="box tier-details">
+    <table class="winners">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Name</th>
+          <th>Reputation</th>
+        </tr>
+      </thead>
+      {#each tier.attendees as attendee, idx}
+        <tr>
+          <td>{idx + 1 + tier.offset}</td>
+          <td>{attendee.name}</td>
+          <td>
+            {#if attendee.rep}{attendee.rep}{:else}&mdash;{/if}
+          </td>
+        </tr>
+      {/each}
+    </table>
+    <div class="winners-fade" />
+  </div>
 </div>
 
 <style>
+  .container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
   .box {
     background-color: var(--white);
     color: var(--black);
     box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.2), 0px 3px 16px rgba(0, 0, 0, 0.12),
       0px 9px 12px rgba(0, 0, 0, 0.14);
-    border-radius: 2px;
-    margin: 1em 0;
+    border-radius: 0.5vw;
+    margin-bottom: 1em;
+    flex-grow: 1;
   }
   .top {
     display: flex;
@@ -41,8 +51,8 @@
     justify-content: space-between;
   }
   .tier-top {
-    font-size: 28px;
-    line-height: 42px;
+    font-size: 2vw;
+    line-height: 1.5;
     color: var(--gray);
     font-weight: normal;
   }
@@ -52,7 +62,7 @@
     position: relative;
   }
   p {
-    margin: 0;
+    margin: 0.5em 0;
   }
   .winners {
     width: 100%;
@@ -60,16 +70,16 @@
   }
   .winners th {
     text-align: left;
-    font-size: 32px;
-    line-height: 48px;
+    font-size: 2vw;
+    line-height: 1.5;
     font-weight: normal;
     padding: 10px 28px;
   }
   .winners td {
-    font-size: 28px;
-    line-height: 42px;
+    font-size: 1.6vw;
+    line-height: 1.5;
     font-weight: normal;
-    border-bottom: 1px solid var(--gray);
+    border-bottom: 0.02em solid var(--gray);
     padding: 0 28px;
   }
   .winners td:first-child {

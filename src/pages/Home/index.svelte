@@ -5,6 +5,7 @@
   import PageWithAction from '../../layout/PageWithAction'
   import { ReputationLog, Button } from '../../components'
   import playerStore from '../../store/player'
+  import bonusStore from '../../store/bonus'
   import ScanIcon from './ScanIcon'
 
   const tracker = events.configured()
@@ -21,11 +22,12 @@
 
   let score
   let log
+  let bonusPercent
 
   $: {
-    const player = $playerStore.data
+    const { loading, error, data: player } = $playerStore
 
-    if (player) {
+    if (player && !(loading || error)) {
       const verificationEntry = {
         type: 'verification',
         name: player.name,
@@ -47,6 +49,13 @@
       log = [verificationEntry, ...scans].reverse()
     }
   }
+
+  $: {
+    const { data } = $bonusStore
+    if (data && data.active) {
+      bonusPercent = (data.multiplier - 1) * 100
+    }
+  }
 </script>
 
 <PageWithAction>
@@ -56,6 +65,15 @@
     {/if}
   </div>
   <div slot="action">
+    {#if $bonusStore.data && $bonusStore.data.active}
+      <div class="boost">
+        <header>Boost Active</header>
+        <p>
+          Scanning select sponsers will earn you {bonusPercent}% bonus
+          reputation points
+        </p>
+      </div>
+    {/if}
     <Button fullWidth on:click={scanContact}>
       <span class="scan-icon">
         <ScanIcon />
@@ -66,6 +84,25 @@
 </PageWithAction>
 
 <style>
+  .boost {
+    margin-bottom: 1em;
+    background: var(--light-gray);
+    border: 1px solid var(--orange);
+    border-radius: 4px;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: normal;
+  }
+  .boost header {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+  }
+  .boost p {
+    margin: 0;
+    font-size: 16px;
+    line-height: 24px;
+  }
   .scan-icon {
     margin-right: 10px;
     position: relative;

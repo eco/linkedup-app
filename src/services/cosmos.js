@@ -164,7 +164,7 @@ export default {
     const res = await fetch(`${config.chainEndpoint}/longy/leader`)
     const { result } = await res.json()
 
-    const processTier = (name, tier) => {
+    const processTier = (name, tier, offset) => {
       const attendees = tier.attendees || []
       const rep = attendees.filter(a => a.rep).map(a => parseInt(a.rep, 10))
 
@@ -177,14 +177,31 @@ export default {
         numAttendees: attendees.length,
         minRep: rep.length && Math.min(...rep),
         maxRep: rep.length && Math.max(...rep),
+        offset,
       }
     }
 
-    const tiers = [
-      processTier('Platinum', result.value.tier1),
-      processTier('Gold', result.value.tier2),
-    ]
+    const platinumTier = processTier('Platinum', result.value.tier1, 0)
+    const goldTier = processTier(
+      'Gold',
+      result.value.tier2,
+      platinumTier.numAttendees
+    )
+    return [platinumTier, goldTier]
+  },
 
-    return tiers
+  async getBonus() {
+    const res = await fetch(`${config.chainEndpoint}/longy/bonus`)
+    if (res.status === 404) {
+      return { active: false }
+    }
+    if (!res.ok) {
+      throw new Error('Failed to fetch bonus')
+    }
+    const json = await res.json()
+    return {
+      active: true,
+      multiplier: parseInt(json.value.multiplier, 10),
+    }
   },
 }

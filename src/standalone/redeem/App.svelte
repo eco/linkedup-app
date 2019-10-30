@@ -39,7 +39,7 @@
         {#if winnings.length}
           <table>
             {#each winnings as prize}
-              <tr>
+              <tr class:unclaimed={!prize.claimed}>
                 <td>{prize.name}</td>
                 <td class="status">
                   {#if prize.claimed}
@@ -76,6 +76,10 @@
   table td {
     padding: 0.5em 0;
     vertical-align: top;
+  }
+  tr.unclaimed {
+    color: var(--blue);
+    font-weight: normal;
   }
   .status {
     text-align: right;
