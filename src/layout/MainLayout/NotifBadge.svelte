@@ -1,7 +1,22 @@
 <script>
   import notificationStore from '../../store/notifications'
+  import userStore from '../../store/user'
 
-  $: badge = $notificationStore.filter(n => !n.accepted).length
+  let badge = 0
+  $: {
+    let notices = $notificationStore
+    if ($userStore.latestNotice) {
+      const [type, imageUrl] = $userStore.latestNotice.split('|')
+      const lastNoticeIndex = notices.findIndex(
+        n => n.type === type && n.imageUrl === imageUrl
+      )
+      if (lastNoticeIndex !== -1) {
+        notices = notices.slice(0, lastNoticeIndex)
+      }
+    }
+
+    badge = notices.filter(n => !n.accepted).length
+  }
 </script>
 
 <span class="badge" class:empty={!badge}>{badge}</span>

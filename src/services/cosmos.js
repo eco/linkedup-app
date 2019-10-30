@@ -181,13 +181,13 @@ export default {
       }
     }
 
-    const platinumTier = processTier('Platinum', result.value.tier1, 0)
-    const goldTier = processTier(
-      'Gold',
+    const tier1 = processTier('Top Ten', result.value.tier1, 0)
+    const tier2 = processTier(
+      'Runner Up',
       result.value.tier2,
-      platinumTier.numAttendees
+      tier1.numAttendees
     )
-    return [platinumTier, goldTier]
+    return [tier1, tier2]
   },
 
   async getBonus() {

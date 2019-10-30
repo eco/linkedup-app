@@ -3,12 +3,22 @@
   import { format } from 'date-fns'
   import { Avatar } from '../components'
   import notificationStore from '../store/notifications'
+  import userStore from '../store/user'
 
   const openNotification = notif => {
     if (notif.type === 'reward') {
       page(`/rewards/${notif.index}`)
     } else {
       page(`/badge/${notif.id}`)
+    }
+  }
+
+  $: {
+    const notices = $notificationStore
+    if (notices.length) {
+      const latestNotice = notices[0]
+      const id = `${latestNotice.type}|${latestNotice.imageUrl}`
+      $userStore.latestNotice = id
     }
   }
 </script>
