@@ -5,6 +5,7 @@
   import { Button } from '../../components'
 
   let loading = false
+  let badgeId
 
   const parseUrl = () => {
     const url = new URL(document.location.href)
@@ -22,13 +23,18 @@
   }
 
   const { address, sig } = parseUrl()
+
   let winningsPromise = cosmos.getWinnings(address)
+  cosmos.getContactByAddr(address).then(contact => (badgeId = contact.id))
 </script>
 
 <MainLayout standalone>
   <PageWithAction>
     <div slot="content">
       <h1>Attendee Reward Status</h1>
+      {#if badgeId}
+        <h2>Badge #{badgeId}</h2>
+      {/if}
       {#await winningsPromise then winnings}
         {#if winnings.length}
           <table>
@@ -68,7 +74,8 @@
     border-spacing: 0;
   }
   table td {
-    padding-top: 0.5em;
+    padding: 0.5em 0;
+    vertical-align: top;
   }
   .status {
     text-align: right;
@@ -81,5 +88,12 @@
     text-transform: uppercase;
     padding: 8px 12px;
     border-radius: 50px;
+  }
+  h2 {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 36px;
+    margin: 1em 0;
+    color: var(--blue);
   }
 </style>

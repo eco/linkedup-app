@@ -27,7 +27,7 @@
 
       if (foundScan.encryptedData) {
         decryptData(foundScan.encryptedData, rsaKeyPair.privateKey).then(
-          data => ({ ...foundScan, ...data })
+          data => (scan = { ...foundScan, ...data })
         )
       } else {
         scan = foundScan
