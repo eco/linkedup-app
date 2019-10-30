@@ -5,6 +5,7 @@
   import events from './services/events'
   import MainLayout from './layout/MainLayout'
   import * as pages from './pages'
+  import config from './config'
 
   let component
   let pageParams = {}
@@ -12,6 +13,12 @@
 
   // configure analytics / segment
   const tracker = events.configure()
+
+  // configure error reporting
+  window.Sentry.init({
+    dsn: config.sentryDsn,
+    environment: config.env,
+  })
 
   userStore.subscribe(({ address, profile }) => {
     if (address) {
