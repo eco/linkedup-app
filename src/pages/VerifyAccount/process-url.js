@@ -22,6 +22,7 @@ const processUrl = () => {
   const attributes = [
     {
       label: 'Email',
+      type: 'email',
       value: profile.email,
     },
   ]

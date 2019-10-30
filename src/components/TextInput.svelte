@@ -6,25 +6,59 @@
   export let fullWidth = false
   export let readonly = false
   export let numpad = false
-  export let maxlength = undefined
   export let autofocus = false
+  export let type = 'text'
+  export let required = false
+  export let displayErrors = false
 
   const maybeAutofocus = el => autofocus && el.focus()
 </script>
 
-<label>
+<label class:displayErrors>
+  {#if type === 'text'}
+    <input
+      type="text"
+      pattern={numpad ? '\\d*' : null}
+      bind:value
+      placeholder={label}
+      class:fullWidth
+      {readonly}
+      {required}
+      use:maybeAutofocus />
+  {:else if type === 'email'}
+    <input
+      type="email"
+      bind:value
+      placeholder={label}
+      class:fullWidth
+      {readonly}
+      {required}
+      use:maybeAutofocus />
+  {:else if type === 'tel'}
+    <input
+      type="tel"
+      autocomplete="tel"
+      pattern="[0-9+-.\s]{'{5,20}'}"
+      bind:value
+      placeholder={label}
+      class:fullWidth
+      {readonly}
+      {required}
+      use:maybeAutofocus />
+  {:else if type === 'url'}
+    <input
+      type="url"
+      bind:value
+      placeholder={label}
+      class:fullWidth
+      {readonly}
+      {required}
+      use:maybeAutofocus />
+  {/if}
+
   {#if value}
     <span class="label" in:fly|local={{ y: 20, duration: 400 }}>{label}</span>
   {/if}
-  <input
-    type="text"
-    pattern={numpad ? '\\d*' : null}
-    bind:value
-    placeholder={label}
-    class:fullWidth
-    {maxlength}
-    {readonly}
-    use:maybeAutofocus />
 </label>
 
 <style>
@@ -37,7 +71,6 @@
     font-size: 12px;
     font-weight: 500;
     text-transform: uppercase;
-    display: block;
     line-height: 1;
     height: 12px;
     position: absolute;
@@ -59,5 +92,11 @@
   }
   input[readonly] {
     border-bottom: 0;
+  }
+  label.displayErrors input:invalid {
+    border-bottom: 1px solid var(--red);
+  }
+  label.displayErrors input:invalid + .label {
+    color: var(--red);
   }
 </style>

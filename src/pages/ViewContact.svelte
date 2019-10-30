@@ -1,10 +1,13 @@
 <script>
   import page from 'page'
+  import config from '../config'
   import { decryptData } from '../crypto'
   import events from '../services/events'
   import userStore from '../store/user'
   import playerStore from '../store/player'
-  import { Avatar, TextInput } from '../components'
+  import { Avatar } from '../components'
+
+  const { platforms } = config
 
   export let pageParams
 
@@ -27,7 +30,35 @@
 
       if (foundScan.encryptedData) {
         decryptData(foundScan.encryptedData, rsaKeyPair.privateKey).then(
-          data => (scan = { ...foundScan, ...data })
+          data => {
+            const sharedAttrs = data.sharedAttrs.map(attr => {
+              const platform = platforms.find(p => p.name === attr.label)
+              switch (attr.type) {
+                case 'email':
+                  return { ...attr, href: `email:${attr.value}` }
+
+                case 'tel':
+                  if (platform.name === 'Phone') {
+                    return { ...attr, href: `tel:${attr.value}` }
+                  }
+                  return attr
+
+                case 'url':
+                  return {
+                    ...attr,
+                    href: attr.value,
+                    value: attr.value.replace(
+                      platform.prefix,
+                      platform.vanityPrefix || ''
+                    ),
+                  }
+
+                default:
+                  return attr
+              }
+            })
+            scan = { ...foundScan, ...data, sharedAttrs }
+          }
         )
       } else {
         scan = foundScan
@@ -44,12 +75,15 @@
   {#if scan.sharedAttrs}
     <ul>
       {#each scan.sharedAttrs as attr}
-        <li>
-          <TextInput
-            fullWidth
-            label={attr.label}
-            bind:value={attr.value}
-            readonly />
+        <li class="field">
+          <span class="label">{attr.label}</span>
+          <span class="value">
+            {#if attr.href}
+              <a href={attr.href} target="_blank" rel="noopener noreferrer">
+                {attr.value}
+              </a>
+            {:else}{attr.value}{/if}
+          </span>
         </li>
       {/each}
     </ul>
@@ -68,8 +102,25 @@
     text-align: center;
     margin-bottom: 2em;
   }
+  li {
+    padding-top: 12px;
+    position: relative;
+  }
   li:not(:first-child) {
     margin-top: 1em;
+  }
+  li .label {
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    line-height: 1;
+    height: 12px;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  .value {
+    display: block;
   }
   .message {
     margin-top: 2em;

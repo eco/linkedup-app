@@ -1,16 +1,25 @@
 <script>
+  import config from '../../config'
   import TextInput from '../TextInput'
   import Checkbox from '../Checkbox'
   import ButtonLink from '../ButtonLink'
   import DeleteIcon from './DeleteIcon.svelte'
   import Modal from '../Modal'
-  import platforms from './platforms'
   import * as socialIcons from './socials'
+
+  const { platforms } = config
 
   export let name = ''
   export let attributes = []
   export let share = []
   export let editable = false
+  let form
+  let displayErrors = false
+
+  export const reportValidity = () => {
+    displayErrors = true
+    return form.reportValidity()
+  }
 
   const shareFlags = Object.fromEntries(share.map(s => [s, true]))
   let fieldsVisible = false
@@ -28,55 +37,64 @@
 
   const addField = field => {
     hideFields()
-    shareFlags[field] = true
+    shareFlags[field.name] = true
+    const platform = platforms.find(p => p.name === field.name)
     attributes = [
       ...attributes,
       {
-        label: field,
-        value: '',
+        label: field.name,
+        type: field.type,
+        value: platform.prefix || '',
       },
     ]
   }
 
-  const removeField = field => {
-    attributes = attributes.filter(a => a.label !== field)
+  const removeField = label => {
+    attributes = attributes.filter(a => a.label !== label)
   }
 </script>
 
-<table>
-  <tr>
-    <th>
-      <TextInput
-        fullWidth
-        label="Name"
-        bind:value={name}
-        readonly={!editable} />
-    </th>
-    <th class="share-input">
-      <span class="label">Share?</span>
-    </th>
-  </tr>
-  {#each attributes as attr, i (attr.label)}
+<form bind:this={form}>
+  <table>
     <tr>
-      <td>
-        {#if editable && i !== 0}
-          <span class="delete" on:click={() => removeField(attr.label)}>
-            <DeleteIcon />
-          </span>
-        {/if}
+      <th>
         <TextInput
           fullWidth
-          label={attr.label}
-          bind:value={attr.value}
+          label="Name"
+          bind:value={name}
           readonly={!editable}
-          autofocus={editable && i !== 0} />
-      </td>
-      <td class="share-input">
-        <Checkbox bind:checked={shareFlags[attr.label]} />
-      </td>
+          required
+          {displayErrors} />
+      </th>
+      <th class="share-input">
+        <span class="label">Share?</span>
+      </th>
     </tr>
-  {/each}
-</table>
+    {#each attributes as attr, i (attr.label)}
+      <tr>
+        <td>
+          {#if editable && i !== 0}
+            <span class="delete" on:click={() => removeField(attr.label)}>
+              <DeleteIcon />
+            </span>
+          {/if}
+          <TextInput
+            fullWidth
+            type={attr.type}
+            label={attr.label}
+            bind:value={attr.value}
+            readonly={!editable}
+            autofocus={editable && i !== 0}
+            required
+            {displayErrors} />
+        </td>
+        <td class="share-input">
+          <Checkbox bind:checked={shareFlags[attr.label]} />
+        </td>
+      </tr>
+    {/each}
+  </table>
+</form>
 
 {#if editable && !allSelected}
   <ButtonLink on:click={showFields}>+ Add field</ButtonLink>
@@ -85,15 +103,15 @@
 {#if editable && fieldsVisible}
   <Modal title="Add Field" on:close={hideFields}>
     <ul class="fields">
-      {#each platforms as field}
+      {#each platforms as field, i (field.name)}
         <li
           class="field"
-          class:selected={selectedFields.includes(field)}
+          class:selected={selectedFields.includes(field.name)}
           on:click={() => addField(field)}>
           <span class="icon">
-            <svelte:component this={socialIcons[field]} />
+            <svelte:component this={socialIcons[field.name]} />
           </span>
-          {field}
+          {field.name}
         </li>
       {/each}
     </ul>
@@ -136,7 +154,6 @@
     left: -20px;
     bottom: 14px;
   }
-
   .fields {
     margin-top: 2em;
     font-weight: normal;

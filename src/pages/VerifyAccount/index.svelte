@@ -9,6 +9,7 @@
 
   let loading = false
   let avatarFile
+  let form
 
   const tracker = events.configured()
   tracker.track('view', {
@@ -19,6 +20,10 @@
   const { address, secret, avatarUploadUrl, profile } = processUrl()
 
   const finishVerification = async () => {
+    if (!form.reportValidity()) {
+      return
+    }
+
     try {
       loading = true
       if (avatarFile) {
@@ -47,6 +52,7 @@
     </p>
     <Attributes
       editable
+      bind:this={form}
       bind:name={profile.name}
       bind:attributes={profile.attributes}
       bind:share={profile.defaultShare} />

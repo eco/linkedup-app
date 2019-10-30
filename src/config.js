@@ -1,3 +1,5 @@
+import platforms from './config.platforms'
+
 const isIOS = /iphone|ipad|ipod/i.test(window.navigator.userAgent)
 
 const defaultOptions = {
@@ -5,6 +7,7 @@ const defaultOptions = {
   dataPollingInterval: 5000,
   segmentWriteApiKey: '6tAoLDmWqPfUxy30obm1ZqxcTbZ3zom8',
   isIOS,
+  platforms,
 }
 
 const domains = {
