@@ -15,7 +15,7 @@
   }
 
   const navConfig = {
-    '/': 'Home',
+    '/': 'Connections',
     '/rewards': {
       name: 'Rewards',
       requiresLogin: true,
@@ -26,7 +26,7 @@
       badge: true,
     },
     '/leaderboard': 'Leaderboard',
-    '/about': 'About',
+    '/about': 'How to Play',
   }
   let navItems
 

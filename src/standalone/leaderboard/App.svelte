@@ -59,7 +59,7 @@
     {/if}
   </main>
   <footer>
-    For more information about Linked Up, visit https://linkedup.sfbw.io
+    For more information about Linked Up, visit https://linkedup.sfbw.io/about
   </footer>
 </div>
 
