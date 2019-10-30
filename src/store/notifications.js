@@ -38,6 +38,11 @@ export default derived(
               mark => mark.score >= parseInt(prize.repNeeded, 10)
             )
 
+            if (!score) {
+              // may not have enough data yet
+              return
+            }
+
             return {
               type: 'reward',
               imageUrl: prize.imageUrl,

@@ -22,11 +22,12 @@
 
   let score
   let log
+  let bonusPercent
 
   $: {
-    const player = $playerStore.data
+    const { loading, error, data: player } = $playerStore
 
-    if (player) {
+    if (player && !(loading || error)) {
       const verificationEntry = {
         type: 'verification',
         name: player.name,
@@ -49,7 +50,6 @@
     }
   }
 
-  let bonusPercent
   $: {
     const { data } = $bonusStore
     if (data && data.active) {
@@ -85,7 +85,7 @@
 
 <style>
   .boost {
-    margin: 1em 0;
+    margin-bottom: 1em;
     background: var(--light-gray);
     border: 1px solid var(--orange);
     border-radius: 4px;

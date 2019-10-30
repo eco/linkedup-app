@@ -30,24 +30,24 @@
 
 <style>
   .box {
+    margin: 1em 0;
     background-color: var(--white);
     color: var(--black);
     box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.2), 0px 3px 16px rgba(0, 0, 0, 0.12),
       0px 9px 12px rgba(0, 0, 0, 0.14);
-    border-radius: 2px;
-    margin: 1em 0;
+    border-radius: 0.5vw;
   }
   .tier {
     display: flex;
     flex-wrap: wrap;
-    padding: 24px;
+    padding: 2.5vw;
     justify-content: space-between;
   }
   h2 {
     margin: 0;
     flex-basis: 50%;
-    font-size: 36px;
-    line-height: 54px;
+    font-size: 2.5vw;
+    line-height: 1;
     font-weight: 500;
   }
   p {
@@ -56,27 +56,25 @@
   .prize {
     flex-basis: 50%;
     text-align: right;
-    font-size: 32px;
-    line-height: 54px;
+    font-size: 2vw;
+    line-height: 1;
     font-weight: normal;
   }
   .prize span {
     color: var(--dark-gray);
-    margin-right: 24px;
+    margin-right: 1em;
   }
   .stat {
-    width: 200px;
+    width: 15vw;
     padding-top: 1.5em;
     text-align: center;
     text-transform: uppercase;
-    font-size: 16px;
-    line-height: 24px;
     font-weight: 600;
   }
   .stat span {
     display: block;
-    font-size: 64px;
-    line-height: 96px;
+    font-size: 4vw;
+    line-height: 1.5;
     font-weight: 500;
   }
 </style>

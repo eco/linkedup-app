@@ -47,14 +47,14 @@
   }
   th {
     text-align: left;
-    padding-bottom: 2em;
+    padding-bottom: 1em;
   }
   td {
     font-size: 16px;
     line-height: 24px;
     vertical-align: top;
     font-weight: 400;
-    padding-bottom: 1em;
+    padding-top: 1em;
   }
   td.avatar-col {
     width: 65px;
