@@ -2,14 +2,12 @@
   import page from 'page'
   import QRCode from 'qrcode'
   import userStore from '../store/user'
-  import playerStore from '../store/player'
   import prizeStore from '../store/prizes'
   import { signAddress } from '../crypto'
 
   export let pageParams = {}
   let qrCodeVisible = false
   let prize
-  let prizeLoading = true
 
   const displayQrCode = () => (qrCodeVisible = true)
 
@@ -34,20 +32,16 @@
   const qrCodePromise = getQrCode()
 
   $: {
-    if (!$playerStore.data || !$prizeStore.data) {
-      prizeLoading = true
-    } else {
-      const { score } = $playerStore.data
+    if ($prizeStore.data) {
       prize = $prizeStore.data[pageParams.prizeIndex]
-      if (!prize || score < prize.repNeeded || prize.claimed) {
+      if (!prize || !prize.won || prize.claimed) {
         page.redirect('/rewards')
       }
-      prizeLoading = false
     }
   }
 </script>
 
-{#if !prizeLoading}
+{#if prize}
   <h1>{prize.prizeText}</h1>
   <p>
     Present this screen at the SF Blockchain Week merchandise booth to claim

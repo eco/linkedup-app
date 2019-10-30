@@ -41,28 +41,34 @@
   <ul>
     {#each prizes as prize, index}
       <li>
-        <span class="image-clip" class:claimed={prize.claimed}>
+        <span
+          class="image-clip"
+          class:claimed={prize.claimed || !prize.quantity}>
           <img src={prize.imageUrl} alt={prize.prizeText} />
         </span>
 
-        {#if !prize.claimed}
+        {#if prize.quantity && !prize.won}
           <progress
             max={prize.repNeeded}
             value={prize.repNeeded - prize.pointsRemaining} />
         {/if}
 
         <span class="message">
-          {#if prize.pointsRemaining}
-            You are {prize.pointsRemaining} points away from a {prize.prizeText}
+          {#if !prize.quantity}
+            All "{prize.prizeText}" have been claimed
           {:else if prize.claimed}
             You claimed a {prize.prizeText}
-          {:else}
+          {:else if prize.won}
             <span class="claim">
               <ButtonLink on:click={() => openPrizeAtIndex(index)}>
                 Claim
               </ButtonLink>
             </span>
             You earned a {prize.prizeText}
+          {:else}
+            You are {prize.pointsRemaining} points away from a {prize.prizeText}
+            <br />
+            <span class="quantity">{prize.quantity} left</span>
           {/if}
         </span>
       </li>
@@ -113,5 +119,9 @@
     float: right;
     line-height: inherit;
     margin: -1em 0;
+  }
+  .quantity {
+    font-size: 14px;
+    float: right;
   }
 </style>
