@@ -5,7 +5,6 @@
   export let label = ''
   export let fullWidth = false
   export let readonly = false
-  export let numpad = false
   export let autofocus = false
   export let type = 'text'
   export let required = false
@@ -19,7 +18,6 @@
   {#if type === 'text'}
     <input
       type="text"
-      pattern={numpad ? '\\d*' : null}
       bind:value
       placeholder={label}
       class:fullWidth

@@ -4,7 +4,7 @@
   import PageWithAction from '../layout/PageWithAction'
   import events from '../services/events'
   import keyService from '../services/key'
-  import { TextInput, Button } from '../components'
+  import { VerificationCode, Button } from '../components'
 
   let code = ''
   let loading = false
@@ -39,12 +39,7 @@
         address.
       </p>
       <p class="verification-code">
-        <TextInput
-          numpad
-          maxlength="6"
-          fullWidth
-          label="Verification code"
-          bind:value={code} />
+        <VerificationCode length={6} bind:code label="Verification code" />
       </p>
     </div>
     <div slot="action">
