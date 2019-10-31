@@ -147,7 +147,7 @@ export default {
       `${config.chainEndpoint}/longy/winnings?address_id=${address}`
     )
     const { result } = await res.json()
-    return result
+    return result || []
   },
 
   async claimWinnings(address, sig) {
