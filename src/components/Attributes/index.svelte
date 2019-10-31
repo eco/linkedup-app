@@ -14,10 +14,10 @@
   export let share = []
   export let editable = false
   let form
-  let displayErrors = false
+  let formSubmitted = false
 
   export const reportValidity = () => {
-    displayErrors = true
+    formSubmitted = true
     return form.reportValidity()
   }
 
@@ -38,13 +38,13 @@
   const addField = field => {
     hideFields()
     shareFlags[field.name] = true
-    const platform = platforms.find(p => p.name === field.name)
     attributes = [
       ...attributes,
       {
         label: field.name,
         type: field.type,
-        value: platform.prefix || '',
+        prefix: field.prefix,
+        value: '',
       },
     ]
   }
@@ -64,7 +64,7 @@
           bind:value={name}
           readonly={!editable}
           required
-          {displayErrors} />
+          displayErrors={formSubmitted} />
       </th>
       <th class="share-input">
         <span class="label">Share?</span>
@@ -86,7 +86,8 @@
             readonly={!editable}
             autofocus={editable && i !== 0}
             required
-            {displayErrors} />
+            displayErrors={formSubmitted}
+            prefix={attr.prefix} />
         </td>
         <td class="share-input">
           <Checkbox bind:checked={shareFlags[attr.label]} />
@@ -135,7 +136,7 @@
     position: relative;
   }
   .share-input {
-    padding-left: 1em;
+    width: 50px;
     text-align: center;
   }
   .label {
