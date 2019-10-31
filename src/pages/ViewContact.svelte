@@ -35,7 +35,7 @@
               const platform = platforms.find(p => p.name === attr.label)
               switch (attr.type) {
                 case 'email':
-                  return { ...attr, href: `email:${attr.value}` }
+                  return { ...attr, href: `mailto:${attr.value}` }
 
                 case 'tel':
                   if (platform.name === 'Phone') {
