@@ -6,7 +6,7 @@ export default [
   {
     name: 'LinkedIn',
     type: 'url',
-    prefix: 'https://www.linkedin.com/in/',
+    prefix: 'linkedin.com/in/',
   },
   {
     name: 'Phone',
@@ -15,12 +15,12 @@ export default [
   {
     name: 'Telegram',
     type: 'url',
-    prefix: 'https://t.me/',
+    prefix: 't.me/',
   },
   {
     name: 'Twitter',
     type: 'url',
-    prefix: 'https://twitter.com/',
+    prefix: 'twitter.com/',
     vanityPrefix: '@',
   },
   {
@@ -38,16 +38,16 @@ export default [
   {
     name: 'AngelList',
     type: 'url',
-    prefix: 'https://angel.co/',
+    prefix: 'angel.co/',
   },
   {
     name: 'Facebook',
     type: 'url',
-    prefix: 'https://www.facebook.com/',
+    prefix: 'facebook.com/',
   },
   {
     name: 'Instagram',
     type: 'url',
-    prefix: 'https://www.instagram.com/',
+    prefix: 'instagram.com/',
   },
 ]

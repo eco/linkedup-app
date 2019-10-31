@@ -46,7 +46,7 @@
                 case 'url':
                   return {
                     ...attr,
-                    href: `${platform.prefix}${attr.value}`,
+                    href: `https://${platform.prefix}${attr.value}`,
                     value: `${platform.vanityPrefix || ''}${attr.value}`,
                   }
 

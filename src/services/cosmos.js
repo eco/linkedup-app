@@ -201,7 +201,7 @@ export default {
     const json = await res.json()
     return {
       active: true,
-      multiplier: parseInt(json.value.multiplier, 10),
+      multiplier: parseFloat(json.value.multiplier, 10),
     }
   },
 }

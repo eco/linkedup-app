@@ -53,13 +53,15 @@
       class:fullWidth
       {readonly}
       {required}
+      autocorrect="off"
+      autocapitalize="none"
       use:maybeAutofocus />
     {#if !readonly}
       <span class="vanity-input">
         <span class="rtl-text" class:has-text={!!value}>
           <span class="ltr-text">
             <!-- prettier-ignore -->
-            <span class="prefix">{prefix}</span>{value.replace(prefix, '') || ' '}
+            <span class="prefix">{prefix}</span>{value}
           </span>
         </span>
       </span>
