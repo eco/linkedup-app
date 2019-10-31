@@ -15,7 +15,7 @@
     href="https://github.com/fourthstate"
     target="_blank"
     rel="noopener noreferrer">
-    <img src="/assets/images/fourthstatelabs.jpeg" alt="FourthState Labs" />
+    <img src="/assets/images/fourthstatelabs.png" alt="FourthState Labs" />
   </a>
 </header>
 

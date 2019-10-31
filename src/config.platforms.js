@@ -1,5 +1,9 @@
 export default [
   {
+    name: 'Email',
+    type: 'email',
+  },
+  {
     name: 'LinkedIn',
     type: 'url',
     prefix: 'https://www.linkedin.com/in/',

@@ -7,7 +7,7 @@
   import Modal from '../Modal'
   import * as socialIcons from './socials'
 
-  const { platforms } = config
+  const { platforms, platformByLabel } = config
 
   export let name = ''
   export let attributes = []
@@ -29,7 +29,7 @@
       .filter(entry => entry[1])
       .map(entry => entry[0])
   }
-  $: selectedFields = attributes.slice(1).map(a => a.label)
+  $: selectedFields = attributes.map(a => a.label)
   $: allSelected = selectedFields.length === platforms.length
 
   const showFields = () => (fieldsVisible = true)
@@ -42,8 +42,6 @@
       ...attributes,
       {
         label: field.name,
-        type: field.type,
-        prefix: field.prefix,
         value: '',
       },
     ]
@@ -73,21 +71,21 @@
     {#each attributes as attr, i (attr.label)}
       <tr>
         <td>
-          {#if editable && i !== 0}
+          {#if editable && attr.label !== 'Email'}
             <span class="delete" on:click={() => removeField(attr.label)}>
               <DeleteIcon />
             </span>
           {/if}
           <TextInput
             fullWidth
-            type={attr.type}
+            type={platformByLabel[attr.label].type}
             label={attr.label}
             bind:value={attr.value}
             readonly={!editable}
-            autofocus={editable && i !== 0}
+            autofocus={editable && attr.label !== 'Email'}
             required
             displayErrors={formSubmitted}
-            prefix={attr.prefix} />
+            prefix={platformByLabel[attr.label].prefix} />
         </td>
         <td class="share-input">
           <Checkbox bind:checked={shareFlags[attr.label]} />
@@ -163,8 +161,7 @@
     line-height: 3em;
   }
   .field.selected {
-    pointer-events: none;
-    opacity: 0.3;
+    display: none;
   }
   .field .icon {
     float: left;

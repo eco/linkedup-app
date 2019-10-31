@@ -7,7 +7,7 @@
   import playerStore from '../store/player'
   import { Avatar } from '../components'
 
-  const { platforms } = config
+  const { platformByLabel } = config
 
   export let pageParams
 
@@ -32,25 +32,22 @@
         decryptData(foundScan.encryptedData, rsaKeyPair.privateKey).then(
           data => {
             const sharedAttrs = data.sharedAttrs.map(attr => {
-              const platform = platforms.find(p => p.name === attr.label)
-              switch (attr.type) {
+              const platform = platformByLabel[attr.label]
+
+              switch (platform.type) {
                 case 'email':
                   return { ...attr, href: `mailto:${attr.value}` }
 
                 case 'tel':
-                  if (platform.name === 'Phone') {
-                    return { ...attr, href: `tel:${attr.value}` }
-                  }
-                  return attr
+                  return platform.name === 'Phone'
+                    ? { ...attr, href: `tel:${attr.value}` }
+                    : attr
 
                 case 'url':
                   return {
                     ...attr,
-                    href: attr.value,
-                    value: attr.value.replace(
-                      platform.prefix,
-                      platform.vanityPrefix || ''
-                    ),
+                    href: `${platform.prefix}${attr.value}`,
+                    value: `${platform.vanityPrefix || ''}${attr.value}`,
                   }
 
                 default:
