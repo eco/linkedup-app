@@ -19,7 +19,7 @@
 
 <div class="layout">
   <header>
-    Linked Up
+    <a href="/">Linked Up</a>
     {#if !standalone}
       {#if navAction === 'menu'}
         <span class="menu-icon" on:click={showMenu}>
@@ -68,6 +68,11 @@
     line-height: 70px;
     font-weight: 800;
     font-size: 18px;
+  }
+  header a {
+    text-decoration: none;
+    outline: none;
+    color: var(--white);
   }
   .menu-icon {
     position: absolute;

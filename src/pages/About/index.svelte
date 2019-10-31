@@ -68,18 +68,18 @@
   The attendees that fall in the range of 11th-30th best reputation scores will
   equally split $2,000!
 </p>
-<h2>LinkedUp Game Mechanics FAQ</h2>
-<h3>Why use LinkedUp?</h3>
+<h2>Linked Up Game Mechanics FAQ</h2>
+<h3>Why use Linked Up?</h3>
 <p>
   Networking at events is exhausting, business cards and contact data frequently
   get forgotten or lost, and most web2.0 contact apps lack comprehensive utility
-  and use you and your contact's data to make money. We built LinkedUp to help
+  and use you and your contact's data to make money. We built Linked Up to help
   you create a lasting network of valuable contacts that live on the blockchain
   and can always be accessed.
 </p>
 <p>
-  Every time you take an action in LinkedUp (sharing your contact info, scanning
-  someone’s badge) you’ll earn points that can be redeemed for rewards.
+  Every time you take an action in Linked Up (sharing your contact info,
+  scanning someone’s badge) you’ll earn points that can be redeemed for rewards.
 </p>
 <h3>Why blockchain?</h3>
 <p>
@@ -119,16 +119,16 @@
 <h3>How do I find the contact information for someone I’ve scanned?</h3>
 <p>
   To see information for someone that you’ve shared information with, navigate
-  to the Reputation page of LinkedUp and click on their photo.
+  to the Reputation page of Linked Up and click on their photo.
 </p>
-<h3>What happens if I accidentally close the LinkedUp browser tab?</h3>
+<h3>What happens if I accidentally close the Linked Up browser tab?</h3>
 <p>
-  Closing the browser tab won’t log you out of LinkedUp, so all you need to do
+  Closing the browser tab won’t log you out of Linked Up, so all you need to do
   is reopen the tab.
 </p>
 <p>
   Your session key is stored in a cookie, so if you clear your cookies you’ll
-  need to take the following steps to open LinkedUp:
+  need to take the following steps to open Linked Up:
 </p>
 <ol type="1">
   <li>
@@ -143,7 +143,7 @@
 
 <h3>How do I earn points?</h3>
 <p>
-  You earn points every time you use LinkedUp to interact with someone at
+  You earn points every time you use Linked Up to interact with someone at
   Blockchain Week:
 </p>
 <ul>
@@ -160,7 +160,7 @@
 </p>
 <p>
   Rewards are nice, but how about something a bit bigger? Keep an eye on the
-  LinkedUp leaderboard: if you’re one of the top participants at SF Blockchain
+  Linked Up leaderboard: if you’re one of the top participants at SF Blockchain
   Week you’ll be splitting one of several Competition Rewards with other
   attendees in your prize tier.
 </p>
@@ -171,14 +171,14 @@
 
 <h3>Where do I pick up rewards that I’ve redeemed?</h3>
 <p>
-  All rewards may be picked up from the LinkedUp game booth. Be sure to show
-  your redemption in the LinkedUp tab to confirm your item!
+  All rewards may be picked up from the Linked Up game booth. Be sure to show
+  your redemption in the Linked Up tab to confirm your item!
 </p>
 <h3>
-  When SF BlockChain Week ends, can I still use my contacts from LinkedUp?
+  When SF BlockChain Week ends, can I still use my contacts from Linked Up?
 </h3>
 <p>
-  LinkedUp is hosted on the Cosmos blockchain, so you’ll always be able to
+  Linked Up is hosted on the Cosmos blockchain, so you’ll always be able to
   access your contacts.
 </p>
 
@@ -189,7 +189,7 @@
     min-height: 150px;
     margin: 0 calc(var(--page-gutter-horiz) * -1);
     width: calc(100% + var(--page-gutter-horiz) * 2);
-    padding: 45px var(--page-gutter-horiz) 0;
+    padding: 0 var(--page-gutter-horiz);
   }
   h1 {
     color: var(--blue);

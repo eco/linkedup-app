@@ -8,6 +8,9 @@
 
   let code = ''
   let loading = false
+  const url = new URL(document.location.href)
+  const badgeId = url.searchParams.get('badgeId')
+  const email = url.searchParams.get('email')
 
   const tracker = events.configured()
   tracker.track('view', {
@@ -18,8 +21,6 @@
   const recoverAccount = async () => {
     try {
       loading = true
-      const url = new URL(document.location.href)
-      const badgeId = url.searchParams.get('badgeId')
       const result = await keyService.recoverAccount(badgeId, code)
       page.redirect(result.claimUrl || '/')
     } catch (e) {
@@ -34,9 +35,10 @@
   <PageWithAction>
     <div slot="content">
       <h1>Check your email</h1>
+      <p>To verify your profile, enter the 6 digit code sent to {email}</p>
       <p>
-        To verify your profile, enter the 6 digit code sent to your email
-        address.
+        If this is not the correct email or you did not recieve an email, please
+        visit the Linked Up game center for help.
       </p>
       <p class="verification-code">
         <VerificationCode length={6} bind:code label="Verification code" />
@@ -48,7 +50,11 @@
   </PageWithAction>
 {:else}
   <h1>Check your email</h1>
-  <p>We've sent you an email with a link to log you in!</p>
+  <p>We've sent an email to {email} with a link to log you in!</p>
+  <p>
+    If this is not the correct email or you did not recieve an email, please
+    visit the Linked Up game center for help.
+  </p>
 {/if}
 
 <style>

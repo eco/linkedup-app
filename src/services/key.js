@@ -30,7 +30,9 @@ export default {
       throw new Error('Failed to post key')
     }
 
+    const email = await res.text()
     userStore.set({ cosmosKey, rsaKeyPair })
+    return email.trim()
   },
 
   async beginRecovery(badgeId) {
@@ -45,6 +47,9 @@ export default {
     if (!res.ok) {
       throw new Error('Failed to post key')
     }
+
+    const email = await res.text()
+    return email.trim()
   },
 
   async getAddressByBadge(badgeId) {

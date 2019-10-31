@@ -11,8 +11,9 @@
     try {
       loading = true
       const badgeId = parseInt(pageParams.badgeId, 10)
-      await keyService.beginRecovery(badgeId)
-      page(`/verify?badgeId=${badgeId}`)
+      const email = await keyService.beginRecovery(badgeId)
+      const query = new URLSearchParams({ badgeId, email })
+      page(`/verify?${query}`)
     } catch (e) {
       window.alert(`ERROR: ${e.message}`)
     } finally {

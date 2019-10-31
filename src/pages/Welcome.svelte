@@ -12,8 +12,9 @@
     try {
       loading = true
       const badgeId = parseInt(pageParams.badgeId, 10)
-      await keyService.beginVerification(badgeId)
-      page(`/verify?badgeId=${badgeId}`)
+      const email = await keyService.beginVerification(badgeId)
+      const query = new URLSearchParams({ badgeId, email })
+      page(`/verify?${query}`)
     } catch (e) {
       window.alert(`ERROR: ${e.message}`)
     } finally {
@@ -24,7 +25,7 @@
 
 <PageWithAction>
   <div slot="content">
-    <h1>Welcome to LinkedUp</h1>
+    <h1>Welcome to Linked Up</h1>
     <p>
       Grow your professional network, make friends, earn loot, and compete to
       take your share of $5,000! Meet with others, share your contact details,
@@ -38,10 +39,9 @@
     <p>
       For
       <em>iOS</em>
-      devices: Due to less than ideal support for progressive web apps, it is
+      devices: In order to have the smoothest Linked Up experience, it is
       recommended that you use
       <em>Safari without a private tab</em>
-      in order to have the smoothest LinkedUp experience.
     </p>
     <p>Please verify your profile information and privacy settings</p>
   </div>
@@ -67,5 +67,10 @@
     color: var(--blue);
     font-style: normal;
     font-weight: normal;
+  }
+  p {
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.5;
   }
 </style>
