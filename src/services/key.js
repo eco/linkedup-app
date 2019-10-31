@@ -22,8 +22,7 @@ export default {
     })
 
     if (res.status === 409) {
-      await this.beginRecovery(badgeId)
-      return
+      return this.beginRecovery(badgeId)
     }
 
     if (!res.ok) {
