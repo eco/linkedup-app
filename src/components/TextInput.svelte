@@ -10,6 +10,7 @@
   export let type = 'text'
   export let required = false
   export let displayErrors = false
+  export let prefix = undefined
 
   const maybeAutofocus = el => autofocus && el.focus()
 </script>
@@ -47,17 +48,31 @@
       use:maybeAutofocus />
   {:else if type === 'url'}
     <input
-      type="url"
+      class="url"
+      type="text"
       bind:value
       placeholder={label}
       class:fullWidth
       {readonly}
       {required}
       use:maybeAutofocus />
+    {#if !readonly}
+      <span class="vanity-input">
+        <span class="rtl-text" class:has-text={!!value}>
+          <span class="ltr-text">
+            <!-- prettier-ignore -->
+            <span class="prefix">{prefix}</span>
+            {value.replace(prefix, '') || ' '}
+          </span>
+        </span>
+      </span>
+    {/if}
   {/if}
 
-  {#if value}
-    <span class="label" in:fly|local={{ y: 20, duration: 400 }}>{label}</span>
+  {#if value || type === 'url'}
+    <span class="label" transition:fly|local={{ y: 20, duration: 400 }}>
+      {label}
+    </span>
   {/if}
 </label>
 
@@ -84,6 +99,9 @@
     border-radius: 0;
     border-bottom: 1px solid var(--gray);
   }
+  input.url:not([readonly]) {
+    opacity: 0;
+  }
   input.fullWidth {
     width: 100%;
   }
@@ -93,10 +111,37 @@
   input[readonly] {
     border-bottom: 0;
   }
-  label.displayErrors input:invalid {
+  label.displayErrors input:invalid,
+  label.displayErrors input:invalid + .vanity-input {
     border-bottom: 1px solid var(--red);
   }
   label.displayErrors input:invalid + .label {
     color: var(--red);
+  }
+  .vanity-input {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    padding-bottom: 4px;
+    width: 100%;
+    overflow: hidden;
+    border-bottom: 1px solid var(--gray);
+    white-space: nowrap;
+    cursor: text;
+  }
+  .vanity-input .rtl-text {
+    display: inline-block;
+    max-width: 100%;
+  }
+  .vanity-input .rtl-text.has-text {
+    /* fix for strange rtl rendering when no text */
+    direction: rtl;
+  }
+  .vanity-input .ltr-text {
+    direction: ltr;
+  }
+  .vanity-input .prefix {
+    opacity: 0.75;
+    font-size: 75%;
   }
 </style>

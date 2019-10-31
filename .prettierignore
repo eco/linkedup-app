@@ -1,0 +1,4 @@
+# bug where svelte prettier plugin is not respecting ignore directives
+# and causes wrapping of html, with unintended side-effects
+#   https://github.com/UnwrittenFun/prettier-plugin-svelte/issues/59
+src/components/TextInput.svelte
