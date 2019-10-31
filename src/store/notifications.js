@@ -32,8 +32,12 @@ export default derived(
         )
 
         rewards = prizes
-          .filter(prize => prize.won)
           .map((prize, index) => {
+            // keep this here to ensure index value matches the index in the prize store
+            if (!prize.won) {
+              return
+            }
+
             const score = scoresWithTimestamps.find(
               mark => mark.score >= parseInt(prize.repNeeded, 10)
             )

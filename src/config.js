@@ -25,7 +25,7 @@ const domains = {
     contentEndpoint: 'https://linkedup-user-content.s3.us-west-2.amazonaws.com',
     env: 'production',
   },
-  localhost: {
+  default: {
     chainEndpoint: '/chainsvc',
     keyEndpoint: '/keysvc',
     contentEndpoint: '/linkedup-user-content',
@@ -33,7 +33,7 @@ const domains = {
   },
 }
 
-const domainOptions = domains[document.location.hostname] || {}
+const domainOptions = domains[document.location.hostname] || domains.default
 
 export default {
   ...defaultOptions,

@@ -1,6 +1,5 @@
 module.exports = {
   directory: 'public',
-  hostname: 'localhost',
   port: '5000',
   spa: 'index.html',
   spaAssetTest: '(\\.|^\\/s\\/)',
