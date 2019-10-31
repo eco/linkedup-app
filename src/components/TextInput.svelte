@@ -12,6 +12,7 @@
   export let prefix = undefined
 
   const maybeAutofocus = el => autofocus && el.focus()
+  const handleFocus = e => setTimeout(() => e.target.scrollIntoView(), 100)
 </script>
 
 <label class:displayErrors>
@@ -55,13 +56,14 @@
       {required}
       autocorrect="off"
       autocapitalize="none"
-      use:maybeAutofocus />
+      use:maybeAutofocus
+      on:focus={handleFocus} />
     {#if !readonly}
       <span class="vanity-input">
         <span class="rtl-text" class:has-text={!!value}>
           <span class="ltr-text">
-            <!-- prettier-ignore -->
-            <span class="prefix">{prefix}</span>{value}
+            <span class="prefix">{prefix}</span>
+            {value}
           </span>
         </span>
       </span>
@@ -142,5 +144,6 @@
   .vanity-input .prefix {
     opacity: 0.75;
     font-size: 65%;
+    margin-right: -0.3em;
   }
 </style>

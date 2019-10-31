@@ -14,6 +14,7 @@ settings:
     node:
       extensions: ['.mjs', '.js', '.svelte', '.json']
 rules:
+  no-alert: off # :*(
   no-use-before-define: off
   no-return-assign: off
   consistent-return: off

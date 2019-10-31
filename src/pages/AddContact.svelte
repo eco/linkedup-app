@@ -25,13 +25,19 @@
   let share = $userStore.profile.defaultShare
 
   const handleShare = async () => {
-    const sharedAttrs = $userStore.profile.attributes.filter(attr =>
-      share.includes(attr.label)
-    )
-    const sharePayload = { sharedAttrs, message }
-    loadingShare = true
-    await cosmos.scanContact(pageParams.badgeId, sharePayload)
-    loadingShare = false
+    try {
+      const sharedAttrs = $userStore.profile.attributes.filter(attr =>
+        share.includes(attr.label)
+      )
+      const sharePayload = { sharedAttrs, message }
+      loadingShare = true
+      await cosmos.scanContact(pageParams.badgeId, sharePayload)
+    } catch (e) {
+      window.alert(`ERROR: ${e.message}`)
+    } finally {
+      loadingShare = false
+    }
+
     page('/')
     tracker.track('click', {
       category: 'share_contact',
@@ -40,9 +46,15 @@
   }
 
   const handleSkip = async () => {
-    loadingSkip = true
-    await cosmos.scanContact(pageParams.badgeId)
-    loadingSkip = false
+    try {
+      loadingSkip = true
+      await cosmos.scanContact(pageParams.badgeId)
+    } catch (e) {
+      window.alert(`ERROR: ${e.message}`)
+    } finally {
+      loadingSkip = false
+    }
+
     page('/')
     tracker.track('click', {
       category: 'share_contact',

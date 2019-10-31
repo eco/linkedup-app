@@ -23,10 +23,15 @@
   }
 
   const markClaimed = async () => {
-    loading = true
-    await cosmos.claimWinnings(address, sig)
-    winningsPromise = cosmos.getWinnings(address)
-    loading = false
+    try {
+      loading = true
+      await cosmos.claimWinnings(address, sig)
+      winningsPromise = cosmos.getWinnings(address)
+    } catch (e) {
+      window.alert(`ERROR: ${e.message}`)
+    } finally {
+      loading = false
+    }
   }
 
   const { address, sig } = parseUrl()

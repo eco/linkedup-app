@@ -2,11 +2,18 @@
   export let length = 6
   export let code = ''
   export let label
+
+  const handleFocus = e => setTimeout(() => e.target.scrollIntoView(), 100)
 </script>
 
 <label>
   <p class="label">{label}</p>
-  <input type="text" pattern="\d*" maxlength={length} bind:value={code} />
+  <input
+    type="text"
+    pattern="\d*"
+    maxlength={length}
+    bind:value={code}
+    on:focus={handleFocus} />
   <div class="container">
     {#each [0, 1, 2, 3, 4, 5] as digit}
       <span class="digit">{code[digit] || ''}</span>
