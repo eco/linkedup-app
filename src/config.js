@@ -6,7 +6,7 @@ const defaultOptions = {
   leaderboardFrameInterval: 10000,
   dataPollingInterval: 5000,
   segmentWriteApiKey: '6tAoLDmWqPfUxy30obm1ZqxcTbZ3zom8',
-  sentryDsn: 'https://7379beb03edb44148dbb098e4f85c83f@sentry.io/1802604',
+  sentryDsn: 'https://eea339b5af8c41cfa29f4f7f936fd601@sentry.io/1799879',
   env: 'development',
   isIOS,
   platforms,
