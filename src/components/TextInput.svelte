@@ -143,7 +143,7 @@
   }
   .vanity-input .prefix {
     opacity: 0.75;
-    font-size: 65%;
+    font-size: 80%;
     margin-right: -0.3em;
   }
 </style>
