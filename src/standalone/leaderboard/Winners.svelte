@@ -1,4 +1,6 @@
 <script>
+  import { flip } from 'svelte/animate'
+
   export let tier
 </script>
 
@@ -16,8 +18,8 @@
           <th>Reputation</th>
         </tr>
       </thead>
-      {#each tier.attendees as attendee, idx}
-        <tr>
+      {#each tier.attendees as attendee, idx (attendee.name)}
+        <tr animate:flip>
           <td>{idx + 1 + tier.offset}</td>
           <td>{attendee.name}</td>
           <td>
