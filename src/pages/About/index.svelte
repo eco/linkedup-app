@@ -2,10 +2,23 @@
   import PointBox from './PointBox'
 </script>
 
-<div class="header">
-  <img class="graphic" src="/assets/images/about-header.svg" alt="Linked Up" />
+<header>
   <h1>Linked Up</h1>
-</div>
+  <p class="subtitle">Powered by:</p>
+  <a href="https://www.eco.com" target="_blank" rel="noopener noreferrer">
+    <img src="/assets/images/eco.png" alt="Eco" />
+  </a>
+  <a href="https://vault12.com" target="_blank" rel="noopener noreferrer">
+    <img src="/assets/images/vault12.png" alt="Vault12" />
+  </a>
+  <a
+    href="https://github.com/fourthstate"
+    target="_blank"
+    rel="noopener noreferrer">
+    <img src="/assets/images/fourthstatelabs.jpeg" alt="FourthState Labs" />
+  </a>
+</header>
+
 <h2>Can you grow the largest network?</h2>
 <p>
   SFBW Epicenter only lasts two days, but you can walk away with a valuable
@@ -170,22 +183,35 @@
 </p>
 
 <style>
-  .header {
+  header {
     position: relative;
-  }
-  .graphic {
+    background: url('/assets/images/about-header.svg') no-repeat top;
+    min-height: 150px;
     margin: 0 calc(var(--page-gutter-horiz) * -1);
     width: calc(100% + var(--page-gutter-horiz) * 2);
-    height: auto;
+    padding: 45px var(--page-gutter-horiz) 0;
   }
   h1 {
     color: var(--blue);
     font-size: 36px;
     line-height: 54px;
     font-weight: bold;
-    position: absolute;
-    left: 0;
-    top: 65px;
+    margin-bottom: 0;
+  }
+  .subtitle {
+    color: var(--dark-gray);
+    text-transform: uppercase;
+    font-weight: bold;
+    margin: -5px 0 2em;
+  }
+  header a {
+    display: block;
+    width: 120px;
+    margin: 1em 0;
+  }
+  header img {
+    width: 100%;
+    height: auto;
   }
   h2 {
     font-size: 24px;
