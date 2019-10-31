@@ -61,8 +61,7 @@
         <span class="rtl-text" class:has-text={!!value}>
           <span class="ltr-text">
             <!-- prettier-ignore -->
-            <span class="prefix">{prefix}</span>
-            {value.replace(prefix, '') || ' '}
+            <span class="prefix">{prefix}</span>{value.replace(prefix, '') || ' '}
           </span>
         </span>
       </span>

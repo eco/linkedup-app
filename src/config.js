@@ -1,5 +1,10 @@
 import platforms from './config.platforms'
 
+const platformByLabel = platforms.reduce(
+  (memo, p) => ({ ...memo, [p.name]: p }),
+  {}
+)
+
 const isIOS = /iphone|ipad|ipod/i.test(window.navigator.userAgent)
 
 const defaultOptions = {
@@ -10,6 +15,7 @@ const defaultOptions = {
   env: 'development',
   isIOS,
   platforms,
+  platformByLabel,
 }
 
 const domains = {
