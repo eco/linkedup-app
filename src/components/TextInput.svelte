@@ -12,7 +12,7 @@
   export let prefix = undefined
 
   const maybeAutofocus = el => autofocus && el.focus()
-  const handleFocus = e => setTimeout(() => e.target.scrollIntoView(), 100)
+  const handleFocus = e => setTimeout(() => e.target.scrollIntoView(), 300)
 </script>
 
 <label class:displayErrors>

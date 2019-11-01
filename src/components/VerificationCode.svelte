@@ -3,7 +3,7 @@
   export let code = ''
   export let label
 
-  const handleFocus = e => setTimeout(() => e.target.scrollIntoView(), 100)
+  const handleFocus = e => setTimeout(() => e.target.scrollIntoView(), 300)
 </script>
 
 <label>

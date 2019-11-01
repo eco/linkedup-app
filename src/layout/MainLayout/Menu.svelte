@@ -71,7 +71,10 @@
   </nav>
 
   <footer>
-    <img src="/assets/images/menu-feature.svg" alt="Linked Up" />
+    <p class="subtitle">Powered by:</p>
+    <a href="https://www.eco.com" target="_blank" rel="noopener noreferrer">
+      <img src="/assets/images/eco.png" alt="Eco" />
+    </a>
   </footer>
 </div>
 
@@ -91,11 +94,14 @@
     top: 0;
     height: 100%;
     width: 90%;
+    overflow: scroll;
     padding: 12px;
     background-color: white;
     box-shadow: 0px 11px 15px rgba(0, 0, 0, 0.2),
       0px 9px 46px rgba(0, 0, 0, 0.12), 0px 24px 38px rgba(0, 0, 0, 0.14);
     z-index: var(--z-index-menu);
+    display: flex;
+    flex-direction: column;
   }
   header {
     color: var(--blue);
@@ -106,26 +112,18 @@
   }
   nav {
     padding-left: 10px;
-    margin-top: 1em;
+    margin: 0.5em 0;
     font-size: 32px;
     font-weight: 500;
     line-height: 54px;
   }
   nav li {
-    margin-bottom: 10px;
+    margin: 5px 0;
   }
   nav a {
     text-decoration: none;
     outline: none;
     color: var(--black);
-  }
-  footer {
-    text-align: center;
-    margin-top: 2em;
-  }
-  footer :global(svg) {
-    width: 180px;
-    height: 180px;
   }
   .badge {
     float: right;
@@ -133,5 +131,24 @@
     top: 4px;
     right: 10px;
     font-size: 18px;
+  }
+  footer {
+    margin-top: auto;
+    padding-left: 10px;
+  }
+  footer .subtitle {
+    color: var(--dark-gray);
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0 0 5px;
+  }
+  footer a {
+    display: block;
+    width: 120px;
+  }
+  footer img {
+    width: 100%;
+    height: auto;
   }
 </style>
