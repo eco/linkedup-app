@@ -20,11 +20,6 @@
       name: 'Rewards',
       requiresLogin: true,
     },
-    '/notifications': {
-      name: 'Notifications',
-      requiresLogin: true,
-      badge: true,
-    },
     '/leaderboard': 'Leaderboard',
     '/about': 'How to Play',
   }
