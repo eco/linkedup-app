@@ -9,7 +9,7 @@ export const createTx = (acc, seq, msg) => ({
         denom: 'longy',
       },
     ],
-    gas: '1000000',
+    gas: '500000000',
   },
   msgs: [msg],
   memo: '',
