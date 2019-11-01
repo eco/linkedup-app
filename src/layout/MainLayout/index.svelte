@@ -30,14 +30,6 @@
           <BackIcon />
         </span>
       {/if}
-      {#if $userStore.profile}
-        <span class="notif-icon" on:click={openNotifs}>
-          <NotifIcon />
-          <span class="badge">
-            <NotifBadge />
-          </span>
-        </span>
-      {/if}
     {/if}
   </header>
 

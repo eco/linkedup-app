@@ -74,12 +74,6 @@
         </p>
       </div>
     {/if}
-    <Button fullWidth on:click={scanContact}>
-      <span class="scan-icon">
-        <ScanIcon />
-      </span>
-      Scan contact
-    </Button>
   </div>
 </PageWithAction>
 

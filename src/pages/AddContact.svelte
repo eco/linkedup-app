@@ -85,19 +85,6 @@
         bind:value={message}
         placeholder="Include a message for {contactFirstName}" />
     </div>
-
-    <div slot="action" class="action">
-      <span class="primary">
-        <Button fullWidth on:click={handleShare} loading={loadingShare}>
-          Share
-        </Button>
-      </span>
-      <span>
-        <Button fullWidth secondary on:click={handleSkip} loading={loadingSkip}>
-          Skip
-        </Button>
-      </span>
-    </div>
   </PageWithAction>
 {/if}
 
