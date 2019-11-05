@@ -20,6 +20,7 @@ const fetchable = (fetchFn, opts = {}) => {
         const data = await fetchFn()
         update({ data })
       } catch (e) {
+        window.Sentry.captureException(e)
         update({ error: e })
       } finally {
         update({ loading: false })

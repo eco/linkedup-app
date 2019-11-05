@@ -24,6 +24,7 @@
       const result = await keyService.recoverAccount(badgeId, code)
       page.redirect(result.claimUrl || '/')
     } catch (e) {
+      window.Sentry.captureException(e)
       window.alert(`ERROR: ${e.message}`)
     } finally {
       loading = false

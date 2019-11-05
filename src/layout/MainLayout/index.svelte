@@ -1,5 +1,6 @@
 <script>
   import page from 'page'
+  import config from '../../config'
   import userStore from '../../store/user'
   import Menu from './Menu'
   import MenuIcon from './MenuIcon'
@@ -28,6 +29,14 @@
       {:else if navAction === 'back'}
         <span class="menu-icon" on:click={goBack}>
           <BackIcon />
+        </span>
+      {/if}
+      {#if $userStore.profile && config.gameActive}
+        <span class="notif-icon" on:click={openNotifs}>
+          <NotifIcon />
+          <span class="badge">
+            <NotifBadge />
+          </span>
         </span>
       {/if}
     {/if}

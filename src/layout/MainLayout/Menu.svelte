@@ -2,6 +2,7 @@
   import { createEventDispatcher } from 'svelte'
   import { fly } from 'svelte/transition'
   import page from 'page'
+  import config from '../../config'
   import userStore from '../../store/user'
   import NotifBadge from './NotifBadge'
 
@@ -20,6 +21,12 @@
       name: 'Rewards',
       requiresLogin: true,
     },
+    '/notifications': {
+      name: 'Notifications',
+      requiresLogin: true,
+      badge: true,
+      disabled: !config.gameActive,
+    },
     '/leaderboard': 'Leaderboard',
     '/about': 'How to Play',
   }
@@ -29,7 +36,7 @@
   $: {
     navItems = Object.entries(navConfig)
       .map(([path, entry]) => {
-        if (entry.requiresLogin && !$userStore.profile) {
+        if (entry.disabled || (entry.requiresLogin && !$userStore.profile)) {
           return false
         }
         const name = entry.name || entry

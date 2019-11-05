@@ -16,6 +16,7 @@
       const query = new URLSearchParams({ badgeId, email })
       page(`/verify?${query}`)
     } catch (e) {
+      window.Sentry.captureException(e)
       window.alert(`ERROR: ${e.message}`)
     } finally {
       loading = false

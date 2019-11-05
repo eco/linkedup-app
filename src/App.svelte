@@ -64,10 +64,10 @@
   page((ctx, next) => ($userStore.profile ? next() : page.redirect('/')))
 
   // scanning contacts and sponsors
-  // page('/scan', () => {
-  //   component = pages.ScanContact
-  //   navAction = 'back'
-  // })
+  page('/scan', () => {
+    component = pages.ScanContact
+    navAction = 'back'
+  })
   page('/badge/:badgeId', async () => {
     const badgeClaimed = await cosmos.isBadgeClaimed(pageParams.badgeId)
     component = badgeClaimed ? pages.AddContact : pages.Unclaimed
@@ -88,7 +88,7 @@
   })
 
   // notifications
-  // page('/notifications', () => (component = pages.Notifications))
+  page('/notifications', () => (component = pages.Notifications))
 
   // finally, if no route matched, display 404
   page(() => {

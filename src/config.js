@@ -8,6 +8,7 @@ const platformByLabel = platforms.reduce(
 const isIOS = /iphone|ipad|ipod/i.test(window.navigator.userAgent)
 
 const defaultOptions = {
+  gameActive: true,
   leaderboardFrameInterval: 10000,
   dataPollingInterval: 5000,
   segmentWriteApiKey: '6tAoLDmWqPfUxy30obm1ZqxcTbZ3zom8',
@@ -20,6 +21,7 @@ const defaultOptions = {
 
 const domains = {
   'linkedup.sfbw.io': {
+    gameActive: false,
     chainEndpoint: 'https://chain.linkedup.sfbw.io',
     keyEndpoint: 'https://keyservice.linkedup.sfbw.io',
     contentEndpoint: 'https://linkedup-user-content.s3.us-west-2.amazonaws.com',
