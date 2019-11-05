@@ -17,6 +17,7 @@
       const result = await keyService.recoverAccount(id, token)
       page.redirect(result.claimUrl || '/')
     } catch (e) {
+      window.Sentry.captureException(e)
       window.alert(`ERROR: ${e.message}`)
     }
   }

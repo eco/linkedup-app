@@ -36,6 +36,7 @@
       })
       page('/')
     } catch (e) {
+      window.Sentry.captureException(e)
       window.alert(`ERROR: ${e.message}`)
     } finally {
       loading = false

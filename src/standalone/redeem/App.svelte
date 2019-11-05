@@ -28,6 +28,7 @@
       await cosmos.claimWinnings(address, sig)
       winningsPromise = cosmos.getWinnings(address)
     } catch (e) {
+      window.Sentry.captureException(e)
       window.alert(`ERROR: ${e.message}`)
     } finally {
       loading = false

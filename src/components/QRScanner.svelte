@@ -22,6 +22,7 @@
         return false
       }
     } catch (e) {
+      window.Sentry.captureException(e)
       return false
     }
 
@@ -105,6 +106,7 @@
           }
         }
       } catch (e) {
+        window.Sentry.captureException(e)
         // fail silently
       }
     }

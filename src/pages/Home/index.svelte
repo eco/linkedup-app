@@ -65,14 +65,22 @@
     {/if}
   </div>
   <div slot="action">
-    {#if $bonusStore.data && $bonusStore.data.active}
-      <div class="boost">
-        <header>Boost Active</header>
-        <p>
-          Scanning sponsors will earn you {bonusPercent}% bonus reputation
-          points
-        </p>
-      </div>
+    {#if config.gameActive}
+      {#if $bonusStore.data && $bonusStore.data.active}
+        <div class="boost">
+          <header>Boost Active</header>
+          <p>
+            Scanning sponsors will earn you {bonusPercent}% bonus reputation
+            points
+          </p>
+        </div>
+      {/if}
+      <Button fullWidth on:click={scanContact}>
+        <span class="scan-icon">
+          <ScanIcon />
+        </span>
+        Scan contact
+      </Button>
     {/if}
   </div>
 </PageWithAction>
