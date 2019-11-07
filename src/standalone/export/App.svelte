@@ -3,18 +3,17 @@
   import PageWithAction from '../../layout/PageWithAction'
   import keyService from '../../services/key'
   import cosmos from '../../services/cosmos'
-  import { decryptData } from '../../crypto'
   import { Button, Spinner } from '../../components'
   import userStore from '../../store/user'
 
   let loading = false
-
-  const url = new URL(document.location.href)
-  const id = url.searchParams.get('id')
-  const token = url.searchParams.get('token')
+  let finished = false
 
   const recoverAccount = async () => {
     try {
+      const url = new URL(document.location.href)
+      const id = url.searchParams.get('id')
+      const token = url.searchParams.get('token')
       await keyService.recoverAccount(id, token)
     } catch (e) {
       window.Sentry.captureException(e)
@@ -25,12 +24,8 @@
   const exportContacts = async () => {
     try {
       loading = true
-      const player = await cosmos.getPlayer(id)
-      const { rsaKeyPair } = $userStore
-      const contacts = player.scans.map(scan =>
-        decryptData(scan.encryptedData, rsaKeyPair.privateKey)
-      )
-      console.log(contacts)
+      await cosmos.exportContacts()
+      finished = true
     } catch (e) {
       window.Sentry.captureException(e)
       window.alert(`ERROR: ${e.message}`)
@@ -45,24 +40,34 @@
 </script>
 
 <MainLayout standalone>
-  {#await recoveryPromise}
-    <div class="progress">
-      <Spinner />
-      <p>Logging back in&hellip;</p>
-    </div>
-  {:then recovery}
-    <PageWithAction>
-      <div slot="content">
-        <h1>Download your contact information</h1>
-        <p>You'll receive a CSV file containing all the connections you made</p>
+  {#if finished}
+    <h1>Check your email</h1>
+    <p>We've sent your connections data.</p>
+  {:else}
+    {#await recoveryPromise}
+      <div class="progress">
+        <Spinner />
+        <p>Logging back in&hellip;</p>
       </div>
-      <div slot="action">
-        <Button fullWidth on:click={exportContacts} {loading}>Download</Button>
-      </div>
-    </PageWithAction>
-  {:catch error}
-    <p>Something went wrong: {error.message}</p>
-  {/await}
+    {:then recovery}
+      <PageWithAction>
+        <div slot="content">
+          <h1>Download your contact information</h1>
+          <p>
+            You'll receive a CSV file containing all the connections you made
+          </p>
+        </div>
+        <div slot="action">
+          <Button fullWidth on:click={exportContacts} {loading}>
+            Download
+          </Button>
+        </div>
+      </PageWithAction>
+    {:catch error}
+      <p>Something went wrong: {error.message}</p>
+    {/await}
+  {/if}
+
 </MainLayout>
 
 <style>
