@@ -22,7 +22,7 @@ const sortObject = obj => {
   return result
 }
 
-const signBuffer = (buf, _privateKey) => {
+const signBuffer = (buf, _privateKey, outputEncoding = 'hex') => {
   // import private cosmos key
   const privateKey = Buffer.from(_privateKey, 'hex')
 
@@ -31,7 +31,7 @@ const signBuffer = (buf, _privateKey) => {
   signature = Buffer.concat([
     signature.r.toArrayLike(Buffer, 'be', 32),
     signature.s.toArrayLike(Buffer, 'be', 32),
-  ]).toString('hex')
+  ]).toString(outputEncoding)
 
   return signature
 }
@@ -50,7 +50,7 @@ export const signTx = async (tx, _privateKey) => {
   ).toString('base64')
 
   // sign transaction
-  const signature = signBuffer(buf, _privateKey)
+  const signature = signBuffer(buf, _privateKey, 'base64')
 
   return {
     tx: {
