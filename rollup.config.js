@@ -114,4 +114,5 @@ export default [
     'public/s/leaderboard',
     35731
   ),
+  generateConfig('src/standalone/export/main', 'public/s/export', 35732)
 ]
