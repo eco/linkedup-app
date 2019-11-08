@@ -1,6 +1,6 @@
 import { get } from 'svelte/store'
 import userStore from '../store/user'
-import { signTx, encryptData, decryptData, signExport } from '../crypto'
+import { signTx, encryptData } from '../crypto'
 import config from '../config'
 import { createTx, claimKey, scanQr } from './cosmos.msgs'
 
@@ -203,26 +203,5 @@ export default {
       active: true,
       multiplier: parseFloat(json.value.multiplier, 10),
     }
-  },
-
-  async exportContacts() {
-    const { cosmosKey, rsaKeyPair } = get(userStore)
-    const player = await this.getPlayer()
-
-    // decrypt all shared data
-    const contacts = await Promise.all(
-      player.scans.map(async scan => {
-        let data = {}
-        if (scan.encryptedData) {
-          data = await decryptData(scan.encryptedData, rsaKeyPair.privateKey)
-        }
-        return { ...scan, ...data }
-      })
-    )
-
-    // create signature
-    const signature = await signExport(cosmosKey)
-
-    console.log({ contacts, signature })
   },
 }

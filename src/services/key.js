@@ -1,7 +1,15 @@
-import { generateCosmosKey, generateRsaKeyPair, decryptData } from '../crypto'
+import { get } from 'svelte/store'
+import { Buffer } from 'buffer'
+import {
+  generateCosmosKey,
+  generateRsaKeyPair,
+  decryptData,
+  signBuffer,
+} from '../crypto'
 import userStore from '../store/user'
 import config from '../config'
 import cosmos from './cosmos'
+import { createContactsCsv } from './csv'
 
 export default {
   async beginVerification(badgeId) {
@@ -101,5 +109,47 @@ export default {
       profileRecovered: contact.claimed,
       claimUrl,
     }
+  },
+
+  async exportContacts(id) {
+    const { cosmosKey, rsaKeyPair } = get(userStore)
+    const player = await cosmos.getPlayer()
+
+    // decrypt all shared data
+    const contacts = await Promise.all(
+      player.scans.map(async scan => {
+        let data = {}
+        if (scan.encryptedData) {
+          data = await decryptData(scan.encryptedData, rsaKeyPair.privateKey)
+        }
+        return { ...scan, ...data }
+      })
+    )
+    const data = createContactsCsv(contacts)
+
+    // create signature
+    const message = 'LinkedUp'
+    const buf = Buffer.from(message)
+    const signature = await signBuffer(buf, cosmosKey)
+
+    // request export
+    const res = await fetch(`${config.keyEndpoint}/sendEmail`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: parseInt(id, 10),
+        msg: message,
+        sig: signature,
+        data,
+      }),
+    })
+
+    if (!res.ok) {
+      throw new Error(`Failed to export contacts: [http:${res.status}]`)
+    }
+
+    return res.text()
   },
 }

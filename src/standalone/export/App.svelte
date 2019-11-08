@@ -2,18 +2,18 @@
   import MainLayout from '../../layout/MainLayout'
   import PageWithAction from '../../layout/PageWithAction'
   import keyService from '../../services/key'
-  import cosmos from '../../services/cosmos'
   import { Button, Spinner } from '../../components'
   import userStore from '../../store/user'
 
   let loading = false
-  let finished = false
+  let email
+
+  const url = new URL(document.location.href)
+  const id = url.searchParams.get('id')
+  const token = url.searchParams.get('token')
 
   const recoverAccount = async () => {
     try {
-      const url = new URL(document.location.href)
-      const id = url.searchParams.get('id')
-      const token = url.searchParams.get('token')
       await keyService.recoverAccount(id, token)
     } catch (e) {
       window.Sentry.captureException(e)
@@ -24,8 +24,7 @@
   const exportContacts = async () => {
     try {
       loading = true
-      await cosmos.exportContacts()
-      finished = true
+      email = await keyService.exportContacts(id)
     } catch (e) {
       window.Sentry.captureException(e)
       window.alert(`ERROR: ${e.message}`)
@@ -40,9 +39,9 @@
 </script>
 
 <MainLayout standalone>
-  {#if finished}
+  {#if email}
     <h1>Check your email</h1>
-    <p>We've sent your connections data.</p>
+    <p>We've sent your connections data to {email}</p>
   {:else}
     {#await recoveryPromise}
       <div class="progress">

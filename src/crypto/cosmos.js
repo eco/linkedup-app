@@ -22,7 +22,7 @@ const sortObject = obj => {
   return result
 }
 
-const signBuffer = (buf, _privateKey, outputEncoding = 'hex') => {
+export const signBuffer = (buf, _privateKey, outputEncoding = 'hex') => {
   // import private cosmos key
   const privateKey = Buffer.from(_privateKey, 'hex')
 
@@ -78,10 +78,5 @@ export const signAddress = async (address, privateKey) => {
   const hash = await subtle.digest('SHA-256', encodedAddress)
   const buf = Buffer.from(hash)
 
-  return signBuffer(buf, privateKey)
-}
-
-export const signExport = async privateKey => {
-  const buf = Buffer.from('linkedup!')
   return signBuffer(buf, privateKey)
 }
