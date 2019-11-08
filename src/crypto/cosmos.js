@@ -22,7 +22,7 @@ const sortObject = obj => {
   return result
 }
 
-export const signBuffer = (buf, _privateKey, outputEncoding = 'hex') => {
+const signBuffer = (buf, _privateKey, encoding) => {
   // import private cosmos key
   const privateKey = Buffer.from(_privateKey, 'hex')
 
@@ -31,12 +31,12 @@ export const signBuffer = (buf, _privateKey, outputEncoding = 'hex') => {
   signature = Buffer.concat([
     signature.r.toArrayLike(Buffer, 'be', 32),
     signature.s.toArrayLike(Buffer, 'be', 32),
-  ]).toString(outputEncoding)
+  ]).toString(encoding)
 
   return signature
 }
 
-export const signTx = async (tx, _privateKey) => {
+export const signTx = async (tx, privateKey) => {
   // encode transaction into buffer
   const encoder = new TextEncoder()
   const data = encoder.encode(JSON.stringify(sortObject(tx)))
@@ -44,13 +44,13 @@ export const signTx = async (tx, _privateKey) => {
   const buf = Buffer.from(hash)
 
   // create keys
-  const privateKey = Buffer.from(_privateKey, 'hex')
+  const pk = Buffer.from(privateKey, 'hex')
   const publicKey = Buffer.from(
-    ec.keyFromPrivate(privateKey).getPublic(true, true)
+    ec.keyFromPrivate(pk).getPublic(true, true)
   ).toString('base64')
 
   // sign transaction
-  const signature = signBuffer(buf, _privateKey, 'base64')
+  const signature = signBuffer(buf, privateKey, 'base64')
 
   return {
     tx: {
@@ -78,5 +78,5 @@ export const signAddress = async (address, privateKey) => {
   const hash = await subtle.digest('SHA-256', encodedAddress)
   const buf = Buffer.from(hash)
 
-  return signBuffer(buf, privateKey)
+  return signBuffer(buf, privateKey, 'hex')
 }

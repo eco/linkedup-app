@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store'
 
-const prefix = 'com.eco.longy-app'
+const prefix = 'com.eco.linkedup-app'
 
 const lsWritable = (name, initialValueWhenEmpty) => {
   const lsKey = [prefix, name].join('.')

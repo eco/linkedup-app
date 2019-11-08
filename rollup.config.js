@@ -9,11 +9,8 @@ import visualizer from 'rollup-plugin-visualizer'
 import json from 'rollup-plugin-json'
 import sha256 from 'hash.js/lib/hash/sha/256'
 
-const thisPkg = require('./package')
-
 const production = !process.env.ROLLUP_WATCH
 const ci = !!process.env.CI
-const sandbox = !!process.env.SANDBOX_MODE
 
 const generateConfig = (input, outputDir, livereloadPort) => {
   let cssName = 'main.css'
@@ -55,18 +52,6 @@ const generateConfig = (input, outputDir, livereloadPort) => {
         preferBuiltins: false,
         dedupe: importee =>
           importee === 'svelte' || importee.startsWith('svelte/'),
-        customResolveOptions: {
-          pathFilter: (pkg, _path, relativePath) => {
-            if (
-              sandbox &&
-              pkg.name === thisPkg.name &&
-              relativePath.startsWith('src/services')
-            ) {
-              return relativePath.replace('src/services', 'sandbox/services')
-            }
-            return relativePath
-          },
-        },
       }),
       commonjs(),
 
@@ -107,7 +92,7 @@ const generateConfig = (input, outputDir, livereloadPort) => {
 }
 
 export default [
-  generateConfig(production ? 'src/main' : 'sandbox/main', 'public', 35729),
+  generateConfig('src/main', 'public', 35729),
   generateConfig('src/standalone/redeem/main', 'public/s/redeem', 35730),
   generateConfig(
     'src/standalone/leaderboard/main',

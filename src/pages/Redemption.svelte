@@ -22,6 +22,7 @@
     url.search = new URLSearchParams({ address, sig }).toString()
 
     // generate QR code
+    window.x = url.toString()
     return QRCode.toDataURL(url.toString(), {
       margin: 0,
       width: 200,

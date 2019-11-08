@@ -1,10 +1,9 @@
 import { get } from 'svelte/store'
-import { Buffer } from 'buffer'
 import {
   generateCosmosKey,
   generateRsaKeyPair,
   decryptData,
-  signBuffer,
+  signAddress,
 } from '../crypto'
 import userStore from '../store/user'
 import config from '../config'
@@ -112,7 +111,7 @@ export default {
   },
 
   async exportContacts(id) {
-    const { cosmosKey, rsaKeyPair } = get(userStore)
+    const { address, cosmosKey, rsaKeyPair } = get(userStore)
     const player = await cosmos.getPlayer()
 
     // decrypt all shared data
@@ -128,9 +127,7 @@ export default {
     const data = createContactsCsv(contacts)
 
     // create signature
-    const message = 'LinkedUp'
-    const buf = Buffer.from(message)
-    const signature = await signBuffer(buf, cosmosKey)
+    const sig = await signAddress(address, cosmosKey)
 
     // request export
     const res = await fetch(`${config.keyEndpoint}/sendEmail`, {
@@ -140,8 +137,7 @@ export default {
       },
       body: JSON.stringify({
         id: parseInt(id, 10),
-        msg: message,
-        sig: signature,
+        sig,
         data,
       }),
     })
