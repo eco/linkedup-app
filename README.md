@@ -22,7 +22,7 @@ Open http://localhost:5000 to begin playing. The dev server will automatically r
 
 * Default and per-deployment settings can be configured in `config.js` and `config.platforms.js`
 * The game has been designed for mobile screens only. If accessing via desktop, optimize your experience by activating [Device Mode](https://developers.google.com/web/tools/chrome-devtools/device-mode)
-* To play without QR Codes, you may manually open the URL that corresponds to each player's badge in the form of https://linkedup.com/badge/BADGE_ID
+* To play without QR Codes, you may manually open the URL that corresponds to each player's badge in the form of https://localhost:5000/badge/BADGE_ID
 
 ## Contributing
 
