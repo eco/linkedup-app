@@ -44,8 +44,9 @@ const escapeCsvValue = value => {
 
   const containsSeparator = value.indexOf(',') > -1
   const containsQuotes = value.indexOf('"') > -1
+  const containsNewline = value.indexOf('\n') > -1
 
-  if (containsSeparator || containsQuotes) {
+  if (containsSeparator || containsQuotes || containsNewline) {
     const newValue = value.replace(/"/g, '""')
     return `"${newValue}"`
   }
