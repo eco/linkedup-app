@@ -24,7 +24,7 @@
   const exportContacts = async () => {
     try {
       loading = true
-      email = await keyService.exportContacts(id)
+      email = await keyService.exportContacts(id, token)
     } catch (e) {
       window.Sentry.captureException(e)
       window.alert(`ERROR: ${e.message}`)
