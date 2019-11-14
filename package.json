@@ -1,17 +1,17 @@
 {
-  "name": "longy-app",
+  "name": "linked-app",
   "version": "1.0.0",
-  "license": "UNLICENSED",
+  "private": true,
+  "license": "MIT",
   "scripts": {
     "build": "rollup -c",
     "autobuild": "rollup -c -w",
     "dev": "run-p start:dev autobuild",
-    "sandbox": "SANDBOX_MODE=true yarn dev",
     "start:dev": "ws",
     "clean": "git clean -Xf public",
-    "style": "prettier --write '{src,sandbox}/**/*.{js,svelte}' public/global.css",
-    "style:check": "prettier --check '{src,sandbox}/**/*.{js,svelte}' public/global.css",
-    "lint": "eslint '{src,sandbox}/**/*.{js,svelte}'"
+    "style": "prettier --write 'src/**/*.{js,svelte}' public/global.css",
+    "style:check": "prettier --check 'src/**/*.{js,svelte}' public/global.css",
+    "lint": "eslint 'src/**/*.{js,svelte}'"
   },
   "dependencies": {
     "babel-eslint": "^10.0.3",
@@ -50,7 +50,7 @@
     }
   },
   "lint-staged": {
-    "{src,sandbox}/**/*.{js,svelte}": [
+    "src/**/*.{js,svelte}": [
       "eslint",
       "prettier --write",
       "git add"

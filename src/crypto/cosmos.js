@@ -22,7 +22,21 @@ const sortObject = obj => {
   return result
 }
 
-export const signTx = async (tx, _privateKey) => {
+const signBuffer = (buf, _privateKey, encoding) => {
+  // import private cosmos key
+  const privateKey = Buffer.from(_privateKey, 'hex')
+
+  // sign data
+  let signature = ec.sign(buf, privateKey, { canonical: true })
+  signature = Buffer.concat([
+    signature.r.toArrayLike(Buffer, 'be', 32),
+    signature.s.toArrayLike(Buffer, 'be', 32),
+  ]).toString(encoding)
+
+  return signature
+}
+
+export const signTx = async (tx, privateKey) => {
   // encode transaction into buffer
   const encoder = new TextEncoder()
   const data = encoder.encode(JSON.stringify(sortObject(tx)))
@@ -30,17 +44,13 @@ export const signTx = async (tx, _privateKey) => {
   const buf = Buffer.from(hash)
 
   // create keys
-  const privateKey = Buffer.from(_privateKey, 'hex')
+  const pk = Buffer.from(privateKey, 'hex')
   const publicKey = Buffer.from(
-    ec.keyFromPrivate(privateKey).getPublic(true, true)
+    ec.keyFromPrivate(pk).getPublic(true, true)
   ).toString('base64')
 
   // sign transaction
-  let signature = ec.sign(buf, privateKey, { canonical: true })
-  signature = Buffer.concat([
-    signature.r.toArrayLike(Buffer, 'be', 32),
-    signature.s.toArrayLike(Buffer, 'be', 32),
-  ]).toString('base64')
+  const signature = signBuffer(buf, privateKey, 'base64')
 
   return {
     tx: {
@@ -61,22 +71,12 @@ export const signTx = async (tx, _privateKey) => {
   }
 }
 
-export const signAddress = async (address, _privateKey) => {
+export const signAddress = async (address, privateKey) => {
   // decode address and hash bytes into buffer
   const encoder = new TextEncoder()
   const encodedAddress = encoder.encode(address)
   const hash = await subtle.digest('SHA-256', encodedAddress)
   const buf = Buffer.from(hash)
 
-  // import private cosmos key
-  const privateKey = Buffer.from(_privateKey, 'hex')
-
-  // sign data
-  let signature = ec.sign(buf, privateKey, { canonical: true })
-  signature = Buffer.concat([
-    signature.r.toArrayLike(Buffer, 'be', 32),
-    signature.s.toArrayLike(Buffer, 'be', 32),
-  ]).toString('hex')
-
-  return signature
+  return signBuffer(buf, privateKey, 'hex')
 }

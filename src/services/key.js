@@ -1,7 +1,9 @@
+import { get } from 'svelte/store'
 import { generateCosmosKey, generateRsaKeyPair, decryptData } from '../crypto'
 import userStore from '../store/user'
 import config from '../config'
 import cosmos from './cosmos'
+import { createContactsCsv } from './csv'
 
 export default {
   async beginVerification(badgeId) {
@@ -101,5 +103,41 @@ export default {
       profileRecovered: contact.claimed,
       claimUrl,
     }
+  },
+
+  async exportContacts(id, token) {
+    const { rsaKeyPair } = get(userStore)
+    const player = await cosmos.getPlayer()
+
+    // decrypt all shared data
+    const contacts = await Promise.all(
+      player.scans.map(async scan => {
+        let data = {}
+        if (scan.encryptedData) {
+          data = await decryptData(scan.encryptedData, rsaKeyPair.privateKey)
+        }
+        return { ...scan, ...data }
+      })
+    )
+    const data = createContactsCsv(contacts)
+
+    // request export
+    const res = await fetch(`${config.keyEndpoint}/sendEmail`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: parseInt(id, 10),
+        token,
+        data,
+      }),
+    })
+
+    if (!res.ok) {
+      throw new Error(`Failed to export contacts: [http:${res.status}]`)
+    }
+
+    return res.text()
   },
 }

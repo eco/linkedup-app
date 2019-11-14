@@ -21,7 +21,7 @@ const broadcastMsg = async (msg, address, cosmosKey) => {
   })
 
   if (!res.ok) {
-    throw new Error(`Failed to broadcast tx: ${msg.typee}`)
+    throw new Error(`Failed to broadcast tx: ${msg.type}`)
   }
 
   const json = await res.json()

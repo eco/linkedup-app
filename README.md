@@ -1,69 +1,33 @@
-*Psst — looking for a shareable component template? Go here --> [sveltejs/component-template](https://github.com/sveltejs/component-template)*
+# Linked Up
 
----
+> The frontend app for "Linked Up", a professional networking blockchain game with rewards
 
-# svelte app
+## Install
 
-This is a project template for [Svelte](https://svelte.dev) apps. It lives at https://github.com/sveltejs/template.
-
-To create a new project based on this template using [degit](https://github.com/Rich-Harris/degit):
-
-```bash
-npx degit sveltejs/template svelte-app
-cd svelte-app
+```
+yarn install
 ```
 
-*Note that you will need to have [Node.js](https://nodejs.org) installed.*
+## Usage
 
+Before continuing, follow the instructions for the backend services found in https://github.com/eco/linkedup. Once these services are available, you can bring up the app dev server with the following command:
 
-## Get started
-
-Install the dependencies...
-
-```bash
-cd svelte-app
-npm install
+```
+yarn dev
 ```
 
-...then start [Rollup](https://rollupjs.org):
+Open http://localhost:5000 to begin playing. The dev server will automatically reload the page upon source code changes.
 
-```bash
-npm run dev
-```
+### Notes
 
-Navigate to [localhost:5000](http://localhost:5000). You should see your app running. Edit a component file in `src`, save it, and reload the page to see your changes.
+* Default and per-deployment settings can be configured in `config.js` and `config.platforms.js`
+* The game has been designed for mobile screens only. If accessing via desktop, optimize your experience by activating [Device Mode](https://developers.google.com/web/tools/chrome-devtools/device-mode)
+* To play without QR Codes, you may manually open the URL that corresponds to each player's badge in the form of https://localhost:5000/badge/BADGE_ID
 
+## Contributing
 
-## Deploying to the web
+PRs accepted.
 
-### With [now](https://zeit.co/now)
+## License
 
-Install `now` if you haven't already:
-
-```bash
-npm install -g now
-```
-
-Then, from within your project folder:
-
-```bash
-cd public
-now
-```
-
-As an alternative, use the [Now desktop client](https://zeit.co/download) and simply drag the unzipped project folder to the taskbar icon.
-
-### With [surge](https://surge.sh/)
-
-Install `surge` if you haven't already:
-
-```bash
-npm install -g surge
-```
-
-Then, from within your project folder:
-
-```bash
-npm run build
-surge public
-```
+MIT © Eco
